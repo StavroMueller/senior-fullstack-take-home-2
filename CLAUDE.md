@@ -119,8 +119,10 @@ Julien's standing rulings, recorded 2026-11-23.
   `lib/backend/<app>/queries/<get_noun>.ex` with one public `run/N`. The context module
   `lib/backend/<app>.ex` exposes both through `defdelegate`. Commands use `Ecto.Multi` when they
   write more than one row and return `{:ok, result}` or `{:error, reason}`.
-- **Every Ecto schema lives in the `database` app under `lib/backend/schema/`.** Domain apps use
-  them and never define their own. Schemas are data definitions and hold no logic.
+- **Every Ecto schema lives in the `database` app under `lib/backend/database/schema/`, as
+  `Backend.Database.Schema.*`.** Domain apps use them and never define their own. Schemas are
+  data definitions and hold no logic. Ruled by Julien, 2026-11-23: the app namespace wins over
+  a bare `Backend.Schema.*`.
 - **Every module is namespaced under its app: `Backend.<App>.*`.** The one exception is
   `Backend.ApiWeb.*`, which keeps Phoenix's web segment.
 - **Resolvers map arguments and delegate.** All logic lives in domain commands and queries.
