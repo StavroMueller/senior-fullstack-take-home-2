@@ -1,7 +1,9 @@
 defmodule Backend.ApiWeb.Endpoint do
-  @moduledoc "The HTTP endpoint: CORS for the frontend, then the router."
+  @moduledoc "The HTTP endpoint and the browser socket: CORS for the frontend, then the router."
 
   use Phoenix.Endpoint, otp_app: :api
+
+  socket "/socket", Backend.ApiWeb.UserSocket, websocket: true, longpoll: false
 
   if code_reloading? do
     plug Phoenix.CodeReloader
