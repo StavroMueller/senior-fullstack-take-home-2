@@ -8,8 +8,8 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
 
   def get_entry(_parent, %{id: entry_id}, _resolution), do: {:ok, Journal.get_entry(entry_id)}
 
-  def get_teacher_line(entry, _arguments, _resolution),
-    do: {:ok, Journal.get_teacher_line(entry)}
+  def get_teacher_reaction(entry, _arguments, _resolution),
+    do: {:ok, Journal.get_teacher_reaction(entry)}
 
   def list_entries(_parent, _arguments, _resolution), do: {:ok, Journal.list_entries()}
 

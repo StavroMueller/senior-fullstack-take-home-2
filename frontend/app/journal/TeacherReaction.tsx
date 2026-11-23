@@ -2,7 +2,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { palette, sizes } from "~/palette";
 
-export function TeacherLine({ line }: { line: string }) {
+export function TeacherReaction({ reaction }: { reaction: string }) {
   return (
     <Paper
       component="aside"
@@ -15,7 +15,7 @@ export function TeacherLine({ line }: { line: string }) {
       }}
     >
       <Typography variant="h2" component="p" sx={{ color: palette.surface }}>
-        {line}
+        {reaction}
       </Typography>
     </Paper>
   );

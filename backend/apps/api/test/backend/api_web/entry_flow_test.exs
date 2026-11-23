@@ -15,7 +15,7 @@ defmodule Backend.ApiWeb.EntryFlowTest do
   id
   body
   analysisStatus
-  teacherLine
+  teacherReaction
   corrections { spanStart spanEnd original fix category }
   """
 
@@ -57,16 +57,16 @@ defmodule Backend.ApiWeb.EntryFlowTest do
     assert submitted["analysisStatus"] == "ANALYZING"
     assert submitted["body"] == "Hier, j'ai allé à le marché."
     assert submitted["corrections"] == []
-    assert submitted["teacherLine"] == nil
+    assert submitted["teacherReaction"] == nil
 
     {:ok, %{analysis_status: :analyzing}, _socket} = join_entry_channel(submitted["id"])
 
     assert %{success: 1} = run_analysis_jobs()
     assert_push "analysis_finished", %{}
 
-    {teacher_line, analyzed} = Map.pop(read_entry(submitted["id"]), "teacherLine")
-    assert teacher_line =~ "2 corrections"
-    assert teacher_line =~ "verb tense"
+    {teacher_reaction, analyzed} = Map.pop(read_entry(submitted["id"]), "teacherReaction")
+    assert teacher_reaction =~ "2 corrections"
+    assert teacher_reaction =~ "verb tense"
 
     assert analyzed == %{
              "id" => submitted["id"],
@@ -127,7 +127,7 @@ defmodule Backend.ApiWeb.EntryFlowTest do
     assert %{
              "body" => "Je va au parc.",
              "analysisStatus" => "ANALYSIS_FAILED",
-             "teacherLine" => nil,
+             "teacherReaction" => nil,
              "corrections" => []
            } =
              read_entry(submitted["id"])

@@ -27,7 +27,7 @@ defmodule Backend.Graphql.Types.JournalTypes do
     field :inserted_at, non_null(:datetime)
 
     @desc "The teacher's reaction to the entry, or null until its analysis finishes."
-    field :teacher_line, :string, resolve: &JournalResolver.get_teacher_line/3
+    field :teacher_reaction, :string, resolve: &JournalResolver.get_teacher_reaction/3
 
     field :corrections, non_null(list_of(non_null(:correction))), resolve: dataloader(:journal)
   end
