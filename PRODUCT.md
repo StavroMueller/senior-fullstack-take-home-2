@@ -199,10 +199,12 @@ Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.
 ### Language and level are data
 
 Each journey stores a `language` (an ISO code such as `fr`) and a `level` (a CEFR level such as
-`A1`), and each entry carries both into the AI prompt. Hand-written strings live in one file per
-language and level, and only French A1 exists.
+`A1`), and each entry carries both into the AI prompt. Hand-written strings live in data files
+under `backend/apps/journal/priv/`, and only French A1 exists. Towns depend on the language alone,
+so `routes/fr.json` covers every French level. Teacher reactions and encounter prompts depend on
+the level too, so they live in `teacher_reactions/fr-A1.json` and `encounters/fr-A1.json`.
 
-Adding Spanish means adding a strings file and changes no code. Declined: a locale framework or
+Adding Spanish A1 means adding those three files and changes no code. Declined: a locale framework or
 a registry of languages, which the no-scale rule bans, and hard-coding French.
 
 Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.

@@ -48,3 +48,16 @@ interest, encounter. The product ruling is "Encounters along the route are fanta
    - ExUnit runs the submit flow through an encounter to the finished journey.
    - Vitest covers the prompt and the finished state.
    - Playwright follows the journey from `/`.
+
+## State
+
+Built on branch `journey-stops`, and every check under "Commands" in `CLAUDE.md` passes.
+
+- Not verified: the coordinates of the 70 towns in `routes/fr.json` were written by hand. On the
+  map, the markers for Limoges, Poitiers, Avignon, Aix-en-Provence, Nantes and Bourges sit on
+  those towns.
+- No test submits two entries at once. The unique indexes on `entries` reject a second entry at
+  the same point of interest or encounter, and no test exercises that path.
+- Copy waiting for Julien: the eight encounter prompts in `encounters/fr-A1.json`, the heading
+  "On the road to {town}", and the finished line "You reached {town}, the end of this journey.
+  Start a journey to keep writing."

@@ -20,9 +20,8 @@ each correction marked inside it, read the teacher's reaction under it, and reop
 
 1. The real AI provider, once Julien picks one.
 2. The README answers, per `todo/2026-11-23-readme.md`, once the real provider works.
-3. Journey stops on the map: the seed draws a route between French towns, and each entry moves
-   the person along it, per "Journeys cross real France on a restyled open map" in `PRODUCT.md`.
-   `JourneyMap` shows the map with no route today.
+3. The journey route on the map, built on branch `journey-stops`, per
+   `todo/2026-11-23-journey-route.md`.
 4. The aged map style, per `todo/2026-11-23-aged-map-style.md`.
 
 Stage 2, the "Usual suspects" screen, starts after these.
