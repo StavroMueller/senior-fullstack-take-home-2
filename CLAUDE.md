@@ -259,6 +259,11 @@ Julien's standing rulings, recorded 2026-11-23.
 
 ## Planning
 
+- **No CI. Every check runs locally before work is called done.** Hosted runs cost money and
+  slow the loop. Run the commands under "Commands" and show their output. Declined: a GitHub
+  Actions workflow, which passed once on 2026-11-23 and was deleted. Ruled by Julien,
+  2026-11-23.
+
 - **No planning tooling.** Open work lives in dated files under `todo/` and nothing else, never
   in a source comment. Declined: GSD, whose overhead a take-home does not pay for.
 - **Rulings have a home.** A decision the code obeys and cannot state goes in `PRODUCT.md`
@@ -328,7 +333,6 @@ specimen the first time Julien rejects a line under them.
 
 ```
 .claude/        the reply-rules hook and the holocron-audit skill
-.github/        the pull request workflow: copy, backend, frontend, e2e
 backend/        the Elixir umbrella: apps/database, apps/journal, apps/graphql, apps/api
 backend/credo_checks/   custom Credo checks, including the comment rule
 frontend/       React Router 7 single-page app, tokens in app/palette.ts, theme in app/theme.ts
@@ -366,11 +370,11 @@ over a per-feature spec, and a per-feature spec wins over any tool's generic def
 
 | Rule | Gate | Command |
 | --- | --- | --- |
-| Writing rules, banned words, em dashes | Prose checker, in CI | `node tools/copy-check/check.mjs <files>` |
+| Writing rules, banned words, em dashes | Prose checker | `node tools/copy-check/check.mjs <files>` |
 | No comments, `@moduledoc` at most two lines | Credo `CommentRules`, ExUnit `NoCommentsTest`, Vitest `noComments.test.ts` | `mix credo --strict`, `mix test`, `npm test` |
 | No single-letter names, no `||` default, no catch-all rescue, no `Repo` in a resolver | Custom Credo checks in `backend/credo_checks/` | `mix credo --strict` |
-| Lint passes with zero issues | Credo strict, `tsc`, Prettier, `mix format`, in CI | the backend and frontend commands above |
-| A change is done when the live journey passes | Playwright, in CI | `cd e2e && npx playwright test` |
+| Lint passes with zero issues | Credo strict, `tsc`, Prettier, `mix format` | the backend and frontend commands above |
+| A change is done when the live journey passes | Playwright | `cd e2e && npx playwright test` |
 | Reply rules | `UserPromptSubmit` hook | `.claude/hooks/reply-rules.sh`, on every turn |
 | Code conventions that need a reader | Convention audit | `/holocron-audit` on changed files before a pull request |
 
