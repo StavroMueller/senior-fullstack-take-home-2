@@ -2,11 +2,11 @@ import Box from "@mui/material/Box";
 import { type GeoJSONSource, LngLatBounds, Map as MapLibreMap, Marker } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import type { PointOfInterest, RouteOnMap } from "~/journal/operations";
+import { agedMapStyle } from "~/journey/agedMapStyle";
 import { palette, sizes } from "~/palette";
 
 const franceCenter: [number, number] = [2.4, 46.6];
 const franceZoom = 5;
-const openFreeMapStyle = "https://tiles.openfreemap.org/styles/liberty";
 const routeSourceId = "route";
 const routePaddingPixels = 48;
 
@@ -74,7 +74,7 @@ export function JourneyMap({
     if (!containerRef.current) return;
     const createdMap = new MapLibreMap({
       container: containerRef.current,
-      style: openFreeMapStyle,
+      style: agedMapStyle,
       center: franceCenter,
       zoom: franceZoom,
     });

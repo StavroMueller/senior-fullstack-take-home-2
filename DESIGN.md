@@ -51,7 +51,7 @@ never drift into the cream band. Ruled by Julien, 2026-11-23.
 | Token | Value | Used for | OKLCH, measured 2026-11-23 |
 | --- | --- | --- | --- |
 | `mapLand` | `#C8A46E` | Land on the map | L 0.739, C 0.083, h 77 |
-| `mapInk` | `#8B6B3E` | Coasts, roads and place names on the map | L 0.549, C 0.074, h 75 |
+| `mapInk` | `#8B6B3E` | Water at half opacity, shorelines, roads and place names on the map | L 0.549, C 0.074, h 75 |
 
 The two hex values are defaults, not yet ruled on. The trail itself is drawn in `action`.
 
