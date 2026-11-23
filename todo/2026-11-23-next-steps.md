@@ -6,8 +6,8 @@ see each correction marked inside it, and reopen the entry from "Your entries".
 ## Waiting on Julien
 
 - Review pull request "Show the teacher's reaction under each analyzed entry" on branch
-  `teacher-lines`: the nine lines in
-  `backend/apps/journal/priv/teacher_lines/fr-A1.json`, and the choice to name the most common
+  `teacher-lines`: the nine reactions in
+  `backend/apps/journal/priv/teacher_reactions/fr-A1.json`, and the choice to name the most common
   category with ties going to the one that appears first in the entry.
 - Pick the AI provider and supply a key, per `todo/2026-11-23-real-ai-provider.md`.
 - Record his preference from 2026-11-23 in `CLAUDE.md`. He said to keep working through the
@@ -23,7 +23,7 @@ see each correction marked inside it, and reopen the entry from "Your entries".
 
 1. The real AI provider, once Julien picks one.
 2. The README answers, per `todo/2026-11-23-readme.md`, once the real provider works.
-3. Teacher lines, in the open pull request on branch `teacher-lines`. The lines name the
+3. Teacher reactions, in the open pull request on branch `teacher-lines`. The reactions name the
    correction count and the most common category, and name no journey event until journey stops
    exist.
 4. Journey stops on the map: the seed draws a route between French towns, and each entry moves
