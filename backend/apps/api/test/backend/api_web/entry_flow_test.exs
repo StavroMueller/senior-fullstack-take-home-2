@@ -124,6 +124,29 @@ defmodule Backend.ApiWeb.EntryFlowTest do
              "corrections" => []
            } =
              read_entry(submitted["id"])
+
+    Application.put_env(:journal, :ai_provider, Backend.Journal.AiProvider.Stub)
+
+    %{"data" => %{"retryAnalysis" => %{"analysisStatus" => "ANALYZING"}}} =
+      graphql("mutation($id: ID!) { retryAnalysis(entryId: $id) { analysisStatus } }", %{
+        id: submitted["id"]
+      })
+
+    assert %{success: 1} = run_analysis_jobs()
+    assert_push "analysis_finished", %{}
+
+    assert %{"analysisStatus" => "ANALYZED", "corrections" => [%{"original" => "Je va"}]} =
+             read_entry(submitted["id"])
+  end
+
+  test "refuses to retry an analysis that did not fail" do
+    journey_id = start_journey()
+    %{"data" => %{"submitEntry" => submitted}} = submit_entry(journey_id, "Bonjour.")
+
+    assert %{"errors" => [%{"message" => "analysis_not_failed"}]} =
+             graphql("mutation($id: ID!) { retryAnalysis(entryId: $id) { id } }", %{
+               id: submitted["id"]
+             })
   end
 
   test "refuses to join the channel of an entry that does not exist" do

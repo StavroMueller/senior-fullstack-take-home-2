@@ -43,6 +43,12 @@ defmodule Backend.Graphql.Schema do
       arg(:input, non_null(:submit_entry_input))
       resolve(&JournalResolver.submit_entry/3)
     end
+
+    @desc "Runs a failed analysis again."
+    field :retry_analysis, non_null(:entry) do
+      arg(:entry_id, non_null(:id))
+      resolve(&JournalResolver.retry_analysis/3)
+    end
   end
 
   def context(context) do

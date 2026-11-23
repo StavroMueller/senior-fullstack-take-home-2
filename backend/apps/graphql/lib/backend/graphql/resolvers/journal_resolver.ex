@@ -19,6 +19,13 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
     end
   end
 
+  def retry_analysis(_parent, %{entry_id: entry_id}, _resolution) do
+    case Journal.retry_analysis(entry_id) do
+      {:ok, entry} -> {:ok, entry}
+      {:error, reason} -> {:error, Atom.to_string(reason)}
+    end
+  end
+
   defp error_messages(changeset) do
     changeset
     |> Ecto.Changeset.traverse_errors(fn {message, _options} -> message end)
