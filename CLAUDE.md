@@ -232,7 +232,11 @@ Ruled by Julien, 2026-11-23.
 ## Migration rules
 
 - **Create every migration with `mix ecto.gen.migration <name>` from `backend/apps/database`.**
-  Hand-picked version numbers collide.
+  Hand-picked version numbers collide, and so do two generated in the same second: generate one,
+  then check `ls priv/repo/migrations` for a repeated version before generating the next.
+- **A column with a fixed set of values is a Postgres enum type,** created in the migration with
+  `execute/2` and read through `Ecto.Enum` in the schema. The database rejects any other value.
+  Ruled by Julien, 2026-11-23.
 - **Migrations run at boot** in the backend container. A migration that raises stops the stack
   from starting, so run `docker compose up` after adding one.
 
