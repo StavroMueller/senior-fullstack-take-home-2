@@ -222,6 +222,19 @@ an invented world.
 
 Ruled by Julien, 2026-11-23. Source: `frontend/app/journey/`.
 
+### Encounters along the route are fantastical
+
+The seed picks a start town and an end town at least 400 km apart, draws a line between them,
+and picks three more real towns along that line, each within 60 km of it and in order along it.
+These towns are the route's points of interest.
+
+Between two points of interest the seed may place an encounter, and encounters are fantastical:
+a dragon on a bridge, a talking goat at a ford. An encounter takes its own entry, the same as a
+point of interest. Encounters come from hand-written strings, so the same seed always gives the
+same route.
+
+Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.
+
 ### Corrections are highlighted inside the entry
 
 A person sees exactly which characters of an entry each correction covers. Each correction
