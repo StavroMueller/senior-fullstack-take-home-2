@@ -6,21 +6,31 @@ import Typography from "@mui/material/Typography";
 import { type FormEvent, useState } from "react";
 import { EntryHistory } from "~/journal/EntryHistory";
 import { EntryView } from "~/journal/EntryView";
-import { CURRENT_JOURNEY, ENTRIES, START_JOURNEY, SUBMIT_ENTRY } from "~/journal/operations";
+import {
+  CURRENT_JOURNEY,
+  type CurrentJourney,
+  ENTRIES,
+  START_JOURNEY,
+  SUBMIT_ENTRY,
+} from "~/journal/operations";
+import { WritingPrompt } from "~/journal/WritingPrompt";
 
-type CurrentJourney = { currentJourney: { id: string } | null };
 type SubmittedEntry = { submitEntry: { id: string } };
 
 export function Logbook() {
-  const { data: journeyData, loading } = useQuery<CurrentJourney>(CURRENT_JOURNEY);
+  const { data: journeyData, loading } = useQuery<{ currentJourney: CurrentJourney | null }>(
+    CURRENT_JOURNEY,
+  );
   const [startJourney] = useMutation(START_JOURNEY, { refetchQueries: [CURRENT_JOURNEY] });
   const [submitEntry, { loading: submitting }] = useMutation<SubmittedEntry>(SUBMIT_ENTRY, {
-    refetchQueries: [ENTRIES],
+    refetchQueries: [ENTRIES, CURRENT_JOURNEY],
   });
   const [body, setBody] = useState("");
   const [submittedEntryId, setSubmittedEntryId] = useState<string>();
 
   const journey = journeyData?.currentJourney;
+  const nextPointOfInterestIndex = journey ? journey.nextPointOfInterestIndex : null;
+  const finishedJourney = journey && nextPointOfInterestIndex === null ? journey : undefined;
 
   async function sendEntry(event: FormEvent) {
     event.preventDefault();
@@ -29,6 +39,11 @@ export function Logbook() {
     });
     setSubmittedEntryId(result.data?.submitEntry.id);
     setBody("");
+  }
+
+  async function startNextJourney() {
+    await startJourney();
+    setSubmittedEntryId(undefined);
   }
 
   return (
@@ -40,15 +55,25 @@ export function Logbook() {
           <Button onClick={() => startJourney()}>Start a journey</Button>
         </Stack>
       )}
-      {journey && submittedEntryId && (
+      {submittedEntryId && <EntryView entryId={submittedEntryId} />}
+      {submittedEntryId && journey && nextPointOfInterestIndex !== null && (
+        <Button sx={{ alignSelf: "flex-start" }} onClick={() => setSubmittedEntryId(undefined)}>
+          Write another entry
+        </Button>
+      )}
+      {finishedJourney && (
         <Stack spacing={2} sx={{ alignItems: "flex-start" }}>
-          <EntryView entryId={submittedEntryId} />
-          <Button onClick={() => setSubmittedEntryId(undefined)}>Write another entry</Button>
+          <Typography>
+            You reached{" "}
+            {finishedJourney.pointsOfInterest[finishedJourney.pointsOfInterest.length - 1].name},
+            the end of this journey. Start a journey to keep writing.
+          </Typography>
+          <Button onClick={startNextJourney}>Start a journey</Button>
         </Stack>
       )}
-      {journey && !submittedEntryId && (
+      {journey && nextPointOfInterestIndex !== null && !submittedEntryId && (
         <Stack component="form" spacing={2} onSubmit={sendEntry} sx={{ alignItems: "flex-start" }}>
-          <Typography>Write about today's stop. Three sentences is enough.</Typography>
+          <WritingPrompt journey={journey} nextPointOfInterestIndex={nextPointOfInterestIndex} />
           <TextField
             label="Your entry"
             multiline

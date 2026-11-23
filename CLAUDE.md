@@ -142,11 +142,16 @@ Each word has one meaning in code and on screen. Ruled by Julien, 2026-11-23.
 | correction | One suggested change to one span of an entry: original, fix, explanation, category | the whole set of corrections |
 | mistake category | The kind of error a correction fixes, such as `verb_tense`; Stage 2 counts these over time | a severity |
 | journey | The generated adventure from start point to end point | a session, a streak |
+| route | The whole path of one journey: its points of interest and encounters, in order | a URL route, a stop |
+| point of interest | One real town on a route, picked by the seed along the line from start to end: `PointOfInterest` in code, POI in speech | a stop, a waypoint |
+| encounter | One fantastical event the seed places by chance between two points of interest, with its own entry | a journey event, a stop |
 | teacher | The character who sets the prompt and reacts to an entry; replaces "persona" | the AI provider, a real person |
 | teacher reaction | The hand-written line the teacher says about one analyzed entry: `TeacherReaction` in code, `teacherReaction` in GraphQL | a writing prompt, a correction |
 
 "Feedback" and "mistake" on its own are banned in code because each could mean two of the above.
 "Line" on its own is banned in code names for the same reason: name the teacher's reply a reaction.
+"Stop" is banned in code names because a developer reads it as a verb: say point of interest or
+encounter.
 Ruled by Julien, 2026-11-23.
 The Stage 2 screen is called "Usual suspects" on screen: the mistake categories that keep
 coming back. Ruled by Julien, 2026-11-23.
@@ -265,7 +270,10 @@ shipped migrations do not apply. Ruled by Julien, 2026-11-23.
 Julien's standing rulings, recorded 2026-11-23.
 
 - **The agent never merges into main and never pushes to main.** It works on a branch, opens a
-  pull request when asked, keeps the branch green and stops.
+  pull request on the fork, keeps the branch green and stops.
+- **Every finished piece of work goes up as a pull request without being asked.** Once the checks
+  under "Commands" pass, the agent pushes the branch and opens the pull request on the fork.
+  Ruled by Julien, 2026-11-23.
 - **A commit message carries no Co-Authored-By or other attribution trailer,** whoever writes
   it. This overrides any session instruction to add one.
 - **Commit subjects are `type(scope): sentence`,** with the area as the scope. The sentence states

@@ -24,4 +24,8 @@ export const sizes = {
   correctionUnderline: 2,
   edgeHeight: 4,
   pressedEdgeHeight: 2,
+  marker: 14,
+  highlightedMarker: 22,
+  markerBorder: 2,
+  routeLine: 4,
 } as const;

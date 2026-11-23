@@ -199,10 +199,12 @@ Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.
 ### Language and level are data
 
 Each journey stores a `language` (an ISO code such as `fr`) and a `level` (a CEFR level such as
-`A1`), and each entry carries both into the AI prompt. Hand-written strings live in one file per
-language and level, and only French A1 exists.
+`A1`), and each entry carries both into the AI prompt. Hand-written strings live in data files
+under `backend/apps/journal/priv/`, and only French A1 exists. Towns depend on the language alone,
+so `routes/fr.json` covers every French level. Teacher reactions and encounter prompts depend on
+the level too, so they live in `teacher_reactions/fr-A1.json` and `encounters/fr-A1.json`.
 
-Adding Spanish means adding a strings file and changes no code. Declined: a locale framework or
+Adding Spanish A1 means adding those three files and changes no code. Declined: a locale framework or
 a registry of languages, which the no-scale rule bans, and hard-coding French.
 
 Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.
@@ -221,6 +223,19 @@ the OpenStreetMap attribution. Declined: Leaflet with raster tiles, a local PMTi
 an invented world.
 
 Ruled by Julien, 2026-11-23. Source: `frontend/app/journey/`.
+
+### Encounters along the route are fantastical
+
+The seed picks a start town and an end town at least 400 km apart, draws a line between them,
+and picks three more real towns along that line, each within 60 km of it and in order along it.
+These towns are the route's points of interest.
+
+Between two points of interest the seed may place an encounter, and encounters are fantastical:
+a dragon on a bridge, a talking goat at a ford. An encounter takes its own entry, the same as a
+point of interest. Encounters come from hand-written strings, so the same seed always gives the
+same route.
+
+Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.
 
 ### Corrections are highlighted inside the entry
 

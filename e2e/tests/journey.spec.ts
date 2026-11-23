@@ -19,9 +19,10 @@ test("a person writes an entry, sees its corrections, and opens it again from hi
   await expect(startJourney.or(entryField)).toBeVisible();
   if (await startJourney.isVisible()) await startJourney.click();
 
-  await expect(
-    page.getByText("Write about today's stop. Three sentences is enough."),
-  ).toBeVisible();
+  const journeyMap = page.getByRole("region", { name: "Journey map" });
+  await expect(journeyMap.getByRole("img").first()).toBeVisible();
+  expect(await journeyMap.getByRole("img").count()).toBeGreaterThanOrEqual(5);
+
   await entryField.fill("Hier, j'ai allé à le marché.");
   await page.getByRole("button", { name: "Send entry" }).click();
 
@@ -39,6 +40,9 @@ test("a person writes an entry, sees its corrections, and opens it again from hi
 
   await expect(page).toHaveURL(/\/entries\/\d+$/);
   await expect(page.getByRole("heading", { name: "Your entry" })).toBeVisible();
+  await expect(
+    page.getByRole("region", { name: "Journey map" }).getByRole("img").first(),
+  ).toBeVisible();
   await expect(page.getByText("Preposition", { exact: true })).toBeVisible();
   await expect(page.locator("mark", { hasText: "j'ai allé" })).toBeVisible();
   await expect(
