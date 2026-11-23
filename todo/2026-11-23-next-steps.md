@@ -1,8 +1,8 @@
 # Pick up the Stage 1 work after the entry flow
 
-Pull requests #3 and #4 are merged into `main`. A person can start a journey, write an entry, see
-each correction marked inside it, read the teacher's reaction under it, and reopen the entry from
-"Your entries".
+Pull requests #3, #4 and #5 are merged into `main`. A person can start a journey, follow its route
+across France through towns and encounters, write an entry at each place, see each correction
+marked inside it, read the teacher's reaction under it, and reopen the entry from "Your entries".
 
 ## Waiting on Julien
 
@@ -20,8 +20,6 @@ each correction marked inside it, read the teacher's reaction under it, and reop
 
 1. The real AI provider, once Julien picks one.
 2. The README answers, per `todo/2026-11-23-readme.md`, once the real provider works.
-3. The journey route on the map, built on branch `journey-stops`, per
-   `todo/2026-11-23-journey-route.md`.
-4. The aged map style, per `todo/2026-11-23-aged-map-style.md`.
+3. The aged map style, per `todo/2026-11-23-aged-map-style.md`.
 
 Stage 2, the "Usual suspects" screen, starts after these.
