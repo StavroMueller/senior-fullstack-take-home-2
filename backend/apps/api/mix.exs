@@ -31,6 +31,7 @@ defmodule Backend.Api.MixProject do
   defp deps do
     [
       {:graphql, in_umbrella: true},
+      {:journal, in_umbrella: true},
       {:database, in_umbrella: true},
       {:phoenix, "~> 1.7"},
       {:phoenix_pubsub, "~> 2.1"},

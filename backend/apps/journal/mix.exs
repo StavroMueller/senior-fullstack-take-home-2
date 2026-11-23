@@ -18,13 +18,18 @@ defmodule Backend.Journal.MixProject do
   end
 
   def application do
-    [extra_applications: [:logger]]
+    [
+      mod: {Backend.Journal.Application, []},
+      extra_applications: [:logger]
+    ]
   end
 
   defp deps do
     [
       {:database, in_umbrella: true},
-      {:oban, "~> 2.19"}
+      {:oban, "~> 2.19"},
+      {:phoenix_pubsub, "~> 2.1"},
+      {:dataloader, "~> 2.0"}
     ]
   end
 end

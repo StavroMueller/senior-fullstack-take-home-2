@@ -12,7 +12,7 @@ config :database, Backend.Database.Repo,
 config :api, Backend.ApiWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
-  pubsub_server: Backend.Api.PubSub,
+  pubsub_server: Backend.Journal.PubSub,
   render_errors: [formats: [json: Backend.ApiWeb.ErrorJSON], layout: false]
 
 config :api, :allowed_origins, ["http://localhost:5173"]
@@ -21,6 +21,8 @@ config :api, Oban,
   engine: Oban.Engines.Basic,
   repo: Backend.Database.Repo,
   queues: [analysis: 5]
+
+config :journal, :ai_provider, Backend.Journal.AiProvider.Stub
 
 config :phoenix, :json_library, Jason
 
