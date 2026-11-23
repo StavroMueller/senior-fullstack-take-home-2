@@ -1,0 +1,47 @@
+services:
+  database:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 127.0.0.1:55433:5432
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 2s
+      retries: 15
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_HOST: database
+      DATABASE_PORT: "5432"
+    ports:
+      - 127.0.0.1:4000:4000
+    depends_on:
+      database:
+        condition: service_healthy
+    command: sh -c "mix ecto.create --quiet && mix ecto.migrate && mix phx.server"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- --header 'content-type: application/json' --post-data '{\"query\":\"{ status }\"}' http://127.0.0.1:4000/api/graphql"]
+      interval: 3s
+      retries: 40
+    volumes:
+      - ./backend/apps:/app/apps
+      - ./backend/config:/app/config
+
+  frontend:
+    build: ./frontend
+    environment:
+      VITE_API_URL: http://localhost:4000/api/graphql
+    ports:
+      - 127.0.0.1:5173:5173
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5173/"]
+      interval: 3s
+      retries: 40
+    volumes:
+      - ./frontend/app:/app/app
