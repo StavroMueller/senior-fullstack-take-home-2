@@ -241,6 +241,14 @@ shipped migrations do not apply. Ruled by Julien, 2026-11-23.
 
 ## Git rules
 
+- **Pull requests open on the fork, `StavroMueller/senior-fullstack-take-home-2`, and never on the
+  company repo, `appliedcomputingtech/senior-fullstack-take-home-2` (the `upstream` remote).**
+  Nothing is pushed to `upstream`. `gh` opens a fork's pull request against its parent unless
+  told otherwise, so every `gh pr create` passes `--repo StavroMueller/senior-fullstack-take-home-2`.
+  Ruled by Julien, 2026-11-23. Gate: `.claude/hooks/fork-only.sh` blocks any command naming the
+  company repo, any `gh pr create` without the fork's `--repo`, and any push to `upstream`;
+  `gh repo set-default` points at the fork on this machine.
+
 Julien's standing rulings, recorded 2026-11-23.
 
 - **The agent never merges into main and never pushes to main.** It works on a branch, opens a
@@ -375,6 +383,7 @@ over a per-feature spec, and a per-feature spec wins over any tool's generic def
 | No single-letter names, no `||` default, no catch-all rescue, no `Repo` in a resolver | Custom Credo checks in `backend/credo_checks/` | `mix credo --strict` |
 | Lint passes with zero issues | Credo strict, `tsc`, Prettier, `mix format` | the backend and frontend commands above |
 | A change is done when the live journey passes | Playwright | `cd e2e && npx playwright test` |
+| Pull requests and pushes go to the fork only | `PreToolUse` hook | `.claude/hooks/fork-only.sh`, on every shell command |
 | Reply rules | `UserPromptSubmit` hook | `.claude/hooks/reply-rules.sh`, on every turn |
 | Code conventions that need a reader | Convention audit | `/holocron-audit` on changed files before a pull request |
 
