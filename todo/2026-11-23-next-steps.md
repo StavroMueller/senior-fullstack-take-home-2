@@ -1,12 +1,14 @@
 # Pick up the Stage 1 work after the entry flow
 
-Pull request #3 on branch `correction-parser` holds the entry flow. A person can start a
-journey, write an entry, see each correction marked inside it, and reopen the entry from "Your
-entries". The pull request description lists what was built and every check that ran.
+Pull request #3 merged the entry flow into `main`. A person can start a journey, write an entry,
+see each correction marked inside it, and reopen the entry from "Your entries".
 
 ## Waiting on Julien
 
-- Merge pull request #3.
+- Review pull request "Show the teacher's reaction under each analyzed entry" on branch
+  `teacher-lines`: the nine reactions in
+  `backend/apps/journal/priv/teacher_reactions/fr-A1.json`, and the choice to name the most common
+  category with ties going to the one that appears first in the entry.
 - Pick the AI provider and supply a key, per `todo/2026-11-23-real-ai-provider.md`.
 - Record his preference from 2026-11-23 in `CLAUDE.md`. He said to keep working through the
   steps of an open pull request without stopping for "done" between them. That reverses
@@ -21,8 +23,9 @@ entries". The pull request description lists what was built and every check that
 
 1. The real AI provider, once Julien picks one.
 2. The README answers, per `todo/2026-11-23-readme.md`, once the real provider works.
-3. Teacher lines: the teacher reacts to each analyzed entry with a hand-written line, per
-   "Characters react" in `PRODUCT.md`. None exists yet.
+3. Teacher reactions, in the open pull request on branch `teacher-lines`. The reactions name the
+   correction count and the most common category, and name no journey event until journey stops
+   exist.
 4. Journey stops on the map: the seed draws a route between French towns, and each entry moves
    the person along it, per "Journeys cross real France on a restyled open map" in `PRODUCT.md`.
    `JourneyMap` shows the map with no route today.

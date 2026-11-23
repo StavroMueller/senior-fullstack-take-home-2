@@ -7,6 +7,7 @@ defmodule Backend.Graphql.Types.JournalTypes do
 
   alias Backend.Database.Schema.Correction
   alias Backend.Database.Schema.Entry
+  alias Backend.Graphql.Resolvers.JournalResolver
 
   enum :analysis_status, values: Ecto.Enum.values(Entry, :analysis_status)
 
@@ -24,6 +25,10 @@ defmodule Backend.Graphql.Types.JournalTypes do
     field :body, non_null(:string)
     field :analysis_status, non_null(:analysis_status)
     field :inserted_at, non_null(:datetime)
+
+    @desc "The teacher's reaction to the entry, or null until its analysis finishes."
+    field :teacher_reaction, :string, resolve: &JournalResolver.get_teacher_reaction/3
+
     field :corrections, non_null(list_of(non_null(:correction))), resolve: dataloader(:journal)
   end
 

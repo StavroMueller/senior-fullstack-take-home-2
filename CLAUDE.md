@@ -143,8 +143,11 @@ Each word has one meaning in code and on screen. Ruled by Julien, 2026-11-23.
 | mistake category | The kind of error a correction fixes, such as `verb_tense`; Stage 2 counts these over time | a severity |
 | journey | The generated adventure from start point to end point | a session, a streak |
 | teacher | The character who sets the prompt and reacts to an entry; replaces "persona" | the AI provider, a real person |
+| teacher reaction | The hand-written line the teacher says about one analyzed entry: `TeacherReaction` in code, `teacherReaction` in GraphQL | a writing prompt, a correction |
 
 "Feedback" and "mistake" on its own are banned in code because each could mean two of the above.
+"Line" on its own is banned in code names for the same reason: name the teacher's reply a reaction.
+Ruled by Julien, 2026-11-23.
 The Stage 2 screen is called "Usual suspects" on screen: the mistake categories that keep
 coming back. Ruled by Julien, 2026-11-23.
 
@@ -156,6 +159,10 @@ Julien's standing rulings, recorded 2026-11-23.
 - **No single-character names.** `entry`, `index`, `mistake`, never `e`, `i`, `m`.
 - **A name states exactly what the thing does.** A function named for one scope returns that
   scope and nothing else. When behavior changes, rename it: a stale name is a bug.
+- **Name the specific thing, never the generic one.** A generic noun such as "line", "item" or
+  "text" fits many things, so a reader has to guess which one is meant. Name what the thing is:
+  `TeacherReaction`, never `TeacherLine`. When no word under "Vocabulary" fits, propose one
+  before writing the code. Ruled by Julien, 2026-11-23.
 - **Siblings share one naming scheme.** Functions behind one screen use one verb across
   entities.
 - **One word per concept, in code and on screen.** The words are fixed under "Vocabulary".

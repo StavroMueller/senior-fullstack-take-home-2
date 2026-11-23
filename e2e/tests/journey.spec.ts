@@ -25,9 +25,12 @@ test("a person writes an entry, sees its corrections, and opens it again from hi
   await entryField.fill("Hier, j'ai allé à le marché.");
   await page.getByRole("button", { name: "Send entry" }).click();
 
-  await expect(page.getByText("Verb tense")).toBeVisible();
+  await expect(page.getByText("Verb tense", { exact: true })).toBeVisible();
   await expect(page.getByText("je suis allé")).toBeVisible();
   await expect(page.locator("mark", { hasText: "à le" })).toBeVisible();
+  await expect(
+    page.getByRole("complementary", { name: "Your teacher" }),
+  ).toContainText("2 corrections");
 
   await page
     .getByRole("link", { name: /2 corrections/ })
@@ -36,8 +39,11 @@ test("a person writes an entry, sees its corrections, and opens it again from hi
 
   await expect(page).toHaveURL(/\/entries\/\d+$/);
   await expect(page.getByRole("heading", { name: "Your entry" })).toBeVisible();
-  await expect(page.getByText("Preposition")).toBeVisible();
+  await expect(page.getByText("Preposition", { exact: true })).toBeVisible();
   await expect(page.locator("mark", { hasText: "j'ai allé" })).toBeVisible();
+  await expect(
+    page.getByRole("complementary", { name: "Your teacher" }),
+  ).toContainText("verb tense");
 
   await page.getByRole("link", { name: "Back to your entries" }).click();
   await expect(

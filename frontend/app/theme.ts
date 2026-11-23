@@ -1,9 +1,8 @@
 import { createTheme } from "@mui/material/styles";
-import { fonts, palette } from "~/palette";
+import { fonts, palette, sizes } from "~/palette";
 
 const cornerRadius = 16;
-const edgeHeight = 4;
-const pressedEdgeHeight = 2;
+const { edgeHeight, pressedEdgeHeight } = sizes;
 
 export const theme = createTheme({
   palette: {

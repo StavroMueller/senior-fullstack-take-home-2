@@ -5,6 +5,7 @@ export const palette = {
   actionEdge: "#C7401F",
   win: "#FFC83D",
   teacher: "#7B4DFF",
+  teacherEdge: "#5A30D9",
   fix: "#12A876",
   error: "#D7263D",
   surface: "#FFFFFF",
@@ -21,4 +22,6 @@ export const fonts = {
 export const sizes = {
   progressIndicator: 24,
   correctionUnderline: 2,
+  edgeHeight: 4,
+  pressedEdgeHeight: 2,
 } as const;

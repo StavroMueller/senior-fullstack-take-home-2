@@ -1,0 +1,27 @@
+{
+  "category_names": {
+    "verb_tense": "verb tense",
+    "verb_agreement": "verb agreement",
+    "gender": "gender",
+    "adjective_agreement": "adjective agreement",
+    "article": "articles",
+    "preposition": "prepositions",
+    "spelling": "spelling",
+    "word_choice": "word choice"
+  },
+  "no_corrections": [
+    "Parfait! Not one correction. I checked twice.",
+    "Incroyable! Nothing to fix. I am almost disappointed.",
+    "Bravo! A clean entry. Don't let it go to your head."
+  ],
+  "one_correction": [
+    "Presque! One correction, in %{category}.",
+    "Pas mal! Only one slip, in %{category}. Let's fix it.",
+    "Ah bon? One little slip in %{category}, and the rest holds up."
+  ],
+  "several_corrections": [
+    "Oh là là! I count %{count} corrections. Start with %{category}.",
+    "Zut! I found %{count} corrections. The road doesn't care, but I do. Start with %{category}.",
+    "Mon dieu, %{count} corrections! Look at %{category} first."
+  ]
+}
