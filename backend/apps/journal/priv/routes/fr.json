@@ -1,0 +1,354 @@
+{
+  "towns": [
+    {
+      "name": "Paris",
+      "longitude": 2.35,
+      "latitude": 48.86
+    },
+    {
+      "name": "Marseille",
+      "longitude": 5.37,
+      "latitude": 43.3
+    },
+    {
+      "name": "Lyon",
+      "longitude": 4.84,
+      "latitude": 45.76
+    },
+    {
+      "name": "Toulouse",
+      "longitude": 1.44,
+      "latitude": 43.6
+    },
+    {
+      "name": "Nice",
+      "longitude": 7.26,
+      "latitude": 43.7
+    },
+    {
+      "name": "Nantes",
+      "longitude": -1.55,
+      "latitude": 47.22
+    },
+    {
+      "name": "Strasbourg",
+      "longitude": 7.75,
+      "latitude": 48.58
+    },
+    {
+      "name": "Montpellier",
+      "longitude": 3.88,
+      "latitude": 43.61
+    },
+    {
+      "name": "Bordeaux",
+      "longitude": -0.58,
+      "latitude": 44.84
+    },
+    {
+      "name": "Lille",
+      "longitude": 3.06,
+      "latitude": 50.63
+    },
+    {
+      "name": "Rennes",
+      "longitude": -1.68,
+      "latitude": 48.11
+    },
+    {
+      "name": "Reims",
+      "longitude": 4.03,
+      "latitude": 49.26
+    },
+    {
+      "name": "Le Havre",
+      "longitude": 0.11,
+      "latitude": 49.49
+    },
+    {
+      "name": "Saint-Étienne",
+      "longitude": 4.39,
+      "latitude": 45.44
+    },
+    {
+      "name": "Toulon",
+      "longitude": 5.93,
+      "latitude": 43.12
+    },
+    {
+      "name": "Grenoble",
+      "longitude": 5.72,
+      "latitude": 45.19
+    },
+    {
+      "name": "Dijon",
+      "longitude": 5.04,
+      "latitude": 47.32
+    },
+    {
+      "name": "Angers",
+      "longitude": -0.55,
+      "latitude": 47.47
+    },
+    {
+      "name": "Nîmes",
+      "longitude": 4.36,
+      "latitude": 43.84
+    },
+    {
+      "name": "Clermont-Ferrand",
+      "longitude": 3.08,
+      "latitude": 45.78
+    },
+    {
+      "name": "Le Mans",
+      "longitude": 0.2,
+      "latitude": 48
+    },
+    {
+      "name": "Aix-en-Provence",
+      "longitude": 5.45,
+      "latitude": 43.53
+    },
+    {
+      "name": "Brest",
+      "longitude": -4.49,
+      "latitude": 48.39
+    },
+    {
+      "name": "Tours",
+      "longitude": 0.69,
+      "latitude": 47.39
+    },
+    {
+      "name": "Amiens",
+      "longitude": 2.3,
+      "latitude": 49.89
+    },
+    {
+      "name": "Limoges",
+      "longitude": 1.26,
+      "latitude": 45.83
+    },
+    {
+      "name": "Annecy",
+      "longitude": 6.13,
+      "latitude": 45.9
+    },
+    {
+      "name": "Perpignan",
+      "longitude": 2.9,
+      "latitude": 42.7
+    },
+    {
+      "name": "Metz",
+      "longitude": 6.18,
+      "latitude": 49.12
+    },
+    {
+      "name": "Besançon",
+      "longitude": 6.02,
+      "latitude": 47.24
+    },
+    {
+      "name": "Orléans",
+      "longitude": 1.91,
+      "latitude": 47.9
+    },
+    {
+      "name": "Rouen",
+      "longitude": 1.1,
+      "latitude": 49.44
+    },
+    {
+      "name": "Caen",
+      "longitude": -0.37,
+      "latitude": 49.18
+    },
+    {
+      "name": "Nancy",
+      "longitude": 6.18,
+      "latitude": 48.69
+    },
+    {
+      "name": "Avignon",
+      "longitude": 4.81,
+      "latitude": 43.95
+    },
+    {
+      "name": "Poitiers",
+      "longitude": 0.34,
+      "latitude": 46.58
+    },
+    {
+      "name": "La Rochelle",
+      "longitude": -1.15,
+      "latitude": 46.16
+    },
+    {
+      "name": "Pau",
+      "longitude": -0.37,
+      "latitude": 43.3
+    },
+    {
+      "name": "Bayonne",
+      "longitude": -1.47,
+      "latitude": 43.49
+    },
+    {
+      "name": "Troyes",
+      "longitude": 4.07,
+      "latitude": 48.3
+    },
+    {
+      "name": "Chartres",
+      "longitude": 1.49,
+      "latitude": 48.45
+    },
+    {
+      "name": "Bourges",
+      "longitude": 2.4,
+      "latitude": 47.08
+    },
+    {
+      "name": "Vichy",
+      "longitude": 3.43,
+      "latitude": 46.13
+    },
+    {
+      "name": "Périgueux",
+      "longitude": 0.72,
+      "latitude": 45.18
+    },
+    {
+      "name": "Carcassonne",
+      "longitude": 2.35,
+      "latitude": 43.21
+    },
+    {
+      "name": "Albi",
+      "longitude": 2.15,
+      "latitude": 43.93
+    },
+    {
+      "name": "Rodez",
+      "longitude": 2.58,
+      "latitude": 44.35
+    },
+    {
+      "name": "Valence",
+      "longitude": 4.89,
+      "latitude": 44.93
+    },
+    {
+      "name": "Chambéry",
+      "longitude": 5.92,
+      "latitude": 45.57
+    },
+    {
+      "name": "Mulhouse",
+      "longitude": 7.34,
+      "latitude": 47.75
+    },
+    {
+      "name": "Colmar",
+      "longitude": 7.36,
+      "latitude": 48.08
+    },
+    {
+      "name": "Auxerre",
+      "longitude": 3.57,
+      "latitude": 47.8
+    },
+    {
+      "name": "Nevers",
+      "longitude": 3.16,
+      "latitude": 46.99
+    },
+    {
+      "name": "Angoulême",
+      "longitude": 0.16,
+      "latitude": 45.65
+    },
+    {
+      "name": "Agen",
+      "longitude": 0.62,
+      "latitude": 44.2
+    },
+    {
+      "name": "Quimper",
+      "longitude": -4.1,
+      "latitude": 48
+    },
+    {
+      "name": "Saint-Malo",
+      "longitude": -2.03,
+      "latitude": 48.65
+    },
+    {
+      "name": "Cherbourg",
+      "longitude": -1.62,
+      "latitude": 49.64
+    },
+    {
+      "name": "Calais",
+      "longitude": 1.86,
+      "latitude": 50.95
+    },
+    {
+      "name": "Arras",
+      "longitude": 2.78,
+      "latitude": 50.29
+    },
+    {
+      "name": "Laval",
+      "longitude": -0.77,
+      "latitude": 48.07
+    },
+    {
+      "name": "Niort",
+      "longitude": -0.46,
+      "latitude": 46.32
+    },
+    {
+      "name": "Brive-la-Gaillarde",
+      "longitude": 1.53,
+      "latitude": 45.16
+    },
+    {
+      "name": "Cahors",
+      "longitude": 1.44,
+      "latitude": 44.45
+    },
+    {
+      "name": "Mâcon",
+      "longitude": 4.83,
+      "latitude": 46.31
+    },
+    {
+      "name": "Gap",
+      "longitude": 6.08,
+      "latitude": 44.56
+    },
+    {
+      "name": "Digne-les-Bains",
+      "longitude": 6.24,
+      "latitude": 44.09
+    },
+    {
+      "name": "Vannes",
+      "longitude": -2.76,
+      "latitude": 47.66
+    },
+    {
+      "name": "Lorient",
+      "longitude": -3.37,
+      "latitude": 47.75
+    },
+    {
+      "name": "Aurillac",
+      "longitude": 2.44,
+      "latitude": 44.93
+    }
+  ]
+}

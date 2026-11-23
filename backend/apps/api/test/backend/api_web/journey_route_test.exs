@@ -1,0 +1,88 @@
+defmodule Backend.ApiWeb.JourneyRouteTest do
+  @moduledoc "Walks one seeded journey over GraphQL from its first point of interest, through its encounters, to its end."
+
+  use Backend.ApiWeb.GraphqlCase, async: false
+
+  alias Backend.Database.Repo
+  alias Backend.Database.Schema.Journey
+
+  @journey_fields """
+  id
+  pointsOfInterest { name }
+  encounters { afterPointOfInterestIndex prompt }
+  openEncounter { id prompt }
+  nextPointOfInterestIndex
+  """
+
+  @ghost_baker_prompt "Tiens! A ghost runs the bakery at the crossroads. Order your breakfast in French."
+
+  defp read_journey do
+    %{"data" => %{"currentJourney" => journey}} =
+      graphql("query { currentJourney { #{@journey_fields} } }")
+
+    journey
+  end
+
+  defp submit_entry(journey_id, body) do
+    graphql(
+      """
+      mutation($input: SubmitEntryInput!) {
+        submitEntry(input: $input) {
+          pointOfInterestIndex
+          encounter { id }
+          journey { pointsOfInterest { name } }
+        }
+      }
+      """,
+      %{input: %{journeyId: journey_id, body: body}}
+    )
+  end
+
+  defp written_place(journey_id) do
+    %{"data" => %{"submitEntry" => entry}} = submit_entry(journey_id, "Bonjour.")
+
+    case entry do
+      %{"encounter" => %{"id" => encounter_id}} -> {:encounter, encounter_id}
+      %{"pointOfInterestIndex" => index} -> {:point_of_interest, index}
+    end
+  end
+
+  test "seed 1 places each entry at a point of interest or an encounter until the journey ends" do
+    %Journey{id: journey_id} = Repo.insert!(%Journey{seed: 1, language: "fr", level: "A1"})
+
+    journey = read_journey()
+    assert length(journey["pointsOfInterest"]) == 5
+    assert journey["nextPointOfInterestIndex"] == 0
+    assert journey["openEncounter"] == nil
+
+    assert written_place(journey_id) == {:point_of_interest, 0}
+
+    %{"openEncounter" => %{"id" => ghost_baker_id, "prompt" => @ghost_baker_prompt}} =
+      read_journey()
+
+    places = for _entry <- 1..7, do: written_place(journey_id)
+
+    assert [
+             {:encounter, ^ghost_baker_id},
+             {:point_of_interest, 1},
+             {:point_of_interest, 2},
+             {:encounter, _lost_knight_id},
+             {:point_of_interest, 3},
+             {:encounter, _giant_snail_id},
+             {:point_of_interest, 4}
+           ] = places
+
+    finished = read_journey()
+    assert finished["nextPointOfInterestIndex"] == nil
+    assert finished["openEncounter"] == nil
+    assert Enum.map(finished["encounters"], & &1["afterPointOfInterestIndex"]) == [0, 2, 3]
+
+    assert %{"errors" => [%{"message" => "journey_finished"}]} =
+             submit_entry(journey_id, "Encore un mot.")
+  end
+
+  test "an entry for a journey that does not exist is refused" do
+    assert %{"errors" => [%{"message" => "journey_not_found"}]} =
+             submit_entry("999999", "Bonjour.")
+  end
+end

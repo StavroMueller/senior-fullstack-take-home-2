@@ -3,6 +3,7 @@ defmodule Backend.Database.Schema.Journey do
 
   use Ecto.Schema
 
+  alias Backend.Database.Schema.Encounter
   alias Backend.Database.Schema.Entry
 
   schema "journeys" do
@@ -11,6 +12,7 @@ defmodule Backend.Database.Schema.Journey do
     field :level, :string
 
     has_many :entries, Entry
+    has_many :encounters, Encounter
 
     timestamps(type: :utc_datetime)
   end
