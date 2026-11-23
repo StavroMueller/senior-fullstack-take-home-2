@@ -221,3 +221,24 @@ the OpenStreetMap attribution. Declined: Leaflet with raster tiles, a local PMTi
 an invented world.
 
 Ruled by Julien, 2026-11-23. Source: `frontend/app/journey/`.
+
+### Corrections are highlighted inside the entry
+
+A person sees exactly which characters of an entry each correction covers. Each correction
+stores `span_start` and `span_end`, counted in Unicode code points from the start of the entry
+body, with the end excluded.
+
+Code points count the same in Elixir (`String.codepoints/1`) and in the browser
+(`Array.from`). Graphemes were declined because the two sides segment them by different Unicode
+versions: `क्ष` is 2 graphemes in Elixir 1.18 and 1 in Node 24. UTF-16 code units and bytes were
+declined because only one side counts them natively.
+
+Language models count characters unreliably, so the parser ignores any position in the AI
+response. The parser finds `original` in the body on word boundaries, searching forward from the
+end of the previous correction, and drops a correction whose text it cannot find.
+
+The entry body, `original` and `fix` are normalized to NFC first, so an accented letter typed as
+two code points still matches.
+
+Ruled by Julien, 2026-11-23. Source: `backend/apps/database/priv/repo/migrations/`,
+`backend/apps/journal/`.
