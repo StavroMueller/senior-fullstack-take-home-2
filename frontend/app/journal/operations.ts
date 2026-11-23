@@ -35,12 +35,72 @@ export type EntrySummary = Pick<Entry, "id" | "body" | "analysisStatus" | "inser
   corrections: Pick<Correction, "id">[];
 };
 
+export type PointOfInterest = { name: string; longitude: number; latitude: number };
+
+export type Encounter = { id: string; afterPointOfInterestIndex: number; prompt: string };
+
+export type RouteOnMap = {
+  pointsOfInterest: PointOfInterest[];
+  encounters: Pick<Encounter, "id" | "afterPointOfInterestIndex">[];
+};
+
+export type CurrentJourney = RouteOnMap & {
+  id: string;
+  openEncounter: Pick<Encounter, "id" | "prompt"> | null;
+  nextPointOfInterestIndex: number | null;
+};
+
+export type EntryOnRoute = {
+  id: string;
+  pointOfInterestIndex: number | null;
+  encounter: Pick<Encounter, "id"> | null;
+  journey: RouteOnMap;
+};
+
+const ROUTE_ON_MAP = gql`
+  fragment RouteOnMap on Journey {
+    pointsOfInterest {
+      name
+      longitude
+      latitude
+    }
+    encounters {
+      id
+      afterPointOfInterestIndex
+    }
+  }
+`;
+
 export const CURRENT_JOURNEY = gql`
   query CurrentJourney {
     currentJourney {
       id
+      ...RouteOnMap
+      openEncounter {
+        id
+        prompt
+      }
+      nextPointOfInterestIndex
     }
   }
+  ${ROUTE_ON_MAP}
+`;
+
+export const ENTRY_ON_ROUTE = gql`
+  query EntryOnRoute($id: ID!) {
+    entry(id: $id) {
+      id
+      pointOfInterestIndex
+      encounter {
+        id
+      }
+      journey {
+        id
+        ...RouteOnMap
+      }
+    }
+  }
+  ${ROUTE_ON_MAP}
 `;
 
 export const START_JOURNEY = gql`
