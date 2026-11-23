@@ -6,13 +6,13 @@ defmodule Backend.CredoChecks.BooleanOperatorDefault do
       check: """
       `||` and `&&` treat `false` and `nil` alike, so they hide which one arrived.
 
-          name = payload["guest_name"] || "A guest"
-          user && user.active
+          category = correction["category"] || "other"
+          entry && entry.analyzed_at
 
       Match the shape instead:
 
-          defp guest_name(%{"guest_name" => name}) when is_binary(name), do: name
-          defp guest_name(_payload), do: "A guest"
+          defp category(%{"category" => category}) when is_binary(category), do: category
+          defp category(_correction), do: "other"
       """
     ]
 

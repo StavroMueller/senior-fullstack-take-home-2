@@ -6,13 +6,13 @@ defmodule Backend.CredoChecks.SingleLetterName do
       check: """
       Variables are named for what they hold, never a single letter.
 
-          from(g in ShowGuest, where: g.show_id == ^show_id)
-          Enum.sort_by(entries, fn e -> e.checked_in_at end)
+          from(c in Correction, where: c.entry_id == ^entry_id)
+          Enum.sort_by(entries, fn e -> e.inserted_at end)
 
       should read:
 
-          from(show_guest in ShowGuest, where: show_guest.show_id == ^show_id)
-          Enum.sort_by(entries, fn entry -> entry.checked_in_at end)
+          from(correction in Correction, where: correction.entry_id == ^entry_id)
+          Enum.sort_by(entries, fn entry -> entry.inserted_at end)
       """
     ]
 

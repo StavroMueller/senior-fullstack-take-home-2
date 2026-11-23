@@ -88,7 +88,7 @@ Ruled by Julien, 2026-11-23: all thirteen standing defaults kept.
 
 ## Architecture
 
-The stack mirrors Julien's usual one, as used in fashionistapp.
+The stack is Julien's usual one.
 
 The backend stays an umbrella
 even under the no-scale rule: each app's name and its `in_umbrella` deps document where code
@@ -112,7 +112,7 @@ Ruled by Julien, 2026-11-23.
 
 ### Backend layout
 
-Carried over from Julien's rulings in fashionistapp, 2026-11-23.
+Julien's standing rulings, recorded 2026-11-23.
 
 - **Commands and queries are separate.** Writes live in
   `lib/backend/<app>/commands/<verb_noun>.ex` with one public `execute/N`. Reads live in
@@ -126,7 +126,7 @@ Carried over from Julien's rulings in fashionistapp, 2026-11-23.
 - **Resolvers map arguments and delegate.** All logic lives in domain commands and queries.
   There are no accounts, so no resolver checks permissions.
 - **One mutation per operation, one entry per call.** `submitEntry(input)` takes one entry. A
-  person writes one entry at a time, so fashionistapp's list-argument rule does not carry over.
+  person writes one entry at a time, so no write takes a list of entries.
   Ruled by Julien, 2026-11-23.
 
 ## Vocabulary
@@ -148,7 +148,7 @@ coming back. Ruled by Julien, 2026-11-23.
 
 ## Code style
 
-Carried over from Julien's rulings in fashionistapp, 2026-11-23.
+Julien's standing rulings, recorded 2026-11-23.
 
 - **Spell names out.** `organizations`, never `orgs`; `corrections`, never `corrs`.
 - **No single-character names.** `entry`, `index`, `mistake`, never `e`, `i`, `m`.
@@ -198,7 +198,7 @@ the directive list.
 
 ### Code discipline
 
-Carried over from Julien's rulings in fashionistapp, 2026-11-23.
+Julien's standing rulings, recorded 2026-11-23.
 
 - **No defensive code.** No `try` or `rescue` around code that cannot fail, no guard on a value
   that exists by contract, no fallback for an impossible case. Validate at the edges only: the
@@ -241,7 +241,7 @@ shipped migrations do not apply. Ruled by Julien, 2026-11-23.
 
 ## Git rules
 
-Carried over from Julien's rulings in fashionistapp, 2026-11-23.
+Julien's standing rulings, recorded 2026-11-23.
 
 - **The agent never merges into main and never pushes to main.** It works on a branch, opens a
   pull request when asked, keeps the branch green and stops.
