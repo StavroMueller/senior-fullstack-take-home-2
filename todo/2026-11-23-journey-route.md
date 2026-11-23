@@ -51,7 +51,7 @@ interest, encounter. The product ruling is "Encounters along the route are fanta
 
 ## State
 
-Built on branch `journey-stops`, and every check under "Commands" in `CLAUDE.md` passes.
+Merged into `main` with pull request #5, after every check under "Commands" in `CLAUDE.md` passed.
 
 - Not verified: the coordinates of the 70 towns in `routes/fr.json` were written by hand. On the
   map, the markers for Limoges, Poitiers, Avignon, Aix-en-Provence, Nantes and Bourges sit on
