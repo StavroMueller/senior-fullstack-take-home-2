@@ -20,6 +20,8 @@ marked inside it, read the teacher's reaction under it, and reopen the entry fro
 
 1. The real AI provider, once Julien picks one.
 2. The README answers, per `todo/2026-11-23-readme.md`, once the real provider works.
-3. The aged map style, per `todo/2026-11-23-aged-map-style.md`.
+
+The aged map style is on branch `aged-map-style`. The map draws water in `mapInk` at half
+opacity, a choice Julien may veto, because `DESIGN.md` named no water color.
 
 Stage 2, the "Usual suspects" screen, starts after these.
