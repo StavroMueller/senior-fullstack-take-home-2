@@ -17,9 +17,7 @@ export function EntryScreen({ entryId }: { entryId: string }) {
           <Link to="/" style={{ color: palette.ink }}>
             Back to your entries
           </Link>
-          <Typography variant="h1" sx={{ fontSize: "2.5rem" }}>
-            Your entry
-          </Typography>
+          <Typography variant="h1">Your entry</Typography>
           <EntryView entryId={entryId} />
         </Stack>
       </Grid>

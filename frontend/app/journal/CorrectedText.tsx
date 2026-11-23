@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import type { Correction } from "~/journal/operations";
-import { palette } from "~/palette";
+import { palette, sizes } from "~/palette";
 
 type Segment = { text: string; isCorrected: boolean };
 
@@ -42,7 +42,7 @@ export function CorrectedText({ body, corrections }: { body: string; corrections
               color: palette.error,
               fontWeight: 700,
               textDecoration: "underline",
-              textDecorationThickness: 2,
+              textDecorationThickness: sizes.correctionUnderline,
             }}
           >
             {segment.text}

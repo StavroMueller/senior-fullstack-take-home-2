@@ -33,9 +33,7 @@ export function Logbook() {
 
   return (
     <Stack spacing={4}>
-      <Typography variant="h1" sx={{ fontSize: "2.5rem" }}>
-        Wayword
-      </Typography>
+      <Typography variant="h1">Wayword</Typography>
       {!loading && !journey && (
         <Stack spacing={2} sx={{ alignItems: "flex-start" }}>
           <Typography>No entries yet. Start a journey to write your first one.</Typography>

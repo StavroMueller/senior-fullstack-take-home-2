@@ -16,8 +16,8 @@ export const theme = createTheme({
   shape: { borderRadius: cornerRadius },
   typography: {
     fontFamily: fonts.reading,
-    h1: { fontFamily: fonts.display, fontWeight: 600 },
-    h2: { fontFamily: fonts.display, fontWeight: 600 },
+    h1: { fontFamily: fonts.display, fontWeight: 600, fontSize: "2.5rem" },
+    h2: { fontFamily: fonts.display, fontWeight: 600, fontSize: "1.5rem" },
     button: { fontFamily: fonts.display, fontWeight: 600, textTransform: "none" },
   },
   components: {

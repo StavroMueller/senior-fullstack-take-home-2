@@ -7,7 +7,17 @@ import { useCallback } from "react";
 import { useAnalysisEnd } from "~/journal/analysisSocket";
 import { CorrectedText } from "~/journal/CorrectedText";
 import { CorrectionList } from "~/journal/CorrectionList";
-import { ENTRIES, ENTRY, type Entry, RETRY_ANALYSIS } from "~/journal/operations";
+import { analysisFailedMessage, analyzingMessage } from "~/journal/analysisCopy";
+import {
+  analysisFailed,
+  ENTRIES,
+  ENTRY,
+  type Entry,
+  isAnalyzed,
+  isAnalyzing,
+  RETRY_ANALYSIS,
+} from "~/journal/operations";
+import { sizes } from "~/palette";
 
 export function EntryView({ entryId }: { entryId: string }) {
   const { data, refetch } = useQuery<{ entry: Entry | null }>(ENTRY, {
@@ -22,26 +32,26 @@ export function EntryView({ entryId }: { entryId: string }) {
   const refetchAfterAnalysis = useCallback(() => {
     refetch();
   }, [refetch]);
-  useAnalysisEnd(entryId, entry?.analysisStatus === "ANALYZING", refetchAfterAnalysis);
+  useAnalysisEnd(entryId, entry ? isAnalyzing(entry) : false, refetchAfterAnalysis);
 
   if (!entry) return null;
 
   return (
     <Stack spacing={3}>
       <CorrectedText body={entry.body} corrections={entry.corrections} />
-      {entry.analysisStatus === "ANALYZING" && (
+      {isAnalyzing(entry) && (
         <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
-          <CircularProgress size={24} />
-          <Typography>Checking your entry</Typography>
+          <CircularProgress size={sizes.progressIndicator} />
+          <Typography>{analyzingMessage}</Typography>
         </Stack>
       )}
-      {entry.analysisStatus === "ANALYSIS_FAILED" && (
+      {analysisFailed(entry) && (
         <Stack spacing={2} sx={{ alignItems: "flex-start" }}>
-          <Typography>We couldn't check this entry. Your text is saved. Try again.</Typography>
+          <Typography>{analysisFailedMessage}</Typography>
           <Button onClick={() => retryAnalysis()}>Try again</Button>
         </Stack>
       )}
-      {entry.analysisStatus === "ANALYZED" && <CorrectionList corrections={entry.corrections} />}
+      {isAnalyzed(entry) && <CorrectionList corrections={entry.corrections} />}
     </Stack>
   );
 }

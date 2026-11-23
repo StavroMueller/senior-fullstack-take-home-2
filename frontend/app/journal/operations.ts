@@ -100,3 +100,15 @@ export const RETRY_ANALYSIS = gql`
     }
   }
 `;
+
+export function isAnalyzing(entry: Pick<Entry, "analysisStatus">) {
+  return entry.analysisStatus === "ANALYZING";
+}
+
+export function analysisFailed(entry: Pick<Entry, "analysisStatus">) {
+  return entry.analysisStatus === "ANALYSIS_FAILED";
+}
+
+export function isAnalyzed(entry: Pick<Entry, "analysisStatus">) {
+  return entry.analysisStatus === "ANALYZED";
+}

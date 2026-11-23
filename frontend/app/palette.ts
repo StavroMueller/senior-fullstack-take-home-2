@@ -17,3 +17,8 @@ export const fonts = {
   display: '"Fredoka", sans-serif',
   reading: '"Atkinson Hyperlegible", sans-serif',
 } as const;
+
+export const sizes = {
+  progressIndicator: 24,
+  correctionUnderline: 2,
+} as const;
