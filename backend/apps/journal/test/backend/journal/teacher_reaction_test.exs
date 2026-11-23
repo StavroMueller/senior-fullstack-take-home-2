@@ -16,6 +16,12 @@ defmodule Backend.Journal.TeacherReactionTest do
     "Bravo! A clean entry. Don't let it go to your head."
   ]
 
+  @one_preposition_reactions [
+    "Presque! One correction, in prepositions.",
+    "Pas mal! Only one slip, in prepositions. Let's fix it.",
+    "Ah bon? One little slip in prepositions, and the rest holds up."
+  ]
+
   defp correction(span_start, category),
     do: %Correction{span_start: span_start, category: category}
 
@@ -25,11 +31,16 @@ defmodule Backend.Journal.TeacherReactionTest do
     assert reaction in @no_corrections_reactions
   end
 
-  test "an entry with one correction names its category" do
-    reaction = TeacherReaction.for_entry(%Entry{id: 1}, @journey, [correction(0, :preposition)])
+  test "an entry with one correction gets a reaction from the one-correction group that names its category" do
+    reactions =
+      for entry_id <- 1..50,
+          uniq: true,
+          do:
+            TeacherReaction.for_entry(%Entry{id: entry_id}, @journey, [
+              correction(0, :preposition)
+            ])
 
-    assert reaction =~ "One"
-    assert reaction =~ "prepositions"
+    assert Enum.sort(reactions) == Enum.sort(@one_preposition_reactions)
   end
 
   test "an entry with several corrections gives the count and the most common category" do
