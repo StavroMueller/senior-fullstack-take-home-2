@@ -25,11 +25,11 @@ defmodule Backend.Journal.Commands.SubmitEntry do
 
   defp entry_changeset(journey_id, body) do
     %Entry{analysis_status: :analyzing}
-    |> cast(%{journey_id: journey_id, body: normalize(body)}, [:journey_id, :body])
+    |> cast(%{journey_id: journey_id, body: trim_and_compose(body)}, [:journey_id, :body])
     |> validate_required([:journey_id, :body])
     |> validate_length(:body, max: @longest_body)
     |> assoc_constraint(:journey)
   end
 
-  defp normalize(body), do: body |> String.trim() |> :unicode.characters_to_nfc_binary()
+  defp trim_and_compose(body), do: body |> String.trim() |> :unicode.characters_to_nfc_binary()
 end

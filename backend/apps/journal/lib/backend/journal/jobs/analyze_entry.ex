@@ -20,16 +20,16 @@ defmodule Backend.Journal.Jobs.AnalyzeEntry do
          {:ok, entry} <- FinishAnalysis.execute(entry, corrections) do
       AnalysisEvents.broadcast_analysis_ended(entry.id, entry.analysis_status)
     else
-      {:error, reason} -> record_failure(entry, job, reason)
+      {:error, reason} -> retry_or_fail(entry, job, reason)
     end
   end
 
-  defp record_failure(_entry, %Oban.Job{attempt: attempt, max_attempts: max_attempts}, reason)
+  defp retry_or_fail(_entry, %Oban.Job{attempt: attempt, max_attempts: max_attempts}, reason)
        when attempt < max_attempts do
     {:error, reason}
   end
 
-  defp record_failure(entry, _final_attempt, reason) do
+  defp retry_or_fail(entry, _final_attempt, reason) do
     {:ok, entry} = FailAnalysis.execute(entry)
     AnalysisEvents.broadcast_analysis_ended(entry.id, entry.analysis_status)
     {:cancel, reason}

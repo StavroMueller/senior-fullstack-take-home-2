@@ -5,22 +5,12 @@ defmodule Backend.Graphql.Types.JournalTypes do
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-  enum :analysis_status do
-    value :analyzing
-    value :analyzed
-    value :analysis_failed
-  end
+  alias Backend.Database.Schema.Correction
+  alias Backend.Database.Schema.Entry
 
-  enum :correction_category do
-    value :verb_tense
-    value :verb_agreement
-    value :gender
-    value :adjective_agreement
-    value :article
-    value :preposition
-    value :spelling
-    value :word_choice
-  end
+  enum :analysis_status, values: Ecto.Enum.values(Entry, :analysis_status)
+
+  enum :correction_category, values: Ecto.Enum.values(Correction, :category)
 
   object :journey do
     field :id, non_null(:id)
