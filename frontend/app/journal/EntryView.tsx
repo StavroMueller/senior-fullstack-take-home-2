@@ -17,6 +17,7 @@ import {
   isAnalyzing,
   RETRY_ANALYSIS,
 } from "~/journal/operations";
+import { TeacherLine } from "~/journal/TeacherLine";
 import { sizes } from "~/palette";
 
 export function EntryView({ entryId }: { entryId: string }) {
@@ -51,6 +52,7 @@ export function EntryView({ entryId }: { entryId: string }) {
           <Button onClick={() => retryAnalysis()}>Try again</Button>
         </Stack>
       )}
+      {entry.teacherLine && <TeacherLine line={entry.teacherLine} />}
       {isAnalyzed(entry) && <CorrectionList corrections={entry.corrections} />}
     </Stack>
   );

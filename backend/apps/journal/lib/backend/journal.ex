@@ -10,6 +10,7 @@ defmodule Backend.Journal do
   defdelegate retry_analysis(entry_id), to: Commands.RetryAnalysis, as: :execute
   defdelegate get_current_journey, to: Queries.GetCurrentJourney, as: :run
   defdelegate get_entry(entry_id), to: Queries.GetEntry, as: :run
+  defdelegate get_teacher_line(entry), to: Queries.GetTeacherLine, as: :run
   defdelegate list_entries, to: Queries.ListEntries, as: :run
   defdelegate get_data_source, to: Queries.GetDataSource, as: :run
   defdelegate subscribe_to_analysis(entry_id), to: AnalysisEvents, as: :subscribe

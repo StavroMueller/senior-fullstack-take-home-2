@@ -27,6 +27,7 @@ export type Entry = {
   body: string;
   analysisStatus: AnalysisStatus;
   insertedAt: string;
+  teacherLine: string | null;
   corrections: Correction[];
 };
 
@@ -57,6 +58,7 @@ export const ENTRY = gql`
       body
       analysisStatus
       insertedAt
+      teacherLine
       corrections {
         id
         spanStart
