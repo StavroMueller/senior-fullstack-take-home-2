@@ -270,7 +270,10 @@ shipped migrations do not apply. Ruled by Julien, 2026-11-23.
 Julien's standing rulings, recorded 2026-11-23.
 
 - **The agent never merges into main and never pushes to main.** It works on a branch, opens a
-  pull request when asked, keeps the branch green and stops.
+  pull request on the fork, keeps the branch green and stops.
+- **Every finished piece of work goes up as a pull request without being asked.** Once the checks
+  under "Commands" pass, the agent pushes the branch and opens the pull request on the fork.
+  Ruled by Julien, 2026-11-23.
 - **A commit message carries no Co-Authored-By or other attribution trailer,** whoever writes
   it. This overrides any session instruction to add one.
 - **Commit subjects are `type(scope): sentence`,** with the area as the scope. The sentence states
