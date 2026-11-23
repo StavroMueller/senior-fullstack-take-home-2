@@ -6,6 +6,8 @@ defmodule Backend.Database.Schema.Correction do
   alias Backend.Database.Schema.Entry
 
   schema "corrections" do
+    field :span_start, :integer
+    field :span_end, :integer
     field :original, :string
     field :fix, :string
     field :explanation, :string

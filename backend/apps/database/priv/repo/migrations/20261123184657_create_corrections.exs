@@ -20,6 +20,8 @@ defmodule Backend.Database.Repo.Migrations.CreateCorrections do
 
     create table(:corrections) do
       add :entry_id, references(:entries, on_delete: :delete_all), null: false
+      add :span_start, :integer, null: false
+      add :span_end, :integer, null: false
       add :original, :text, null: false
       add :fix, :text, null: false
       add :explanation, :text, null: false
@@ -29,5 +31,9 @@ defmodule Backend.Database.Repo.Migrations.CreateCorrections do
     end
 
     create index(:corrections, [:entry_id])
+
+    create constraint(:corrections, :span_is_nonnegative_and_nonempty,
+             check: "span_start >= 0 AND span_end > span_start"
+           )
   end
 end
