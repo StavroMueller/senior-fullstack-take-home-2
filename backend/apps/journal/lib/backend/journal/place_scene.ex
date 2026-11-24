@@ -10,10 +10,9 @@ defmodule Backend.Journal.PlaceScene do
   def for_arrival(%Journey{} = journey, point_of_interest_index) do
     town = Enum.at(Route.points_of_interest(journey), point_of_interest_index).name
 
-    town
-    |> provider().describe_place(journey.language, journey.level)
-    |> usable()
-    |> case do
+    ai_scene = provider().describe_place(town, journey.language, journey.level)
+
+    case usable(ai_scene) do
       nil -> hand_written(journey, point_of_interest_index, town)
       scene -> scene
     end

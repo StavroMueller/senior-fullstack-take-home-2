@@ -9,10 +9,9 @@ defmodule Backend.Journal.JourneyIntro do
   def for_journey(%Journey{} = journey) do
     towns = journey |> Route.points_of_interest() |> Enum.map(& &1.name)
 
-    towns
-    |> provider().introduce_journey(journey.language, journey.level)
-    |> PlaceScene.usable()
-    |> case do
+    ai_intro = provider().introduce_journey(towns, journey.language, journey.level)
+
+    case PlaceScene.usable(ai_intro) do
       nil -> hand_written(journey, towns)
       intro -> intro
     end
