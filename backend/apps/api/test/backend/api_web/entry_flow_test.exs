@@ -22,7 +22,7 @@ defmodule Backend.ApiWeb.EntryFlowTest do
 
   defp start_journey do
     %{"data" => %{"startJourney" => %{"id" => journey_id}}} =
-      graphql("mutation { startJourney { id language level } }")
+      graphql(~s|mutation { startJourney(language: "fr", level: "A1") { id language level } }|)
 
     journey_id
   end

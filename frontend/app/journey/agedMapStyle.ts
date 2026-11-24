@@ -1,4 +1,4 @@
-import type { StyleSpecification } from "maplibre-gl";
+import type { FilterSpecification, StyleSpecification } from "maplibre-gl";
 import { palette } from "~/palette";
 
 const vectorSourceId = "openmaptiles";
@@ -6,6 +6,13 @@ const labelFont = ["Noto Sans Italic"];
 const waterOpacity = 0.5;
 const riverOpacity = 0.6;
 const labelHaloWidth = 1.5;
+const coastRippleWidth = 0.8;
+const coastRipples = [
+  { offset: 1.5, opacity: 0.7 },
+  { offset: 3, opacity: 0.4 },
+];
+const woodOpacity = 0.14;
+const woodEdgeOpacity = 0.5;
 
 const motorwayTrunkPrimaryRoadClasses = ["motorway", "trunk", "primary"];
 const secondaryTertiaryRoadClasses = ["secondary", "tertiary"];
@@ -19,6 +26,27 @@ export const agedMapStyle: StyleSpecification = {
   layers: [
     { id: "land", type: "background", paint: { "background-color": palette.mapLand } },
     {
+      id: "landcover_wood",
+      type: "fill",
+      source: vectorSourceId,
+      "source-layer": "landcover",
+      filter: ["==", ["get", "class"], "wood"],
+      paint: { "fill-color": palette.mapInk, "fill-opacity": woodOpacity },
+    },
+    {
+      id: "landcover_wood_edge",
+      type: "line",
+      source: vectorSourceId,
+      "source-layer": "landcover",
+      filter: ["==", ["get", "class"], "wood"],
+      paint: {
+        "line-color": palette.mapInk,
+        "line-width": coastRippleWidth,
+        "line-opacity": woodEdgeOpacity,
+        "line-dasharray": [1, 2],
+      },
+    },
+    {
       id: "water",
       type: "fill",
       source: vectorSourceId,
@@ -26,6 +54,19 @@ export const agedMapStyle: StyleSpecification = {
       filter: ["!=", ["get", "brunnel"], "tunnel"],
       paint: { "fill-color": palette.mapInk, "fill-opacity": waterOpacity },
     },
+    ...coastRipples.map(({ offset, opacity }) => ({
+      id: `water_coast_ripple_${offset}`,
+      type: "line" as const,
+      source: vectorSourceId,
+      "source-layer": "water",
+      filter: ["!=", ["get", "brunnel"], "tunnel"] as FilterSpecification,
+      paint: {
+        "line-color": palette.mapInk,
+        "line-width": coastRippleWidth,
+        "line-offset": offset,
+        "line-opacity": opacity,
+      },
+    })),
     {
       id: "water_outline",
       type: "line",

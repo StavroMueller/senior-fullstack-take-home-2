@@ -28,7 +28,14 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
 
   def list_entries(_parent, _arguments, _resolution), do: {:ok, Journal.list_entries()}
 
-  def start_journey(_parent, _arguments, _resolution), do: Journal.start_journey()
+  def start_journey(_parent, arguments, _resolution) do
+    case Journal.start_journey(arguments) do
+      {:ok, journey} -> {:ok, journey}
+      {:error, reason} -> {:error, Atom.to_string(reason)}
+    end
+  end
+
+  def list_languages(_parent, _arguments, _resolution), do: {:ok, Journal.list_languages()}
 
   def submit_entry(_parent, %{input: input}, _resolution) do
     case Journal.submit_entry(input) do
@@ -47,6 +54,9 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
 
   def get_can_travel_on(journey, _arguments, _resolution),
     do: {:ok, Journal.get_journey_progress(journey).can_travel_on}
+
+  def get_current_scene(journey, _arguments, _resolution),
+    do: {:ok, Journal.get_journey_progress(journey).current_scene}
 
   def retry_analysis(_parent, %{entry_id: entry_id}, _resolution) do
     case Journal.retry_analysis(entry_id) do

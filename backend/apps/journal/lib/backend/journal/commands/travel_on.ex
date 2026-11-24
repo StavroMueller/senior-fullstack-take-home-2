@@ -1,10 +1,11 @@
 defmodule Backend.Journal.Commands.TravelOn do
-  @moduledoc "Moves a journey from its current place to the next one, once that place has an entry, drawing any encounter the seed places on the road."
+  @moduledoc "Moves a journey from its current place to the next one, once that place has an entry, drawing any encounter on the road and setting the scene in each new town."
 
   alias Backend.Database.Repo
   alias Backend.Database.Schema.Encounter
   alias Backend.Database.Schema.Journey
   alias Backend.Journal.EncounterDraw
+  alias Backend.Journal.PlaceScene
   alias Backend.Journal.Queries.GetJourneyProgress
   alias Backend.Journal.Route
   alias Ecto.Changeset
@@ -25,10 +26,8 @@ defmodule Backend.Journal.Commands.TravelOn do
   defp travel_on(%Journey{current_encounter_id: encounter_id} = journey, _progress)
        when not is_nil(encounter_id) do
     journey
-    |> Changeset.change(
-      current_encounter_id: nil,
-      current_point_of_interest_index: journey.current_point_of_interest_index + 1
-    )
+    |> Changeset.change(current_encounter_id: nil)
+    |> arrive_at(journey.current_point_of_interest_index + 1)
     |> Repo.update()
   end
 
@@ -42,9 +41,8 @@ defmodule Backend.Journal.Commands.TravelOn do
 
   defp leave_point_of_interest(journey, nil) do
     journey
-    |> Changeset.change(
-      current_point_of_interest_index: journey.current_point_of_interest_index + 1
-    )
+    |> Changeset.change()
+    |> arrive_at(journey.current_point_of_interest_index + 1)
     |> Repo.update()
   end
 
@@ -63,5 +61,12 @@ defmodule Backend.Journal.Commands.TravelOn do
       {:ok, %{journey: journey}} -> {:ok, journey}
       {:error, _operation, reason, _changes} -> {:error, reason}
     end
+  end
+
+  defp arrive_at(%Changeset{data: journey} = changeset, point_of_interest_index) do
+    Changeset.change(changeset,
+      current_point_of_interest_index: point_of_interest_index,
+      current_place_scene: PlaceScene.for_arrival(journey, point_of_interest_index)
+    )
   end
 end

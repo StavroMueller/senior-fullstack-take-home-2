@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@apollo/client";
 import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useCallback } from "react";
 import { useAnalysisEnd } from "~/journal/analysisSocket";
+import { Buddy } from "~/journal/Buddy";
 import { CorrectedText } from "~/journal/CorrectedText";
 import { CorrectionList } from "~/journal/CorrectionList";
 import { analysisFailedMessage, analyzingMessage } from "~/journal/analysisCopy";
@@ -42,7 +42,7 @@ export function EntryView({ entryId }: { entryId: string }) {
       <CorrectedText body={entry.body} corrections={entry.corrections} />
       {isAnalyzing(entry) && (
         <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
-          <CircularProgress size={sizes.progressIndicator} />
+          <Buddy size={sizes.thinkingBuddy} expression="thinking" />
           <Typography>{analyzingMessage}</Typography>
         </Stack>
       )}

@@ -145,7 +145,7 @@ Each word has one meaning in code and on screen. Ruled by Julien, 2026-11-23.
 | route | The whole path of one journey: its points of interest and encounters, in order | a URL route, a stop |
 | point of interest | One real town on a route, picked by the seed along the line from start to end: `PointOfInterest` in code, POI in speech | a stop, a waypoint |
 | encounter | One fantastical event the seed places by chance between two points of interest, with its own entry | a journey event, a stop |
-| teacher | The character who sets the prompt and reacts to an entry; replaces "persona" | the AI provider, a real person |
+| teacher | The character who travels with the person, sets the scene at each place and reacts to an entry; replaces "persona" and "buddy" | the AI provider, a real person |
 | teacher reaction | The line the teacher says about one analyzed entry, written by the AI or hand-written: `TeacherReaction` in code, `teacherReaction` in GraphQL | a writing prompt, a correction |
 
 "Feedback" and "mistake" on its own are banned in code because each could mean two of the above.
@@ -225,6 +225,9 @@ Julien's standing rulings, recorded 2026-11-23.
   function, and every screen and query calls that function.
 - **Lint passes with zero issues** before work is called done: `mix credo --strict` and
   `tsc`. When linting a subset, confirm the tool scanned the files.
+- **AI prompts take the language and level as arguments.** A prompt names no language, country
+  or level in its text; it refers to "that language" and the CEFR level it is given, so a new
+  language needs data files and no prompt edits. Ruled by Julien, 2026-11-23.
 - **No speculative cache work.** Select the fields the screen renders and nothing extra. Touch
   Apollo cache behavior only for a reproduced bug.
 

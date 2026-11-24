@@ -73,11 +73,14 @@ screen shows which kinds of error keep coming back and which have dropped off.
 
 ## How the interface supports writing and review
 
-- **Writing.** The left half is a map of France with the journey's route. The right half gives a
-  prompt for the current stop, such as "Write about today's stop. Three sentences is enough.",
-  and an entry field. Some stops are fantastical encounters with their own prompt. A stop takes
-  as many entries as you like, and once it has one, "Keep going" moves you on: the "You are here"
-  marker walks along the trail to the next stop.
+- **Writing.** The left half is a map of France with the journey's route. On the right, the
+  teacher, drawn as a travel buddy, sets the scene at the current stop and asks for a few French
+  sentences about it, above an entry field. In a town the scene names something the town is known
+  for; some stops are fantastical encounters with their own scene. A new journey opens on the
+  teacher's intro to the route, from the first town to the last, and "Let's go" moves on to the
+  first town. "Start a journey in France" shows one button per language with data files. A stop
+  takes as many entries as you like, and once it has one, "Keep going" moves you on: the "You are
+  here" marker walks along the trail to the next stop.
 - **Waiting.** After you send an entry, it shows "Checking your entry" until analysis ends. The
   page hears the result over a Phoenix channel, with no reload.
 - **Reading corrections.** Each corrected span is highlighted inside the entry. Below it, the
@@ -107,10 +110,11 @@ is one mutation or query, and resolvers only map arguments to the `journal` app.
 
 | Operation | Does |
 | --- | --- |
-| `startJourney` | Starts a journey from a random seed |
+| `startJourney` | Starts a journey in a language and level from `languages`, from a random seed |
 | `submitEntry(input)` | Saves one entry as `analyzing` and enqueues its analysis |
 | `retryAnalysis(entryId)` | Runs a failed analysis again |
 | `travelOn(journeyId)` | Moves the journey to its next place, once the current place has an entry |
+| `languages` | Each language and level a journey can start in, with its country |
 | `currentJourney` | The newest journey, with its route, the place you are at and `canTravelOn` |
 | `entries` | Every entry, newest first |
 | `entry(id)` | One entry with its corrections and the teacher's reaction |

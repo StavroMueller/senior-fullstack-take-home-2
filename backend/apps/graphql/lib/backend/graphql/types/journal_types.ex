@@ -32,6 +32,16 @@ defmodule Backend.Graphql.Types.JournalTypes do
     field :trend, :category_trend_direction
   end
 
+  @desc "A language and level a journey can start in."
+  object :language do
+    @desc "The ISO 639-1 code, such as fr."
+    field :code, non_null(:string)
+    @desc "The CEFR level, such as A1."
+    field :level, non_null(:string)
+    @desc "The country the route crosses."
+    field :country, non_null(:string)
+  end
+
   object :journey do
     field :id, non_null(:id)
     field :seed, non_null(:integer)
@@ -47,6 +57,12 @@ defmodule Backend.Graphql.Types.JournalTypes do
 
     @desc "The encounter the person is at, or null when they are at a point of interest."
     field :open_encounter, :encounter, resolve: &JournalResolver.get_open_encounter/3
+
+    @desc "What the teacher says as the journey begins, naming its route; null for journeys started before intros existed."
+    field :intro, :string
+
+    @desc "What the teacher says at the current place, to write about; null once the journey is finished."
+    field :current_scene, :string, resolve: &JournalResolver.get_current_scene/3
 
     @desc "Whether the current place has an entry, so the journey can move on."
     field :can_travel_on, non_null(:boolean), resolve: &JournalResolver.get_can_travel_on/3

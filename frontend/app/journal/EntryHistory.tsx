@@ -25,9 +25,6 @@ export function EntryHistory() {
   return (
     <Stack spacing={2}>
       <Typography variant="h2">Your entries</Typography>
-      <Link to="/usual-suspects" style={{ color: palette.ink }}>
-        Usual suspects: the mistake categories that keep coming back
-      </Link>
       <Stack component="ul" spacing={2} sx={{ listStyle: "none", padding: 0, margin: 0 }}>
         {entries.map((entry) => (
           <Paper component="li" key={entry.id} sx={{ padding: 2 }}>

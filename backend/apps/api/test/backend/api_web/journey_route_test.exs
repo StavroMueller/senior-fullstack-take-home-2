@@ -13,9 +13,11 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
   openEncounter { id prompt }
   currentPointOfInterestIndex
   canTravelOn
+  currentScene
+  intro
   """
 
-  @ghost_baker_prompt "Tiens! A ghost runs the bakery at the crossroads. Order your breakfast in French."
+  @ghost_baker_prompt "Tiens! The bakery at the crossroads is open, but the baker is a ghost. The croissants smell real, at least. Order our breakfast in French: what do you want, and how many?"
 
   defp read_journey do
     %{"data" => %{"currentJourney" => journey}} =
@@ -40,6 +42,19 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
 
   defp travel_on(journey_id) do
     graphql("mutation($id: ID!) { travelOn(journeyId: $id) { id } }", %{id: journey_id})
+  end
+
+  defp assert_scene_names_the_town_reached do
+    case read_journey() do
+      %{"currentPointOfInterestIndex" => nil} ->
+        :finished
+
+      %{"openEncounter" => nil, "currentPointOfInterestIndex" => index} = journey ->
+        assert journey["currentScene"] =~ Enum.at(journey["pointsOfInterest"], index)["name"]
+
+      %{"openEncounter" => %{"prompt" => prompt}, "currentScene" => scene} ->
+        assert scene == prompt
+    end
   end
 
   defp written_place(journey_id) do
@@ -72,18 +87,24 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
     assert written_place(journey_id) == {:point_of_interest, 0}
     travel_on(journey_id)
 
-    %{"openEncounter" => %{"id" => ghost_baker_id, "prompt" => @ghost_baker_prompt}} =
-      read_journey()
+    %{
+      "openEncounter" => %{"id" => _ghost_baker_id, "prompt" => @ghost_baker_prompt},
+      "currentScene" => @ghost_baker_prompt
+    } = read_journey()
+
+    assert %{"data" => %{"submitEntry" => _entry}} = submit_entry(journey_id, "Un croissant.")
+    travel_on(journey_id)
+    assert read_journey()["currentScene"] =~ "Vichy"
 
     places =
-      for _place <- 1..7 do
+      for _place <- 1..6 do
         place = written_place(journey_id)
         travel_on(journey_id)
+        assert_scene_names_the_town_reached()
         place
       end
 
     assert [
-             {:encounter, ^ghost_baker_id},
              {:point_of_interest, 1},
              {:point_of_interest, 2},
              {:encounter, _lost_knight_id},
@@ -102,6 +123,35 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
              submit_entry(journey_id, "Encore un mot.")
 
     assert %{"errors" => [%{"message" => "journey_finished"}]} = travel_on(journey_id)
+  end
+
+  test "a new journey opens on the teacher's intro to its route and the scene in its first town" do
+    %{"data" => %{"startJourney" => %{"pointsOfInterest" => towns}}} =
+      graphql(
+        ~s|mutation { startJourney(language: "fr", level: "A1") { pointsOfInterest { name } } }|
+      )
+
+    [%{"name" => first_town} | _later_towns] = towns
+    %{"name" => last_town} = List.last(towns)
+    journey = read_journey()
+
+    assert journey["intro"] =~ first_town
+    assert journey["intro"] =~ last_town
+    assert journey["currentScene"] =~ first_town
+  end
+
+  test "lists French A1 in France as the language a journey can start in" do
+    assert %{
+             "data" => %{
+               "languages" => [%{"code" => "fr", "level" => "A1", "country" => "France"}]
+             }
+           } =
+             graphql("query { languages { code level country } }")
+  end
+
+  test "a journey in a language with no data files is refused" do
+    assert %{"errors" => [%{"message" => "language_not_offered"}]} =
+             graphql(~s|mutation { startJourney(language: "xx", level: "A1") { id } }|)
   end
 
   test "an entry for a journey that does not exist is refused" do

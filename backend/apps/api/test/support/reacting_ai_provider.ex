@@ -10,6 +10,12 @@ defmodule Backend.ApiWeb.Test.ReactingAiProvider do
   def teacher_reaction, do: @teacher_reaction
 
   @impl true
+  def describe_place(_town, _language, _level), do: {:error, :provider_unavailable}
+
+  @impl true
+  def introduce_journey(_towns, _language, _level), do: {:error, :provider_unavailable}
+
+  @impl true
   def correct_entry(body, language, level) do
     {:ok, response} = Stub.correct_entry(body, language, level)
     {:ok, Map.put(response, "teacher_reaction", @teacher_reaction)}

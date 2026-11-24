@@ -166,6 +166,11 @@ export function JourneyMap({
   const placeLongitude = place?.coordinates[0];
   const placeLatitude = place?.coordinates[1];
   const placeText = place ? `${placeLabel}: ${place.name}` : null;
+  const placeRef = useRef<Coordinates | null>(null);
+  placeRef.current = place?.coordinates ?? null;
+  const routeTowns = route?.pointsOfInterest
+    .map((pointOfInterest) => pointOfInterest.name)
+    .join("|");
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -205,9 +210,18 @@ export function JourneyMap({
     markers.forEach((marker) => marker.addTo(map));
 
     drawRouteLine(map, pointsOfInterest);
+
+    return () => markers.forEach((marker) => marker.remove());
+  }, [map, route]);
+
+  useEffect(() => {
+    if (!map || !route) return;
     const bounds = new LngLatBounds();
-    pointsOfInterest.forEach((pointOfInterest) => bounds.extend(coordinatesOf(pointOfInterest)));
+    route.pointsOfInterest.forEach((pointOfInterest) =>
+      bounds.extend(coordinatesOf(pointOfInterest)),
+    );
     map.fitBounds(bounds, {
+      duration: 0,
       padding: {
         top: routePaddingPixels,
         right: routePaddingPixels,
@@ -215,9 +229,8 @@ export function JourneyMap({
         left: routePaddingPixels,
       },
     });
-
-    return () => markers.forEach((marker) => marker.remove());
-  }, [map, route]);
+    if (placeRef.current) map.jumpTo({ center: placeRef.current });
+  }, [map, routeTowns]);
 
   useEffect(() => {
     if (!map || placeLongitude === undefined || placeLatitude === undefined || !placeText) return;
@@ -235,6 +248,7 @@ export function JourneyMap({
 
     traveler.label.textContent = placeText;
     traveler.element.setAttribute("aria-label", placeText);
+    map.easeTo({ center: destination, duration: sizes.travelMilliseconds });
     return walk(traveler, destination);
   }, [map, placeLongitude, placeLatitude, placeText]);
 

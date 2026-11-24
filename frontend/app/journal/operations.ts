@@ -61,9 +61,11 @@ export type RouteOnMap = {
 
 export type CurrentJourney = RouteOnMap & {
   id: string;
-  openEncounter: Pick<Encounter, "id" | "prompt"> | null;
+  openEncounter: Pick<Encounter, "id"> | null;
   currentPointOfInterestIndex: number | null;
   canTravelOn: boolean;
+  currentScene: string | null;
+  intro: string | null;
 };
 
 export type EntryOnRoute = {
@@ -94,10 +96,11 @@ export const CURRENT_JOURNEY = gql`
       ...RouteOnMap
       openEncounter {
         id
-        prompt
       }
       currentPointOfInterestIndex
       canTravelOn
+      currentScene
+      intro
     }
   }
   ${ROUTE_ON_MAP}
@@ -120,9 +123,21 @@ export const ENTRY_ON_ROUTE = gql`
   ${ROUTE_ON_MAP}
 `;
 
+export type Language = { code: string; level: string; country: string };
+
+export const LANGUAGES = gql`
+  query Languages {
+    languages {
+      code
+      level
+      country
+    }
+  }
+`;
+
 export const START_JOURNEY = gql`
-  mutation StartJourney {
-    startJourney {
+  mutation StartJourney($language: String!, $level: String!) {
+    startJourney(language: $language, level: $level) {
       id
     }
   }

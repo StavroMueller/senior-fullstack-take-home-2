@@ -12,6 +12,8 @@ export const palette = {
   surfaceEdge: "#B9D9EE",
   mapLand: "#C8A46E",
   mapInk: "#8B6B3E",
+  buddySkin: "#F4B98F",
+  buddySkinShade: "#E39A70",
 } as const;
 
 export const fonts = {
@@ -20,10 +22,16 @@ export const fonts = {
 } as const;
 
 export const sizes = {
-  progressIndicator: 24,
+  thinkingBuddy: 64,
   correctionUnderline: 2,
   edgeHeight: 4,
   pressedEdgeHeight: 2,
+  buddy: 96,
+  buddyTalkMilliseconds: 220,
+  buddyBobMilliseconds: 440,
+  buddyBlinkMilliseconds: 4000,
+  buddyTalkMillisecondsPerCharacter: 35,
+  buddyLongestTalkMilliseconds: 5000,
   marker: 14,
   travelerMarker: 26,
   travelerPulse: 14,

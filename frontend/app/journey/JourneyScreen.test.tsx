@@ -2,7 +2,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { vi } from "vitest";
-import { CURRENT_JOURNEY, ENTRIES } from "~/journal/operations";
+import { CURRENT_JOURNEY, ENTRIES, LANGUAGES } from "~/journal/operations";
 import { JourneyScreen } from "~/journey/JourneyScreen";
 import { testJourney } from "~/journey/testJourney";
 
@@ -17,6 +17,8 @@ vi.mock("maplibre-gl", () => ({
       addSource: vi.fn(),
       addLayer: vi.fn(),
       fitBounds: vi.fn(),
+      jumpTo: vi.fn(),
+      easeTo: vi.fn(),
     };
   }),
   Marker: vi.fn(function FakeMarker({ element }: { element: HTMLElement }) {
@@ -50,6 +52,7 @@ const mocks = [
     },
   },
   { request: { query: ENTRIES }, result: { data: { entries: [] } } },
+  { request: { query: LANGUAGES }, result: { data: { languages: [] } } },
 ];
 
 describe("JourneyScreen", () => {
@@ -64,7 +67,7 @@ describe("JourneyScreen", () => {
 
     expect(screen.getByRole("region", { name: "Journey map" })).toBeInTheDocument();
     expect(
-      await screen.findByText("Write about today's stop. Three sentences is enough."),
+      await screen.findByText("Voilà, we made it to Nancy! Tell me in French what you see first."),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Your entry")).toBeInTheDocument();
 

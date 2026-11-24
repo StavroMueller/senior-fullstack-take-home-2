@@ -1,32 +1,36 @@
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { Buddy, useTalking } from "~/journal/Buddy";
 import type { CurrentJourney } from "~/journal/operations";
-
-export const pointOfInterestPrompt = "Write about today's stop. Three sentences is enough.";
+import { sizes } from "~/palette";
 
 export function WritingPrompt({
   journey,
   currentPointOfInterestIndex,
+  thinking,
 }: {
   journey: CurrentJourney;
   currentPointOfInterestIndex: number;
+  thinking: boolean;
 }) {
-  if (journey.openEncounter) {
-    const nextPointOfInterest = journey.pointsOfInterest[currentPointOfInterestIndex + 1];
-    return (
-      <Stack spacing={1}>
-        <Typography variant="h2">On the road to {nextPointOfInterest.name}</Typography>
-        <Typography>{journey.openEncounter.prompt}</Typography>
-      </Stack>
-    );
-  }
+  const talking = useTalking(journey.currentScene);
+  const heading = journey.openEncounter
+    ? `On the road to ${journey.pointsOfInterest[currentPointOfInterestIndex + 1].name}`
+    : journey.pointsOfInterest[currentPointOfInterestIndex].name;
 
   return (
-    <Stack spacing={1}>
-      <Typography variant="h2">
-        {journey.pointsOfInterest[currentPointOfInterestIndex].name}
-      </Typography>
-      <Typography>{pointOfInterestPrompt}</Typography>
+    <Stack spacing={2} sx={{ width: "100%" }}>
+      <Typography variant="h2">{heading}</Typography>
+      <Stack direction="row" spacing={2} sx={{ alignItems: "flex-end" }}>
+        <Buddy
+          size={sizes.buddy}
+          expression={thinking ? "thinking" : talking ? "talking" : "resting"}
+        />
+        <Paper sx={{ padding: 2, flex: 1 }}>
+          <Typography>{journey.currentScene}</Typography>
+        </Paper>
+      </Stack>
     </Stack>
   );
 }
