@@ -106,13 +106,13 @@ describe("Logbook", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("offers to keep going only once the current place has an entry", async () => {
+  it("offers to keep going only once the current route position has an entry", async () => {
     renderLogbook(testJourney({ canTravelOn: true }));
 
     expect(await screen.findByRole("button", { name: "Keep going" })).toBeEnabled();
   });
 
-  it("hides keep going before the current place has an entry", async () => {
+  it("hides keep going before the current route position has an entry", async () => {
     renderLogbook(testJourney());
 
     expect(await screen.findByRole("button", { name: "Send entry" })).toBeInTheDocument();

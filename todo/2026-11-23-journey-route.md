@@ -28,7 +28,7 @@ interest, encounter. The product ruling is "Encounters along the route are fanta
      `encounter_key`, unique on `(journey_id, after_point_of_interest_index)`.
    - Add the nullable `point_of_interest_index` and `encounter_id` to `entries`. A check
      constraint requires exactly one of the two to be set, and unique indexes stop a second
-     entry at the same place.
+     entry at the same route position.
 4. `SubmitEntry` writes the entry at the open encounter when one exists, or else at the next
    point of interest. After an entry at a point of interest that is not the last, the seed
    decides whether an encounter follows and writes the `encounters` row in the same
@@ -36,10 +36,10 @@ interest, encounter. The product ruling is "Encounters along the route are fanta
    `SubmitEntry` refuses another entry.
 5. GraphQL: `Journey.pointsOfInterest`, `Journey.encounters`, and `Journey.writingPrompt`, which
    is null when the journey is finished. `Entry.pointOfInterest`, `Entry.encounter` and
-   `Entry.journey` let a reopened entry draw its place.
+   `Entry.journey` let a reopened entry draw its route position.
 6. Frontend:
    - `JourneyMap` draws the route line in `action`, a marker per point of interest and per
-     encounter, and the current place.
+     encounter, and the current route position.
    - `Logbook` shows the writing prompt and the finished state, and refetches
      `CURRENT_JOURNEY` after a submit.
 7. Tests:
@@ -51,9 +51,9 @@ interest, encounter. The product ruling is "Encounters along the route are fanta
 
 ## Changed after merge
 
-On 2026-11-23 Julien asked for several entries per place and a "Keep going" button. The unique
-indexes on `entries` became plain indexes, `journeys` stores the current place, and the new
-`travelOn` mutation draws encounters. The rulings below about one entry per place no longer hold.
+On 2026-11-23 Julien asked for several entries per route position and a "Keep going" button. The unique
+indexes on `entries` became plain indexes, `journeys` stores the current route position, and the new
+`travelOn` mutation draws encounters. The rulings below about one entry per route position no longer hold.
 
 ## State
 

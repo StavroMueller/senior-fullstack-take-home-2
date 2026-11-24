@@ -56,7 +56,7 @@ defmodule Backend.Graphql.Schema do
       resolve(&JournalResolver.submit_entry/3)
     end
 
-    @desc "Moves the journey on to its next place, once the current place has an entry."
+    @desc "Moves the journey on to its next route position, once the current route position has an entry."
     field :travel_on, non_null(:journey) do
       arg(:journey_id, non_null(:id))
       resolve(&JournalResolver.travel_on/3)

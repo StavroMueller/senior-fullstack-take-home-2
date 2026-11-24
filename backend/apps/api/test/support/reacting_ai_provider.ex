@@ -10,7 +10,7 @@ defmodule Backend.ApiWeb.Test.ReactingAiProvider do
   def teacher_reaction, do: @teacher_reaction
 
   @impl true
-  def describe_place(_town, _language, _level), do: {:error, :provider_unavailable}
+  def describe_point_of_interest(_town, _language, _level), do: {:error, :provider_unavailable}
 
   @impl true
   def introduce_journey(_towns, _language, _level), do: {:error, :provider_unavailable}

@@ -1,11 +1,11 @@
 defmodule Backend.Journal.Commands.TravelOn do
-  @moduledoc "Moves a journey from its current place to the next one, once that place has an entry, drawing any encounter on the road and setting the scene in each new town."
+  @moduledoc "Moves a journey from its current route position to the next one, once that route position has an entry, drawing any encounter on the road and setting the scene in each new town."
 
   alias Backend.Database.Repo
   alias Backend.Database.Schema.Encounter
   alias Backend.Database.Schema.Journey
   alias Backend.Journal.EncounterDraw
-  alias Backend.Journal.PlaceScene
+  alias Backend.Journal.PointOfInterestScene
   alias Backend.Journal.Queries.GetJourneyProgress
   alias Backend.Journal.Route
   alias Ecto.Changeset
@@ -66,7 +66,8 @@ defmodule Backend.Journal.Commands.TravelOn do
   defp arrive_at(%Changeset{data: journey} = changeset, point_of_interest_index) do
     Changeset.change(changeset,
       current_point_of_interest_index: point_of_interest_index,
-      current_place_scene: PlaceScene.for_arrival(journey, point_of_interest_index)
+      current_point_of_interest_scene:
+        PointOfInterestScene.for_arrival(journey, point_of_interest_index)
     )
   end
 end

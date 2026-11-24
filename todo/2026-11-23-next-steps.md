@@ -1,7 +1,7 @@
 # Pick up the Stage 1 work after the entry flow
 
 Pull requests #3, #4 and #5 are merged into `main`. A person can start a journey, follow its route
-across France through towns and encounters, write an entry at each place, see each correction
+across France through towns and encounters, write an entry at each route position, see each correction
 marked inside it, read the teacher's reaction under it, and reopen the entry from "Your entries".
 
 ## Waiting on Julien

@@ -66,7 +66,7 @@ Requested by Julien, 2026-11-23.
 
 **The Teacher Buddy.** The teacher appears as an original flat character: a round face in
 `buddySkin` with `buddySkinShade` ears and jaw, a `teacherEdge` beret, a scarf in `action` and a
-`teacher` coat. The buddy sits beside the scene at each place, which reads as a speech bubble. When a new
+`teacher` coat. The buddy sits beside the scene at each route position, which reads as a speech bubble. When a new
 scene arrives, the buddy talks: the mouth opens and closes and the head bobs, for 35 ms per
 character of the scene, up to 5 seconds. The eyes blink every 4 seconds. While the AI works, the buddy
 thinks: pupils raised, one brow up and a small downturned mouth. That face shows beside "Checking
@@ -74,9 +74,9 @@ your entry" and while "Start a journey" or "Keep going" waits for a scene. No
 feature of the buddy comes from a Duolingo character. Requested by Julien, 2026-11-23.
 
 **The Traveler.** One marker in `action`, larger than a stop, with a pulsing ring and an `ink`
-label, marks the current place: "You are here: {town}" on the journey screen, "Written here:
+label, marks the current route position: "You are here: {town}" on the journey screen, "Written here:
 {town}" on an entry. When the journey moves on, the traveler walks along the trail to the next
-place, so the move reads as travel. Stops are plain dots. Requested by Julien, 2026-11-23.
+route position, so the move reads as travel. Stops are plain dots. Requested by Julien, 2026-11-23.
 
 ## 2a. Layout
 

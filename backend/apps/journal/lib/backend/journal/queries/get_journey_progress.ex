@@ -1,5 +1,5 @@
 defmodule Backend.Journal.Queries.GetJourneyProgress do
-  @moduledoc "Reads where a journey's entries go now, whether it can travel on, and the scene the teacher sets at the current place."
+  @moduledoc "Reads where a journey's entries go now, whether it can travel on, and the scene the teacher sets at the current route position."
 
   import Ecto.Query
 
@@ -9,7 +9,7 @@ defmodule Backend.Journal.Queries.GetJourneyProgress do
   alias Backend.Database.Schema.Journey
   alias Backend.Journal.EncounterPrompt
 
-  @doc "Returns the encounter the person is at, or nil, the index of the point of interest they are at, or nil once finished, whether the current place has an entry, and the scene the teacher sets there."
+  @doc "Returns the encounter the person is at, or nil, the index of the point of interest they are at, or nil once finished, whether the current route position has an entry, and the scene the teacher sets there."
   def run(%Journey{} = journey) do
     %Journey{current_encounter: open_encounter} = Repo.preload(journey, :current_encounter)
 
@@ -24,7 +24,9 @@ defmodule Backend.Journal.Queries.GetJourneyProgress do
   defp current_scene(%Journey{finished_at: nil} = journey, %Encounter{} = encounter),
     do: EncounterPrompt.for_encounter(encounter, journey)
 
-  defp current_scene(%Journey{finished_at: nil} = journey, nil), do: journey.current_place_scene
+  defp current_scene(%Journey{finished_at: nil} = journey, nil),
+    do: journey.current_point_of_interest_scene
+
   defp current_scene(%Journey{}, _open_encounter), do: nil
 
   defp current_point_of_interest_index(%Journey{finished_at: nil} = journey),

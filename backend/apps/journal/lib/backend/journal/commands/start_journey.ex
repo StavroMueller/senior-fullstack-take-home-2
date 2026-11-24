@@ -4,7 +4,7 @@ defmodule Backend.Journal.Commands.StartJourney do
   alias Backend.Database.Repo
   alias Backend.Database.Schema.Journey
   alias Backend.Journal.JourneyIntro
-  alias Backend.Journal.PlaceScene
+  alias Backend.Journal.PointOfInterestScene
   alias Backend.Journal.Queries.ListLanguages
 
   @largest_seed 2_147_483_647
@@ -23,11 +23,11 @@ defmodule Backend.Journal.Commands.StartJourney do
       Task.await_many(
         [
           Task.async(fn -> JourneyIntro.for_journey(journey) end),
-          Task.async(fn -> PlaceScene.for_arrival(journey, 0) end)
+          Task.async(fn -> PointOfInterestScene.for_arrival(journey, 0) end)
         ],
         @longest_wait_for_the_teacher
       )
 
-    Repo.insert(%Journey{journey | intro: intro, current_place_scene: first_scene})
+    Repo.insert(%Journey{journey | intro: intro, current_point_of_interest_scene: first_scene})
   end
 end
