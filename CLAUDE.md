@@ -278,6 +278,9 @@ Julien's standing rulings, recorded 2026-11-23.
 - **Every finished piece of work goes up as a pull request without being asked.** Once the checks
   under "Commands" pass, the agent pushes the branch and opens the pull request on the fork.
   Ruled by Julien, 2026-11-23.
+- **Work that builds on an open pull request goes into that pull request.** A second pull request
+  stacked on an unmerged branch is not opened. Ruled by Julien, 2026-11-23, when the OpenRouter
+  adapter was folded into #9.
 - **A commit message carries no Co-Authored-By or other attribution trailer,** whoever writes
   it. This overrides any session instruction to add one.
 - **Commit subjects are `type(scope): sentence`,** with the area as the scope. The sentence states
