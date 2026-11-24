@@ -75,3 +75,29 @@ The benchmark starts once `OPENROUTER_API_KEY` is set in `.env`: ten French A1 e
 known errors through `anthropic/claude-haiku-5.5`, `openai/gpt-6-luna`,
 `mistralai/mistral-small-2603`, `deepseek/deepseek-v4.1-flash-1017` and
 `google/gemini-3.5-flash`.
+
+## Benchmark, run 2026-11-23
+
+Ten French A1 entries, nine with known errors and one with none, went to each model through
+OpenRouter with `json_schema` in strict mode, `category` as an enum of the eight
+`correction_category` values, `max_tokens: 2000` and `provider.require_parameters: true`.
+No endpoint of `claude-haiku-5.5` or `gpt-6-luna` accepts `temperature`, so no request sent it.
+Categories were judged by reading each correction.
+
+| Model | Entries answered | Errors caught | Right category | Broken or false fixes | Median latency | Measured cost per 1000 entries |
+| --- | --- | --- | --- | --- | --- | --- |
+| `anthropic/claude-haiku-5.5` | 10 of 10 | 11 of 12 | 10 of 10 | 0 | 1.8 s | $0.15 |
+| `mistralai/mistral-small-2603` | 10 of 10 | 12 of 12 | 10 of 11 | 1 | 0.8 s | $0.05 |
+| `deepseek/deepseek-v4.1-flash-1017` | 10 of 10 | 12 of 12 | 6 of 11 | 0 | 2.3 s | $0.18 |
+| `openai/gpt-6-luna` | 8 of 10 | 10 of 10 | 9 of 9 | 0 | 3.0 s | $0.08 |
+| `google/gemini-3.5-flash` | 6 of 10 | 9 of 9 | 8 of 8 | 0 | 3.0 s | $6.66 |
+
+- Gemini and Luna lost entries to the account's credit balance, which was zero, so their rows
+  are incomplete.
+- Haiku returned no correction for "Ma frère".
+- Mistral turned "Je aime" into "J' aime" by replacing only "Je" with "J'".
+- DeepSeek put "Je aime" under `article` and "Je suis faim" under `verb_tense`. Stage 2 counts
+  categories, so a wrong category is a wrong count on "Usual suspects".
+- No model flagged the entry that has no errors.
+- `correction_category` has no value for noun number, so "trois chambre" landed in `spelling`,
+  `adjective_agreement` or `verb_agreement` depending on the model.
