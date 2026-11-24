@@ -1,5 +1,5 @@
 defmodule Backend.Journal.Commands.TravelOn do
-  @moduledoc "Moves a journey from its current place to the next one, once that place has an entry, drawing any encounter on the road and setting the scene in each new town."
+  @moduledoc "Moves a journey from its current route position to the next one, once that route position has an entry, drawing any encounter on the road and setting the scene in each new town."
 
   alias Backend.Database.Repo
   alias Backend.Database.Schema.Encounter

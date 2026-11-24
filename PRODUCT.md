@@ -187,9 +187,9 @@ seeded, so the same seed always gives the same route.
 This reverses the ruling "AI corrects entries and does nothing else", once the real provider
 returned valid corrections. Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.
 
-### The teacher travels with you and sets the scene at each place
+### The teacher travels with you and sets the scene at each route position
 
-The teacher is a travel buddy walking the road with the person. At each place the buddy says, in
+The teacher is a travel buddy walking the road with the person. At each route position the buddy says, in
 the voice set under "Voice and copy", what is there and asks for a few French sentences about it,
 so the person always has something to write about.
 
@@ -262,9 +262,9 @@ Between two points of interest the seed may place an encounter, and encounters a
 a dragon on a bridge, a talking goat at a ford. Encounters come from hand-written strings, so the
 same seed always gives the same route.
 
-A person stays at a place, a point of interest or an encounter, until they choose to move on. A
-place takes as many entries as the person writes. Once it has one entry, "Keep going" appears,
-and pressing it moves the journey to the next place, where the seed may draw an encounter first.
+A person stays at a route position, a point of interest or an encounter, until they choose to move on. A
+route position takes as many entries as the person writes. Once it has one entry, "Keep going" appears,
+and pressing it moves the journey to the next route position, where the seed may draw an encounter first.
 Sending an entry never moves the journey, so a person reads the corrections before leaving.
 Requested by Julien, 2026-11-23.
 

@@ -1,5 +1,5 @@
 defmodule Backend.Journal.Commands.SubmitEntry do
-  @moduledoc "Saves an entry at the journey's current place and enqueues its analysis in one transaction, leaving the journey where it is."
+  @moduledoc "Saves an entry at the journey's current route position and enqueues its analysis in one transaction, leaving the journey where it is."
 
   import Ecto.Changeset
 
@@ -48,9 +48,9 @@ defmodule Backend.Journal.Commands.SubmitEntry do
     end
   end
 
-  defp entry_changeset(journey, body, place) do
+  defp entry_changeset(journey, body, route_position) do
     %Entry{analysis_status: :analyzing, journey_id: journey.id}
-    |> cast(Map.put(place, :body, trim_and_compose(body)), [
+    |> cast(Map.put(route_position, :body, trim_and_compose(body)), [
       :body,
       :point_of_interest_index,
       :encounter_id

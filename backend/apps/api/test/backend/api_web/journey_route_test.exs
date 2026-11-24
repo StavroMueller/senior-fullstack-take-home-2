@@ -57,7 +57,7 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
     end
   end
 
-  defp written_place(journey_id) do
+  defp written_route_position(journey_id) do
     %{"data" => %{"submitEntry" => entry}} = submit_entry(journey_id, "Bonjour.")
 
     case entry do
@@ -66,7 +66,7 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
     end
   end
 
-  test "a place takes several entries, and the journey moves on only when asked" do
+  test "a route position takes several entries, and the journey moves on only when asked" do
     %Journey{id: journey_id} = Repo.insert!(%Journey{seed: 1, language: "fr", level: "A1"})
 
     journey = read_journey()
@@ -76,15 +76,15 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
 
     assert %{"errors" => [%{"message" => "no_entry_here"}]} = travel_on(journey_id)
 
-    assert written_place(journey_id) == {:point_of_interest, 0}
-    assert written_place(journey_id) == {:point_of_interest, 0}
+    assert written_route_position(journey_id) == {:point_of_interest, 0}
+    assert written_route_position(journey_id) == {:point_of_interest, 0}
     assert read_journey()["canTravelOn"] == true
   end
 
   test "seed 1 travels through every point of interest and its encounters to the end" do
     %Journey{id: journey_id} = Repo.insert!(%Journey{seed: 1, language: "fr", level: "A1"})
 
-    assert written_place(journey_id) == {:point_of_interest, 0}
+    assert written_route_position(journey_id) == {:point_of_interest, 0}
     travel_on(journey_id)
 
     %{
@@ -96,12 +96,12 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
     travel_on(journey_id)
     assert read_journey()["currentScene"] =~ "Vichy"
 
-    places =
-      for _place <- 1..6 do
-        place = written_place(journey_id)
+    route_positions =
+      for _route_position_number <- 1..6 do
+        route_position = written_route_position(journey_id)
         travel_on(journey_id)
         assert_scene_names_the_town_reached()
-        place
+        route_position
       end
 
     assert [
@@ -111,7 +111,7 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
              {:point_of_interest, 3},
              {:encounter, _giant_snail_id},
              {:point_of_interest, 4}
-           ] = places
+           ] = route_positions
 
     finished = read_journey()
     assert finished["currentPointOfInterestIndex"] == nil

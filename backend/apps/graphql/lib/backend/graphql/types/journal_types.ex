@@ -61,10 +61,10 @@ defmodule Backend.Graphql.Types.JournalTypes do
     @desc "What the teacher says as the journey begins, naming its route; null for journeys started before intros existed."
     field :intro, :string
 
-    @desc "What the teacher says at the current place, to write about; null once the journey is finished."
+    @desc "What the teacher says at the current route position, to write about; null once the journey is finished."
     field :current_scene, :string, resolve: &JournalResolver.get_current_scene/3
 
-    @desc "Whether the current place has an entry, so the journey can move on."
+    @desc "Whether the current route position has an entry, so the journey can move on."
     field :can_travel_on, non_null(:boolean), resolve: &JournalResolver.get_can_travel_on/3
 
     @desc "The index of the point of interest the person is at, or null once the journey is finished."

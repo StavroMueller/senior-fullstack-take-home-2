@@ -145,13 +145,16 @@ Each word has one meaning in code and on screen. Ruled by Julien, 2026-11-23.
 | route | The whole path of one journey: its points of interest and encounters, in order | a URL route, a stop |
 | point of interest | One real town on a route, picked by the seed along the line from start to end: `PointOfInterest` in code, POI in speech | a stop, a waypoint |
 | encounter | One fantastical event the seed places by chance between two points of interest, with its own entry | a journey event, a stop |
-| teacher | The character who travels with the person, sets the scene at each place and reacts to an entry; replaces "persona" and "buddy" | the AI provider, a real person |
+| route position | One point of interest or one encounter on the route: where the person is, and where an entry is written. `route_position` in code | a map coordinate, a URL route |
+| teacher | The character who travels with the person, sets the scene at each route position and reacts to an entry; replaces "persona" and "buddy" | the AI provider, a real person |
 | teacher reaction | The line the teacher says about one analyzed entry, written by the AI or hand-written: `TeacherReaction` in code, `teacherReaction` in GraphQL | a writing prompt, a correction |
 
 "Feedback" and "mistake" on its own are banned in code because each could mean two of the above.
 "Line" on its own is banned in code names for the same reason: name the teacher's reply a reaction.
 "Stop" is banned in code names because a developer reads it as a verb: say point of interest or
 encounter.
+"Place" is banned in code names for the same reason, and because it sits beside "scene": say route
+position, or name the map marker it draws.
 Ruled by Julien, 2026-11-23.
 The Stage 2 screen is called "Usual suspects" on screen: the mistake categories that keep
 coming back. Ruled by Julien, 2026-11-23.
