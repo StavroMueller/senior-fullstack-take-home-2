@@ -10,7 +10,14 @@ const { placedMarkers } = vi.hoisted(() => ({ placedMarkers: [] as HTMLElement[]
 
 vi.mock("maplibre-gl", () => ({
   Map: vi.fn(function FakeMap() {
-    return { remove: vi.fn(), isStyleLoaded: () => false, once: vi.fn() };
+    return {
+      remove: vi.fn(),
+      once: (_event: string, listener: () => void) => listener(),
+      getSource: () => undefined,
+      addSource: vi.fn(),
+      addLayer: vi.fn(),
+      fitBounds: vi.fn(),
+    };
   }),
   Marker: vi.fn(function FakeMarker({ element }: { element: HTMLElement }) {
     const marker = {
@@ -23,7 +30,9 @@ vi.mock("maplibre-gl", () => ({
     };
     return marker;
   }),
-  LngLatBounds: vi.fn(),
+  LngLatBounds: vi.fn(function FakeBounds() {
+    return { extend: vi.fn() };
+  }),
 }));
 
 const encounter = { __typename: "Encounter", id: "7", afterPointOfInterestIndex: 0 };
