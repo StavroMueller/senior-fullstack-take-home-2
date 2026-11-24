@@ -78,9 +78,9 @@ screen shows which kinds of error keep coming back and which have dropped off.
   sentences about it, above an entry field. In a town the scene names something the town is known
   for; some stops are fantastical encounters with their own scene. A new journey opens on the
   teacher's intro to the route, from the first town to the last, and "Let's go" moves on to the
-  first town. "Start a journey in France" shows one button per language with data files. A stop takes
-  as many entries as you like, and once it has one, "Keep going" moves you on: the "You are here"
-  marker walks along the trail to the next stop.
+  first town. "Start a journey in France" shows one button per language with data files. A stop
+  takes as many entries as you like, and once it has one, "Keep going" moves you on: the "You are
+  here" marker walks along the trail to the next stop.
 - **Waiting.** After you send an entry, it shows "Checking your entry" until analysis ends. The
   page hears the result over a Phoenix channel, with no reload.
 - **Reading corrections.** Each corrected span is highlighted inside the entry. Below it, the
