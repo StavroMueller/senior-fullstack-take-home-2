@@ -44,8 +44,8 @@ Ruled by Julien, 2026-11-23.
 
 Taken from what Julien wants from the Duolingo feel, 2026-11-23.
 
-- **Characters react.** A teacher answers each entry with a short line in character, drawn from
-  hand-written strings, never from the AI.
+- **Characters react.** A teacher answers each entry with a short line in character. The AI
+  writes the line, and a hand-written one stands in when the AI's line fails its check.
 - **Bright, chunky and rounded.** Big rounded buttons with a pressed-down edge, flat saturated
   colors and large type, in this product's own palette and typeface.
 - **Every entry is a win.** Finishing an entry moves the person along the journey map and shows a
@@ -173,16 +173,19 @@ Declined: analyzing inside the request, an Absinthe subscription, and polling.
 
 Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`, `backend/apps/api/`.
 
-### AI corrects entries and does nothing else
+### AI corrects entries and writes the teacher's reaction
 
-The one AI call takes the entry text and returns structured corrections: the mistake, the fix,
-a category and an explanation.
+The one AI call takes the entry text and returns structured corrections, each with the mistake,
+the fix, a category and an explanation. The same call returns the teacher's reaction, one line in
+the voice set under "Voice and copy", stored in `entries.teacher_reaction`.
 
-The map, the journey events, teacher lines and writing prompts come from a seeded random
-generator and hand-written strings, so the same seed always gives the same journey and tests can
-pin it.
+The parser keeps the reaction only when it is one short line and every correction in the
+response survived parsing, so its count matches the screen. Otherwise, and with the stub, the
+teacher speaks a hand-written line picked by the seed. The map, the journey events and the
+writing prompts stay seeded and hand-written, so the same seed always gives the same journey.
 
-Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.
+This reverses the ruling "AI corrects entries and does nothing else", once the real provider
+returned valid corrections. Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.
 
 ### Claude Haiku 5.5 corrects entries through OpenRouter when a key is set
 

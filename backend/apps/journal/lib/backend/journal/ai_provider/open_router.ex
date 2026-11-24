@@ -1,5 +1,5 @@
 defmodule Backend.Journal.AiProvider.OpenRouter do
-  @moduledoc "An AI provider that asks a pinned model on OpenRouter for an entry's corrections as schema-checked JSON."
+  @moduledoc "An AI provider that asks a pinned model on OpenRouter for an entry's corrections and the teacher's reaction as schema-checked JSON."
 
   @behaviour Backend.Journal.AiProvider
 
@@ -17,8 +17,9 @@ defmodule Backend.Journal.AiProvider.OpenRouter do
       schema: %{
         type: "object",
         additionalProperties: false,
-        required: ["corrections"],
+        required: ["corrections", "teacher_reaction"],
         properties: %{
+          teacher_reaction: %{type: "string"},
           corrections: %{
             type: "array",
             items: %{
@@ -58,21 +59,30 @@ defmodule Backend.Journal.AiProvider.OpenRouter do
       response_format: @response_format,
       provider: %{require_parameters: true},
       messages: [
-        %{role: "system", content: correction_instructions(language, level)},
+        %{role: "system", content: analysis_instructions(language, level)},
         %{role: "user", content: body}
       ]
     }
   end
 
-  defp correction_instructions(language, level) do
+  defp analysis_instructions(language, level) do
     """
     You correct text written by a learner of the language with ISO 639-1 code "#{language}", at CEFR level #{level}.
     Return every error in the entry as one correction.
     "original" is the shortest span that contains the error, copied character for character from the entry.
+    "original" and "fix" cover whole words. When a fix joins two words, as when "je aime" becomes "j'aime", "original" holds both words.
     "fix" is the corrected span. "explanation" is one short sentence in English.
     "category" is the kind of error.
     List corrections in the order they appear in the entry.
     Do not correct style or word choice that is already correct. If the entry has no errors, return an empty list.
+
+    "teacher_reaction" is one line, under 160 characters, from the teacher who set the entry.
+    The teacher speaks English as "I", opens with a French interjection a beginner can read, and names one real fact: the number of corrections or the most common kind of error.
+    The teacher teases dryly and never gushes, and praises only what the entry earned.
+    Examples of the voice:
+    Oh là là! You crossed the pass in a storm and only tripped on two verbs. Bravo!
+    Zut! Three wrong genders. The mountain doesn't care, but I do. Let's fix them.
+    Pas mal! Only one slip, in gender. Let's fix it.
     """
   end
 

@@ -7,6 +7,7 @@ defmodule Backend.ApiWeb.EntryFlowTest do
 
   alias Backend.ApiWeb.EntryChannel
   alias Backend.ApiWeb.Test.FailingAiProvider
+  alias Backend.ApiWeb.Test.ReactingAiProvider
   alias Backend.ApiWeb.UserSocket
 
   @endpoint Backend.ApiWeb.Endpoint
@@ -89,6 +90,23 @@ defmodule Backend.ApiWeb.EntryFlowTest do
                }
              ]
            }
+  end
+
+  test "shows the AI's teacher reaction when the provider writes one" do
+    Application.put_env(:journal, :ai_provider, ReactingAiProvider)
+
+    on_exit(fn ->
+      Application.put_env(:journal, :ai_provider, Backend.Journal.AiProvider.Stub)
+    end)
+
+    journey_id = start_journey()
+
+    %{"data" => %{"submitEntry" => submitted}} =
+      submit_entry(journey_id, "J'ai allé à le marché.")
+
+    run_analysis_jobs()
+
+    assert read_entry(submitted["id"])["teacherReaction"] == ReactingAiProvider.teacher_reaction()
   end
 
   test "lists entries newest first" do

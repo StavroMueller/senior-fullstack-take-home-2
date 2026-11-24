@@ -9,6 +9,22 @@ defmodule Backend.Journal.CorrectionParser do
                         {name, category}
                       end)
 
+  @longest_teacher_reaction 200
+
+  @doc "Returns the teacher's reaction from the response when it is one short line and every correction in the response was kept, or nil."
+  def parse_teacher_reaction(
+        %{"teacher_reaction" => reaction, "corrections" => items},
+        kept_corrections
+      )
+      when is_binary(reaction) and length(items) == length(kept_corrections) do
+    trimmed_reaction = String.trim(reaction)
+
+    if trimmed_reaction != "" and String.length(trimmed_reaction) <= @longest_teacher_reaction,
+      do: trimmed_reaction
+  end
+
+  def parse_teacher_reaction(_response, _kept_corrections), do: nil
+
   @doc "Returns the valid corrections found in the body, in body order, with code point spans."
   def parse(body, %{"corrections" => items}) when is_list(items) do
     {corrections, _byte_cursor} = Enum.flat_map_reduce(items, 0, &locate(body, &1, &2))
@@ -36,6 +52,9 @@ defmodule Backend.Journal.CorrectionParser do
         {[], byte_cursor}
     end
   end
+
+  defp validate(%{"original" => unchanged_text, "fix" => unchanged_text} = item),
+    do: {:error, {:fix_changes_nothing, item}}
 
   defp validate(
          %{

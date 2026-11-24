@@ -24,5 +24,9 @@ else
   fi
 fi
 
-echo "Starting Wayword. Open http://localhost:5173 once the containers are up."
-exec docker compose up --build
+echo "Building and starting Wayword."
+docker compose up --build --detach --wait
+echo
+echo "Wayword is running at http://localhost:5173"
+echo "Backend logs: docker compose logs --follow backend"
+echo "Stop it:      docker compose down"
