@@ -75,7 +75,9 @@ screen shows which kinds of error keep coming back and which have dropped off.
 
 - **Writing.** The left half is a map of France with the journey's route. The right half gives a
   prompt for the current stop, such as "Write about today's stop. Three sentences is enough.",
-  and an entry field. Some stops are fantastical encounters with their own prompt.
+  and an entry field. Some stops are fantastical encounters with their own prompt. A stop takes
+  as many entries as you like, and once it has one, "Keep going" moves you on: the "You are here"
+  marker walks along the trail to the next stop.
 - **Waiting.** After you send an entry, it shows "Checking your entry" until analysis ends. The
   page hears the result over a Phoenix channel, with no reload.
 - **Reading corrections.** Each corrected span is highlighted inside the entry. Below it, the
@@ -108,7 +110,8 @@ is one mutation or query, and resolvers only map arguments to the `journal` app.
 | `startJourney` | Starts a journey from a random seed |
 | `submitEntry(input)` | Saves one entry as `analyzing` and enqueues its analysis |
 | `retryAnalysis(entryId)` | Runs a failed analysis again |
-| `currentJourney` | The newest journey, with its route and the next place to write |
+| `travelOn(journeyId)` | Moves the journey to its next place, once the current place has an entry |
+| `currentJourney` | The newest journey, with its route, the place you are at and `canTravelOn` |
 | `entries` | Every entry, newest first |
 | `entry(id)` | One entry with its corrections and the teacher's reaction |
 | `categoryTrends` | Each mistake category with its count and trend |
@@ -120,11 +123,12 @@ The browser joins the Phoenix channel `entry:<id>` to hear `analysis_finished` o
 
 Postgres holds four tables:
 
-- `journeys`: `seed`, `language` and `level`. The route is drawn from the seed when read, so it is
-  not stored.
+- `journeys`: `seed`, `language`, `level`, and the place the person is at:
+  `current_point_of_interest_index`, `current_encounter_id` and `finished_at`. The route is drawn
+  from the seed when read, so it is not stored.
 - `entries`: `body`, `analysis_status` (`analyzing`, `analyzed` or `analysis_failed`), a
-  `point_of_interest_index` or an `encounter_id`, `teacher_reaction` and `inserted_at`. A check constraint requires
-  exactly one place.
+  `point_of_interest_index` or an `encounter_id`, `teacher_reaction` and `inserted_at`. A check
+  constraint requires exactly one place, and a place can hold several entries.
 - `corrections`: `entry_id`, `span_start` and `span_end` in Unicode code points, `original`,
   `fix`, `explanation` and `category`. `category` is a Postgres enum of nine values.
 - `encounters`: the encounters met on a journey, each placed after one point of interest.

@@ -40,8 +40,8 @@ describe("Logbook", () => {
     expect(sendButton).toBeEnabled();
   });
 
-  it("names the next point of interest above the prompt", async () => {
-    renderLogbook(testJourney({ nextPointOfInterestIndex: 2 }));
+  it("names the point of interest the person is at above the prompt", async () => {
+    renderLogbook(testJourney({ currentPointOfInterestIndex: 2 }));
 
     expect(await screen.findByRole("heading", { name: "Bourges" })).toBeInTheDocument();
     expect(
@@ -52,7 +52,7 @@ describe("Logbook", () => {
   it("gives the encounter's prompt while an encounter waits for an entry", async () => {
     renderLogbook(
       testJourney({
-        nextPointOfInterestIndex: 1,
+        currentPointOfInterestIndex: 0,
         openEncounter: {
           __typename: "Encounter",
           id: "7",
@@ -67,8 +67,21 @@ describe("Logbook", () => {
     expect(screen.getByText("Mon dieu, a dragon is asleep on the bridge!")).toBeInTheDocument();
   });
 
+  it("offers to keep going only once the current place has an entry", async () => {
+    renderLogbook(testJourney({ canTravelOn: true }));
+
+    expect(await screen.findByRole("button", { name: "Keep going" })).toBeEnabled();
+  });
+
+  it("hides keep going before the current place has an entry", async () => {
+    renderLogbook(testJourney());
+
+    expect(await screen.findByRole("button", { name: "Send entry" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Keep going" })).not.toBeInTheDocument();
+  });
+
   it("ends the journey at the last point of interest and offers the next one", async () => {
-    renderLogbook(testJourney({ nextPointOfInterestIndex: null }));
+    renderLogbook(testJourney({ currentPointOfInterestIndex: null }));
 
     expect(
       await screen.findByText(

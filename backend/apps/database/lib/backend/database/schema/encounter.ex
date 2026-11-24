@@ -22,7 +22,7 @@ defmodule Backend.Database.Schema.Encounter do
       ]
 
     belongs_to :journey, Journey
-    has_one :entry, Entry
+    has_many :entries, Entry
 
     timestamps(type: :utc_datetime)
   end

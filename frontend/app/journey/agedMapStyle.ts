@@ -2,7 +2,7 @@ import type { StyleSpecification } from "maplibre-gl";
 import { palette } from "~/palette";
 
 const vectorSourceId = "openmaptiles";
-const labelFont = ["Noto Sans Regular"];
+const labelFont = ["Noto Sans Italic"];
 const waterOpacity = 0.5;
 const riverOpacity = 0.6;
 const labelHaloWidth = 1.5;

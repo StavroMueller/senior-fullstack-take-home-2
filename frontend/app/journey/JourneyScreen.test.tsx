@@ -44,7 +44,7 @@ const mocks = [
       data: {
         currentJourney: testJourney({
           encounters: [encounter],
-          nextPointOfInterestIndex: 1,
+          currentPointOfInterestIndex: 1,
         }),
       },
     },
@@ -76,6 +76,7 @@ describe("JourneyScreen", () => {
       "Tours",
       "La Rochelle",
       "Encounter after Nancy",
+      "You are here: Troyes",
     ]);
   });
 });

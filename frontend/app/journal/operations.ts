@@ -62,7 +62,8 @@ export type RouteOnMap = {
 export type CurrentJourney = RouteOnMap & {
   id: string;
   openEncounter: Pick<Encounter, "id" | "prompt"> | null;
-  nextPointOfInterestIndex: number | null;
+  currentPointOfInterestIndex: number | null;
+  canTravelOn: boolean;
 };
 
 export type EntryOnRoute = {
@@ -95,7 +96,8 @@ export const CURRENT_JOURNEY = gql`
         id
         prompt
       }
-      nextPointOfInterestIndex
+      currentPointOfInterestIndex
+      canTravelOn
     }
   }
   ${ROUTE_ON_MAP}
@@ -178,6 +180,14 @@ export const CATEGORY_TRENDS = gql`
 export const SUBMIT_ENTRY = gql`
   mutation SubmitEntry($input: SubmitEntryInput!) {
     submitEntry(input: $input) {
+      id
+    }
+  }
+`;
+
+export const TRAVEL_ON = gql`
+  mutation TravelOn($journeyId: ID!) {
+    travelOn(journeyId: $journeyId) {
       id
     }
   }

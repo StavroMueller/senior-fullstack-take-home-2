@@ -11,7 +11,8 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
   pointsOfInterest { name }
   encounters { afterPointOfInterestIndex prompt }
   openEncounter { id prompt }
-  nextPointOfInterestIndex
+  currentPointOfInterestIndex
+  canTravelOn
   """
 
   @ghost_baker_prompt "Tiens! A ghost runs the bakery at the crossroads. Order your breakfast in French."
@@ -30,12 +31,15 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
         submitEntry(input: $input) {
           pointOfInterestIndex
           encounter { id }
-          journey { pointsOfInterest { name } }
         }
       }
       """,
       %{input: %{journeyId: journey_id, body: body}}
     )
+  end
+
+  defp travel_on(journey_id) do
+    graphql("mutation($id: ID!) { travelOn(journeyId: $id) { id } }", %{id: journey_id})
   end
 
   defp written_place(journey_id) do
@@ -47,20 +51,36 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
     end
   end
 
-  test "seed 1 places each entry at a point of interest or an encounter until the journey ends" do
+  test "a place takes several entries, and the journey moves on only when asked" do
     %Journey{id: journey_id} = Repo.insert!(%Journey{seed: 1, language: "fr", level: "A1"})
 
     journey = read_journey()
     assert length(journey["pointsOfInterest"]) == 5
-    assert journey["nextPointOfInterestIndex"] == 0
-    assert journey["openEncounter"] == nil
+    assert journey["currentPointOfInterestIndex"] == 0
+    assert journey["canTravelOn"] == false
+
+    assert %{"errors" => [%{"message" => "no_entry_here"}]} = travel_on(journey_id)
 
     assert written_place(journey_id) == {:point_of_interest, 0}
+    assert written_place(journey_id) == {:point_of_interest, 0}
+    assert read_journey()["canTravelOn"] == true
+  end
+
+  test "seed 1 travels through every point of interest and its encounters to the end" do
+    %Journey{id: journey_id} = Repo.insert!(%Journey{seed: 1, language: "fr", level: "A1"})
+
+    assert written_place(journey_id) == {:point_of_interest, 0}
+    travel_on(journey_id)
 
     %{"openEncounter" => %{"id" => ghost_baker_id, "prompt" => @ghost_baker_prompt}} =
       read_journey()
 
-    places = for _entry <- 1..7, do: written_place(journey_id)
+    places =
+      for _place <- 1..7 do
+        place = written_place(journey_id)
+        travel_on(journey_id)
+        place
+      end
 
     assert [
              {:encounter, ^ghost_baker_id},
@@ -73,12 +93,15 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
            ] = places
 
     finished = read_journey()
-    assert finished["nextPointOfInterestIndex"] == nil
+    assert finished["currentPointOfInterestIndex"] == nil
     assert finished["openEncounter"] == nil
+    assert finished["canTravelOn"] == false
     assert Enum.map(finished["encounters"], & &1["afterPointOfInterestIndex"]) == [0, 2, 3]
 
     assert %{"errors" => [%{"message" => "journey_finished"}]} =
              submit_entry(journey_id, "Encore un mot.")
+
+    assert %{"errors" => [%{"message" => "journey_finished"}]} = travel_on(journey_id)
   end
 
   test "an entry for a journey that does not exist is refused" do
