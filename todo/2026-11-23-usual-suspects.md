@@ -20,8 +20,7 @@ lately". With fewer than two analyzed entries, no category gets a trend.
    ExUnit covers the split and every trend without a database.
 3. `Backend.Journal.Queries.GetCategoryTrends.run/0` reads analyzed entries with their correction
    categories in one query and calls `CategoryTrends.from_entries/1`.
-4. GraphQL: `categoryTrends` returns the analyzed entry count, the size of each half, and one row
-   per category with `category`, `count` and `trend`.
+4. GraphQL: `categoryTrends` returns the size of each half and one row per category with `category`, `count` and `trend`.
 5. Frontend: the `/usual-suspects` route lists the rows, most frequent first, and a link on the
    home screen opens it.
 6. Tests: ExUnit for `CategoryTrends` and for the query through the `api` app, Vitest for the

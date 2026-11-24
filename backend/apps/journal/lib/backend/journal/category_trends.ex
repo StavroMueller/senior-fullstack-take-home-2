@@ -35,7 +35,6 @@ defmodule Backend.Journal.CategoryTrends do
       |> Enum.sort_by(fn row -> {-row.count, Atom.to_string(row.category)} end)
 
     %{
-      analyzed_entry_count: length(categories_per_entry),
       older_entry_count: older_entry_count,
       recent_entry_count: recent_entry_count,
       categories: categories

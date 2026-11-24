@@ -8,7 +8,6 @@ defmodule Backend.Journal.CategoryTrendsTest do
 
   test "no analyzed entries give no categories" do
     assert CategoryTrends.from_entries([]) == %{
-             analyzed_entry_count: 0,
              older_entry_count: 0,
              recent_entry_count: 0,
              categories: []

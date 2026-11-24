@@ -6,7 +6,6 @@ describe("UsualSuspects", () => {
     render(
       <UsualSuspects
         categoryTrends={{
-          analyzedEntryCount: 4,
           olderEntryCount: 2,
           recentEntryCount: 2,
           categories: [
@@ -36,7 +35,6 @@ describe("UsualSuspects", () => {
     render(
       <UsualSuspects
         categoryTrends={{
-          analyzedEntryCount: 1,
           olderEntryCount: 0,
           recentEntryCount: 1,
           categories: [{ category: "ARTICLE", count: 2, trend: null }],
@@ -53,7 +51,6 @@ describe("UsualSuspects", () => {
     render(
       <UsualSuspects
         categoryTrends={{
-          analyzedEntryCount: 0,
           olderEntryCount: 0,
           recentEntryCount: 0,
           categories: [],

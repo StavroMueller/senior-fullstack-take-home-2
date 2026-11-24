@@ -44,7 +44,6 @@ export type CategoryTrend = {
 };
 
 export type CategoryTrends = {
-  analyzedEntryCount: number;
   olderEntryCount: number;
   recentEntryCount: number;
   categories: CategoryTrend[];
@@ -164,7 +163,6 @@ export const ENTRIES = gql`
 export const CATEGORY_TRENDS = gql`
   query CategoryTrends {
     categoryTrends {
-      analyzedEntryCount
       olderEntryCount
       recentEntryCount
       categories {

@@ -6,7 +6,6 @@ defmodule Backend.ApiWeb.CategoryTrendsTest do
   @category_trends_query """
   query {
     categoryTrends {
-      analyzedEntryCount
       olderEntryCount
       recentEntryCount
       categories { category count trend }
@@ -43,7 +42,6 @@ defmodule Backend.ApiWeb.CategoryTrendsTest do
     %{"data" => %{"categoryTrends" => category_trends}} = graphql(@category_trends_query)
 
     assert category_trends == %{
-             "analyzedEntryCount" => 4,
              "olderEntryCount" => 2,
              "recentEntryCount" => 2,
              "categories" => [

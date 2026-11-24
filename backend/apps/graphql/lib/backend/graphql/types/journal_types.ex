@@ -19,7 +19,6 @@ defmodule Backend.Graphql.Types.JournalTypes do
 
   @desc "Each mistake category counted over the analyzed entries, most frequent first."
   object :category_trends do
-    field :analyzed_entry_count, non_null(:integer)
     field :older_entry_count, non_null(:integer)
     field :recent_entry_count, non_null(:integer)
     field :categories, non_null(list_of(non_null(:category_trend)))
