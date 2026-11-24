@@ -1,5 +1,5 @@
 defmodule Backend.Journal.AiProvider do
-  @moduledoc "The contract every AI provider meets: corrections for an entry, and the teacher's intro to a new journey, and the scene the teacher sets when the journey reaches a town."
+  @moduledoc "The contract every AI provider meets, and the calls that reach the provider set in config: corrections for an entry, the teacher's intro to a new journey, and the scene the teacher sets in a town."
 
   @callback correct_entry(body :: String.t(), language :: String.t(), level :: String.t()) ::
               {:ok, map()} | {:error, term()}
