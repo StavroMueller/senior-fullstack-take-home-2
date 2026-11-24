@@ -16,12 +16,11 @@ marked inside it, read the teacher's reaction under it, and reopen the entry fro
   value; matching `original` regardless of case; dropping a correction that appears before the
   previous one.
 
-## Stage 1 work left, in order
+## Stage 1 and Stage 2
 
-1. The README answers, per `todo/2026-11-23-readme.md`, now that the real provider works.
+Both stages are built, and the README answers each question the assignment asks of it.
 
 The aged map style is merged with pull request #7. The map draws water in `mapInk` at half
 opacity, a choice Julien may veto, because `DESIGN.md` named no water color.
 
-Stage 2, the "Usual suspects" screen, is on branch `usual-suspects`, per
-`todo/2026-11-23-usual-suspects.md`. The README answers follow it.
+The "Usual suspects" screen merged with pull request #11.
