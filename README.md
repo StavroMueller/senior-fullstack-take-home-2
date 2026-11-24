@@ -13,7 +13,7 @@ You need Docker.
 ```
 
 The script asks for an OpenRouter API key at a hidden prompt, saves the key to `.env`, then
-runs `docker compose up --build`. Press Enter at the prompt to run with the stub provider. Once `.env` holds a key, the script uses that key without
+starts the stack in the background and prints its address once every container is healthy. Press Enter at the prompt to run with the stub provider. Once `.env` holds a key, the script uses that key without
 asking; delete `.env` to change or drop it.
 
 Open http://localhost:5173. The GraphQL API answers at http://localhost:4000/api/graphql, and
