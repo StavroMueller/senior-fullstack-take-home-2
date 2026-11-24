@@ -107,3 +107,17 @@ Categories were judged by reading each correction.
 Julien picked `anthropic/claude-haiku-5.5` on 2026-11-23, from the benchmark above: every
 category right, no broken fix, a median of 1.8 s and $0.15 per 1000 entries measured. The
 adapter calls OpenRouter with the request shape the benchmark used.
+
+## Built
+
+`Backend.Journal.AiProvider.OpenRouter` is selected in `backend/config/runtime.exs` when
+`OPENROUTER_API_KEY` is set outside the test environment. One entry submitted through the app
+against `anthropic/claude-haiku-5.5` came back in 6.0 s with four corrections, each one marked in
+the entry with its category and explanation. Julien ruled that the real provider gets no
+automated test.
+
+Left open:
+
+- `CorrectionParser.validate/1` accepts a correction whose `fix` equals its `original`.
+- `correction_category` has no value for noun number.
+- A fix that only elides, such as "Je" to "J'", renders as "J' aime" with a space.
