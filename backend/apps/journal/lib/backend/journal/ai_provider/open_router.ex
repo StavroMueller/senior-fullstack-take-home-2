@@ -50,7 +50,7 @@ defmodule Backend.Journal.AiProvider.OpenRouter do
   end
 
   @impl true
-  def describe_place(town, language, level) do
+  def describe_point_of_interest(town, language, level) do
     settings = Application.fetch_env!(:journal, __MODULE__)
 
     post(settings, %{

@@ -1,7 +1,12 @@
 defmodule Backend.Journal.Queries.ListLanguages do
   @moduledoc "Lists each language and level a journey can start in: every pair whose route and level strings files all exist."
 
-  @level_strings_folders ["teacher_reactions", "encounters", "place_scenes", "journey_intros"]
+  @level_strings_folders [
+    "teacher_reactions",
+    "encounters",
+    "point_of_interest_scenes",
+    "journey_intros"
+  ]
 
   @doc "Returns each startable language code with its level and the country its route crosses, sorted by country."
   def run do

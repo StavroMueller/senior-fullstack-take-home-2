@@ -24,7 +24,9 @@ defmodule Backend.Journal.Queries.GetJourneyProgress do
   defp current_scene(%Journey{finished_at: nil} = journey, %Encounter{} = encounter),
     do: EncounterPrompt.for_encounter(encounter, journey)
 
-  defp current_scene(%Journey{finished_at: nil} = journey, nil), do: journey.current_place_scene
+  defp current_scene(%Journey{finished_at: nil} = journey, nil),
+    do: journey.current_point_of_interest_scene
+
   defp current_scene(%Journey{}, _open_encounter), do: nil
 
   defp current_point_of_interest_index(%Journey{finished_at: nil} = journey),

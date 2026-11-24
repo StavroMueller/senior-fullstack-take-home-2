@@ -164,6 +164,12 @@ Julien's standing rulings, recorded 2026-11-23.
 - **No single-character names.** `entry`, `index`, `mistake`, never `e`, `i`, `m`.
 - **A name states exactly what the thing does.** A function named for one scope returns that
   scope and nothing else. When behavior changes, rename it: a stale name is a bug.
+- **Long and descriptive beats short.** A name that spells out what it holds wins over a shorter
+  one that needs a guess: `PointOfInterestScene`, never `PlaceScene`. Ruled by Julien,
+  2026-11-23.
+- **No near-synonyms in one name, and no word that reads as a verb in a noun name.** In
+  `PlaceScene`, "place" reads as a verb and sits beside its near-synonym "scene", so a reader
+  cannot tell what the module holds. Ruled by Julien, 2026-11-23.
 - **Name the specific thing, never the generic one.** A generic noun such as "line", "item" or
   "text" fits many things, so a reader has to guess which one is meant. Name what the thing is:
   `TeacherReaction`, never `TeacherLine`. When no word under "Vocabulary" fits, propose one
@@ -175,7 +181,7 @@ Julien's standing rulings, recorded 2026-11-23.
 - **One word per concept, in code and on screen.** The words are fixed under "Vocabulary".
 - **A pipe chain reads top to bottom.** Start it from the data, and pipe only into a named
   module's function. Never pipe into a call on a module looked up at runtime, such as
-  `provider().describe_place(...)`, and never pipe into `case` to branch on a result: bind the
+  `provider().describe_point_of_interest(...)`, and never pipe into `case` to branch on a result: bind the
   result to a name, then `case` on that name. A `Multi` chain may end in `Repo.transaction()
   |> case do`. Ruled by Julien, 2026-11-23, after `JourneyIntro.for_journey` piped a town list
   into the provider.

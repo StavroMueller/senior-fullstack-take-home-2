@@ -12,7 +12,7 @@ defmodule Backend.Database.Schema.Journey do
     field :level, :string
     field :current_point_of_interest_index, :integer, default: 0
     field :finished_at, :utc_datetime
-    field :current_place_scene, :string
+    field :current_point_of_interest_scene, :string
     field :intro, :string
 
     belongs_to :current_encounter, Encounter

@@ -24,6 +24,10 @@ verbs for the same act.
 `CLAUDE.md`: "feedback" or "mistake" alone in code, "persona" for the teacher, "session" for a
 journey.
 
+**NM-06: Long and descriptive beats short.** WARN. A name shortened past what it holds, or one
+that pairs near-synonyms or uses a word that reads as a verb in a noun name, such as
+`PlaceScene`.
+
 ## Comments (CM)
 
 **CM-01: No comments.** WARN. Any comment other than a tool directive (`eslint-disable`,

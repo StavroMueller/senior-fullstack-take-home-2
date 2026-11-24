@@ -1,4 +1,4 @@
-defmodule Backend.Journal.PlaceScene do
+defmodule Backend.Journal.PointOfInterestScene do
   @moduledoc "Sets the scene the teacher gives on reaching a town: the AI's, when it returns a usable one, or a hand-written scene from the strings file."
 
   alias Backend.Database.Schema.Journey
@@ -10,7 +10,7 @@ defmodule Backend.Journal.PlaceScene do
   def for_arrival(%Journey{} = journey, point_of_interest_index) do
     town = Enum.at(Route.points_of_interest(journey), point_of_interest_index).name
 
-    ai_scene = AiProvider.describe_place(town, journey.language, journey.level)
+    ai_scene = AiProvider.describe_point_of_interest(town, journey.language, journey.level)
 
     case TeacherText.usable(ai_scene) do
       {:ok, scene} -> scene
@@ -21,7 +21,9 @@ defmodule Backend.Journal.PlaceScene do
   defp hand_written(journey, point_of_interest_index, town) do
     scenes =
       :journal
-      |> Application.app_dir("priv/place_scenes/#{journey.language}-#{journey.level}.json")
+      |> Application.app_dir(
+        "priv/point_of_interest_scenes/#{journey.language}-#{journey.level}.json"
+      )
       |> File.read!()
       |> Jason.decode!()
       |> Map.fetch!("scenes")

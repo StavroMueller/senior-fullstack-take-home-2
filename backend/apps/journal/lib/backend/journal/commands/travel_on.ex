@@ -5,7 +5,7 @@ defmodule Backend.Journal.Commands.TravelOn do
   alias Backend.Database.Schema.Encounter
   alias Backend.Database.Schema.Journey
   alias Backend.Journal.EncounterDraw
-  alias Backend.Journal.PlaceScene
+  alias Backend.Journal.PointOfInterestScene
   alias Backend.Journal.Queries.GetJourneyProgress
   alias Backend.Journal.Route
   alias Ecto.Changeset
@@ -66,7 +66,8 @@ defmodule Backend.Journal.Commands.TravelOn do
   defp arrive_at(%Changeset{data: journey} = changeset, point_of_interest_index) do
     Changeset.change(changeset,
       current_point_of_interest_index: point_of_interest_index,
-      current_place_scene: PlaceScene.for_arrival(journey, point_of_interest_index)
+      current_point_of_interest_scene:
+        PointOfInterestScene.for_arrival(journey, point_of_interest_index)
     )
   end
 end

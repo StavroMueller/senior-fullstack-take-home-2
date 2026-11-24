@@ -31,7 +31,7 @@ defmodule Backend.Journal.AiProvider.Stub do
   ]
 
   @impl true
-  def describe_place(_town, _language, _level), do: {:error, :stub_writes_no_scenes}
+  def describe_point_of_interest(_town, _language, _level), do: {:error, :stub_writes_no_scenes}
 
   @impl true
   def introduce_journey(_towns, _language, _level), do: {:error, :stub_writes_no_intros}
