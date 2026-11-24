@@ -76,6 +76,7 @@ describe("JourneyScreen", () => {
       "Tours",
       "La Rochelle",
       "Encounter after Nancy",
+      "You are here: Troyes",
     ]);
   });
 });

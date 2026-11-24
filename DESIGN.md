@@ -55,6 +55,16 @@ never drift into the cream band. Ruled by Julien, 2026-11-23.
 
 The two hex values are defaults, not yet ruled on. The trail itself is drawn in `action`.
 
+**The Hand-Drawn Map.** An SVG turbulence filter wobbles every line on the map canvas, so coasts,
+roads and borders look inked by hand. The trail is a dashed line in `action` with round caps, and
+place names are set in Noto Sans Italic, the italic face the OpenFreeMap glyph server offers.
+Requested by Julien, 2026-11-23.
+
+**The Traveler.** One marker in `action`, larger than a stop, with a pulsing ring and an `ink`
+label, marks the current place: "You are here: {town}" on the journey screen, "Written here:
+{town}" on an entry. When the journey moves on, the traveler walks along the trail to the next
+place, so the move reads as travel. Stops are plain dots. Requested by Julien, 2026-11-23.
+
 ## 2a. Layout
 
 **The Grid Rule.** Every screen is laid out on the MUI `Grid`. From the `md` breakpoint up, the map
