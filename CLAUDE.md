@@ -69,7 +69,9 @@ the canary not worth its tokens.
    option first. Never ask for a typed reply such as "1 merge, 2 keep".
 5. **Say what each option changes.** Every option states what changes on screen and on the
    server.
-6. **Ask one thing at a time.** In multi-step work, give one step and wait for "done".
+6. **Ask one thing at a time, and run the steps of one pull request without stopping.** Within
+   one open pull request, work through every step without waiting for "done". A question to
+   Julien still asks one thing. Ruled by Julien, 2026-11-24.
 7. **Push back.** When a plan has a gap, say so with the reasoning before doing any of the plan.
 8. **Name the operation.** Explain a change by what happens to the code, with one scenario of
    who does what. No figure of speech stands in for the operation.

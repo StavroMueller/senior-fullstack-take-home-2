@@ -6,12 +6,7 @@ marked inside it, read the teacher's reaction under it, and reopen the entry fro
 
 ## Waiting on Julien
 
-- Pick the AI provider and supply a key, per `todo/2026-11-23-real-ai-provider.md`.
-- Record his preference from 2026-11-23 in `CLAUDE.md`. He said to keep working through the
-  steps of an open pull request without stopping for "done" between them. That reverses
-  Engagement rule 6, "Ask one thing at a time". Auto mode blocked the agent's edit to rule 6, so
-  Julien makes it or approves it.
-- Choices made in `CorrectionParser` that Julien may veto: the eight categories in the
+- Choices made in `CorrectionParser` that Julien may veto: the nine categories in the
   `correction_category` enum; dropping a correction whose category is unknown, with no `other`
   value; matching `original` regardless of case; dropping a correction that appears before the
   previous one.
