@@ -22,7 +22,7 @@ export const fonts = {
 } as const;
 
 export const sizes = {
-  progressIndicator: 24,
+  thinkingBuddy: 64,
   correctionUnderline: 2,
   edgeHeight: 4,
   pressedEdgeHeight: 2,

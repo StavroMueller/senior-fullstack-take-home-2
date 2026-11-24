@@ -68,7 +68,9 @@ Requested by Julien, 2026-11-23.
 `buddySkin` with `buddySkinShade` ears and jaw, a `teacherEdge` beret, a scarf in `action` and a
 `teacher` coat. The buddy sits beside the scene at each place, which reads as a speech bubble. When a new
 scene arrives, the buddy talks: the mouth opens and closes and the head bobs, for 35 ms per
-character of the scene, up to 5 seconds. The eyes blink every 4 seconds. No
+character of the scene, up to 5 seconds. The eyes blink every 4 seconds. While the AI works, the buddy
+thinks: pupils raised, one brow up and a small downturned mouth. That face shows beside "Checking
+your entry" and while "Start a journey" or "Keep going" waits for a scene. No
 feature of the buddy comes from a Duolingo character. Requested by Julien, 2026-11-23.
 
 **The Traveler.** One marker in `action`, larger than a stop, with a pulsing ring and an `ink`

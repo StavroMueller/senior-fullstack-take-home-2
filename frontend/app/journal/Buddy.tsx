@@ -6,9 +6,14 @@ const bobAnimation = "buddy-bob";
 const blinkAnimation = "buddy-blink";
 const svgPartStyle = { transformBox: "fill-box" as const, transformOrigin: "center" };
 
-export function Buddy({ size, talking }: { size: number; talking: boolean }) {
+export type BuddyExpression = "resting" | "talking" | "thinking";
+
+export function Buddy({ size, expression }: { size: number; expression: BuddyExpression }) {
+  const thinking = expression === "thinking";
+  const pupilY = thinking ? 50 : 56;
+  const pupilShine = thinking ? 48 : 54;
   const talkingStyle = (animation: string, milliseconds: number) =>
-    talking
+    expression === "talking"
       ? { ...svgPartStyle, animation: `${animation} ${milliseconds}ms ease-in-out infinite` }
       : svgPartStyle;
 
@@ -57,7 +62,7 @@ export function Buddy({ size, talking }: { size: number; talking: boolean }) {
             fill="none"
           />
           <path
-            d="M67 43 Q73 40 79 44"
+            d={thinking ? "M67 40 Q73 35 79 39" : "M67 43 Q73 40 79 44"}
             stroke={palette.ink}
             strokeWidth={3}
             strokeLinecap="round"
@@ -71,17 +76,27 @@ export function Buddy({ size, talking }: { size: number; talking: boolean }) {
           >
             <ellipse cx={47} cy={54} rx={7} ry={8} fill={palette.surface} />
             <ellipse cx={73} cy={54} rx={7} ry={8} fill={palette.surface} />
-            <circle cx={48} cy={56} r={4} fill={palette.ink} />
-            <circle cx={74} cy={56} r={4} fill={palette.ink} />
-            <circle cx={49.5} cy={54} r={1.5} fill={palette.surface} />
-            <circle cx={75.5} cy={54} r={1.5} fill={palette.surface} />
+            <circle cx={49} cy={pupilY} r={4} fill={palette.ink} />
+            <circle cx={75} cy={pupilY} r={4} fill={palette.ink} />
+            <circle cx={50.5} cy={pupilShine} r={1.5} fill={palette.surface} />
+            <circle cx={76.5} cy={pupilShine} r={1.5} fill={palette.surface} />
           </g>
           <circle cx={40} cy={66} r={5} fill={palette.action} opacity={0.35} />
           <circle cx={80} cy={66} r={5} fill={palette.action} opacity={0.35} />
-          <g style={talkingStyle(talkAnimation, sizes.buddyTalkMilliseconds)}>
-            <path d="M48 67 Q60 80 72 67 Z" fill={palette.ink} />
-            <path d="M53 72 Q60 78 67 72 Q60 70 53 72 Z" fill={palette.action} />
-          </g>
+          {thinking ? (
+            <path
+              d="M52 74 Q60 69 68 74"
+              stroke={palette.ink}
+              strokeWidth={3}
+              strokeLinecap="round"
+              fill="none"
+            />
+          ) : (
+            <g style={talkingStyle(talkAnimation, sizes.buddyTalkMilliseconds)}>
+              <path d="M48 67 Q60 80 72 67 Z" fill={palette.ink} />
+              <path d="M53 72 Q60 78 67 72 Q60 70 53 72 Z" fill={palette.action} />
+            </g>
+          )}
         </g>
       </svg>
     </>

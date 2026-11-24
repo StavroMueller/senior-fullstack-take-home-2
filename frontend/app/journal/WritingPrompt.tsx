@@ -16,9 +16,11 @@ function talkMilliseconds(scene: string) {
 export function WritingPrompt({
   journey,
   currentPointOfInterestIndex,
+  thinking,
 }: {
   journey: CurrentJourney;
   currentPointOfInterestIndex: number;
+  thinking: boolean;
 }) {
   const [talking, setTalking] = useState(false);
   const scene = journey.currentScene;
@@ -37,7 +39,10 @@ export function WritingPrompt({
     <Stack spacing={2} sx={{ width: "100%" }}>
       <Typography variant="h2">{heading}</Typography>
       <Stack direction="row" spacing={2} sx={{ alignItems: "flex-end" }}>
-        <Buddy size={sizes.buddy} talking={talking} />
+        <Buddy
+          size={sizes.buddy}
+          expression={thinking ? "thinking" : talking ? "talking" : "resting"}
+        />
         <Paper sx={{ padding: 2, flex: 1 }}>
           <Typography>{scene}</Typography>
         </Paper>

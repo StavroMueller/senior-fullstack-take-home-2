@@ -4,6 +4,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { type FormEvent, useState } from "react";
+import { Buddy } from "~/journal/Buddy";
 import { EntryHistory } from "~/journal/EntryHistory";
 import { EntryView } from "~/journal/EntryView";
 import {
@@ -18,6 +19,7 @@ import {
   TRAVEL_ON,
 } from "~/journal/operations";
 import { WritingPrompt } from "~/journal/WritingPrompt";
+import { sizes } from "~/palette";
 
 type SubmittedEntry = { submitEntry: { id: string } };
 
@@ -25,7 +27,10 @@ export function Logbook() {
   const { data: journeyData, loading } = useQuery<{ currentJourney: CurrentJourney | null }>(
     CURRENT_JOURNEY,
   );
-  const [startJourney] = useMutation(START_JOURNEY, { refetchQueries: [CURRENT_JOURNEY] });
+  const [startJourney, { loading: startingJourney }] = useMutation(START_JOURNEY, {
+    refetchQueries: [CURRENT_JOURNEY],
+    awaitRefetchQueries: true,
+  });
   const [submitEntry, { loading: submitting }] = useMutation<SubmittedEntry>(SUBMIT_ENTRY, {
     refetchQueries: [ENTRIES, CURRENT_JOURNEY],
   });
@@ -75,6 +80,7 @@ export function Logbook() {
   return (
     <Stack spacing={4}>
       <Typography variant="h1">Wayword</Typography>
+      {startingJourney && <Buddy size={sizes.thinkingBuddy} expression="thinking" />}
       {!loading && !journey && (
         <Stack spacing={2} sx={{ alignItems: "flex-start" }}>
           <Typography>No entries yet. Start a journey to write your first one.</Typography>
@@ -83,9 +89,10 @@ export function Logbook() {
       )}
       {submittedEntryId && <EntryView entryId={submittedEntryId} />}
       {submittedEntryId && (
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
           <Button onClick={() => setSubmittedEntryId(undefined)}>Write another entry</Button>
           {keepGoingButton}
+          {traveling && <Buddy size={sizes.thinkingBuddy} expression="thinking" />}
         </Stack>
       )}
       {finishedJourney && (
@@ -103,6 +110,7 @@ export function Logbook() {
           <WritingPrompt
             journey={journey}
             currentPointOfInterestIndex={currentPointOfInterestIndex}
+            thinking={traveling}
           />
           <TextField
             label="Your entry"
