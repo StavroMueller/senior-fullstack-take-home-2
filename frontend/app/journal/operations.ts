@@ -35,6 +35,20 @@ export type EntrySummary = Pick<Entry, "id" | "body" | "analysisStatus" | "inser
   corrections: Pick<Correction, "id">[];
 };
 
+export type CategoryTrendDirection = "FEWER_LATELY" | "MORE_LATELY" | "STEADY" | "GONE_LATELY";
+
+export type CategoryTrend = {
+  category: CorrectionCategory;
+  count: number;
+  trend: CategoryTrendDirection | null;
+};
+
+export type CategoryTrends = {
+  olderEntryCount: number;
+  recentEntryCount: number;
+  categories: CategoryTrend[];
+};
+
 export type PointOfInterest = { name: string; longitude: number; latitude: number };
 
 export type Encounter = { id: string; afterPointOfInterestIndex: number; prompt: string };
@@ -141,6 +155,20 @@ export const ENTRIES = gql`
       insertedAt
       corrections {
         id
+      }
+    }
+  }
+`;
+
+export const CATEGORY_TRENDS = gql`
+  query CategoryTrends {
+    categoryTrends {
+      olderEntryCount
+      recentEntryCount
+      categories {
+        category
+        count
+        trend
       }
     }
   }

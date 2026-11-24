@@ -184,17 +184,19 @@ pin it.
 
 Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.
 
-### The AI provider is a stub for now
+### Claude Haiku 5.5 corrects entries through OpenRouter when a key is set
 
-The correction call goes through a provider `@behaviour`. The only adapter is a stub that returns
-canned corrections.
+The correction call goes through a provider `@behaviour` with two adapters. With
+`OPENROUTER_API_KEY` set, `Backend.Journal.AiProvider.OpenRouter` asks
+`anthropic/claude-haiku-5.5` for corrections as strict JSON. With no key, the stub returns canned
+corrections, so the app runs and every test passes with no AI service.
 
-The assignment requires real AI analysis, so this is open work, tracked in
-`todo/2026-11-23-real-ai-provider.md`. The option on the table: an OpenAI-compatible adapter
-that reads base URL, key and model from the environment, pointed at a free open-weight model on
-OpenRouter, with the stub kept for tests and for running with no key.
+Haiku won a benchmark of five models on ten French A1 entries: every category right, no broken
+fix, a median of 1.8 seconds and $0.15 per 1000 entries. Ollama in Docker was declined because a
+Mac runs the model on its CPU, taking 24 to 128 seconds an entry, and its categories were wrong.
+The measurements are in `todo/2026-11-23-real-ai-provider.md`.
 
-Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.
+Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`, `backend/config/runtime.exs`.
 
 ### Language and level are data
 
@@ -257,3 +259,16 @@ two code points still matches.
 
 Ruled by Julien, 2026-11-23. Source: `backend/apps/database/priv/repo/migrations/`,
 `backend/apps/journal/`.
+
+### Usual suspects compares the older half of the entries with the recent half
+
+The "Usual suspects" screen lists each mistake category with its count, most frequent first. A
+category reads "fewer lately", "more lately", "steady" or "gone lately" by comparing corrections
+per entry in the older half of the analyzed entries with the recent half. With an odd count, the
+recent half holds the extra entry.
+
+Halves were picked because a reviewer writes a few entries in one sitting. A comparison by week
+would put every entry in one bucket, and a fixed window of the last five entries would show no
+trend before ten entries. Comparing per entry keeps two halves of different sizes fair.
+
+Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/lib/backend/journal/category_trends.ex`.

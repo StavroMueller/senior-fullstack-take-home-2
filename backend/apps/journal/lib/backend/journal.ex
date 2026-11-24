@@ -8,6 +8,7 @@ defmodule Backend.Journal do
   defdelegate start_journey, to: Commands.StartJourney, as: :execute
   defdelegate submit_entry(attributes), to: Commands.SubmitEntry, as: :execute
   defdelegate retry_analysis(entry_id), to: Commands.RetryAnalysis, as: :execute
+  defdelegate get_category_trends, to: Queries.GetCategoryTrends, as: :run
   defdelegate get_current_journey, to: Queries.GetCurrentJourney, as: :run
   defdelegate get_encounter_prompt(encounter), to: Queries.GetEncounterPrompt, as: :run
   defdelegate get_entry(entry_id), to: Queries.GetEntry, as: :run

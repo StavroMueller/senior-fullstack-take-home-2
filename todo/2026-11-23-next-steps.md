@@ -23,4 +23,5 @@ marked inside it, read the teacher's reaction under it, and reopen the entry fro
 The aged map style is merged with pull request #7. The map draws water in `mapInk` at half
 opacity, a choice Julien may veto, because `DESIGN.md` named no water color.
 
-Stage 2, the "Usual suspects" screen, starts after these.
+Stage 2, the "Usual suspects" screen, is on branch `usual-suspects`, per
+`todo/2026-11-23-usual-suspects.md`. The README answers follow it.

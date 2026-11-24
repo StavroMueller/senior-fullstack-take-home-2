@@ -78,7 +78,7 @@ export function JourneyMap({
       center: franceCenter,
       zoom: franceZoom,
     });
-    setMap(createdMap);
+    createdMap.once("load", () => setMap(createdMap));
     return () => createdMap.remove();
   }, []);
 
@@ -112,14 +112,10 @@ export function JourneyMap({
     const markers = [...pointOfInterestMarkers, ...encounterMarkers];
     markers.forEach((marker) => marker.addTo(map));
 
-    const showRoute = () => {
-      drawRouteLine(map, pointsOfInterest);
-      const bounds = new LngLatBounds();
-      pointsOfInterest.forEach((pointOfInterest) => bounds.extend(coordinatesOf(pointOfInterest)));
-      map.fitBounds(bounds, { padding: routePaddingPixels });
-    };
-    if (map.isStyleLoaded()) showRoute();
-    else map.once("load", showRoute);
+    drawRouteLine(map, pointsOfInterest);
+    const bounds = new LngLatBounds();
+    pointsOfInterest.forEach((pointOfInterest) => bounds.extend(coordinatesOf(pointOfInterest)));
+    map.fitBounds(bounds, { padding: routePaddingPixels });
 
     return () => markers.forEach((marker) => marker.remove());
   }, [map, route, highlightedPointOfInterestIndex, highlightedEncounterId]);

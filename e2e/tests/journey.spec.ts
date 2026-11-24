@@ -9,7 +9,7 @@ test("the journey screen shows the map of France beside the logbook", async ({
   await expect(journeyMap.locator("canvas")).toBeVisible();
 });
 
-test("a person writes an entry, sees its corrections, and opens it again from history", async ({
+test("a person writes an entry, sees its corrections, opens it again from history and finds its category among the usual suspects", async ({
   page,
 }) => {
   await page.goto("/");
@@ -53,4 +53,16 @@ test("a person writes an entry, sees its corrections, and opens it again from hi
   await expect(
     page.getByRole("heading", { name: "Your entries" }),
   ).toBeVisible();
+
+  await page.getByRole("link", { name: /Usual suspects/ }).click();
+  await expect(page).toHaveURL(/\/usual-suspects$/);
+  await expect(
+    page.getByRole("heading", { name: "Usual suspects" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("listitem").filter({ hasText: "Verb tense" }),
+  ).toContainText(/\d+ times?/);
+  await expect(
+    page.getByRole("complementary", { name: "Your teacher" }),
+  ).toContainText("keeps tripping you up.");
 });

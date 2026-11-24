@@ -300,6 +300,10 @@ Julien's standing rulings, recorded 2026-11-23.
   Actions workflow, which passed once on 2026-11-23 and was deleted. Ruled by Julien,
   2026-11-23.
 
+- **Build each feature in one pass.** Wayword is a demo: build the feature, run the checks under
+  "Commands" and open the pull request. No second round of refinement on logic that already
+  passes its tests. Ruled by Julien, 2026-11-23.
+
 - **No planning tooling.** Open work lives in dated files under `todo/` and nothing else, never
   in a source comment. Declined: GSD, whose overhead a take-home does not pay for.
 - **Rulings have a home.** A decision the code obeys and cannot state goes in `PRODUCT.md`

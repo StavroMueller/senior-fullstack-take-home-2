@@ -15,6 +15,11 @@ defmodule Backend.Graphql.Schema do
       resolve(fn _parent, _arguments, _resolution -> {:ok, "ok"} end)
     end
 
+    @desc "Each mistake category counted over the analyzed entries, with its trend."
+    field :category_trends, non_null(:category_trends) do
+      resolve(&JournalResolver.get_category_trends/3)
+    end
+
     @desc "The journey started most recently, or null before the first one."
     field :current_journey, :journey do
       resolve(&JournalResolver.get_current_journey/3)
