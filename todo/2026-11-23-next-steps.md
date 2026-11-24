@@ -18,8 +18,7 @@ marked inside it, read the teacher's reaction under it, and reopen the entry fro
 
 ## Stage 1 work left, in order
 
-1. The real AI provider, once Julien picks one.
-2. The README answers, per `todo/2026-11-23-readme.md`, once the real provider works.
+1. The README answers, per `todo/2026-11-23-readme.md`, now that the real provider works.
 
 The aged map style is merged with pull request #7. The map draws water in `mapInk` at half
 opacity, a choice Julien may veto, because `DESIGN.md` named no water color.

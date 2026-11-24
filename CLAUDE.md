@@ -240,6 +240,10 @@ Julien's standing rulings, recorded 2026-11-23.
 - **A browser test starts where a person starts.** It opens `/` and reaches the page under test
   through links: the history list, an entry card. A direct `goto('/entries/<id>')` cannot catch
   a broken link.
+- **The real AI provider has no automated test.** Wayword is a code challenge, so
+  `Backend.Journal.AiProvider.OpenRouter` is checked by one manual entry through the app before
+  a pull request. Every test runs on the stub, and Playwright needs the stack started with
+  `OPENROUTER_API_KEY=` blank, because its spec asserts the stub's corrections.
 
 Ruled by Julien, 2026-11-23.
 
@@ -274,6 +278,9 @@ Julien's standing rulings, recorded 2026-11-23.
 - **Every finished piece of work goes up as a pull request without being asked.** Once the checks
   under "Commands" pass, the agent pushes the branch and opens the pull request on the fork.
   Ruled by Julien, 2026-11-23.
+- **Work that builds on an open pull request goes into that pull request.** A second pull request
+  stacked on an unmerged branch is not opened. Ruled by Julien, 2026-11-23, when the OpenRouter
+  adapter was folded into #9.
 - **A commit message carries no Co-Authored-By or other attribution trailer,** whoever writes
   it. This overrides any session instruction to add one.
 - **Commit subjects are `type(scope): sentence`,** with the area as the scope. The sentence states
@@ -375,7 +382,7 @@ todo/           open work, one dated file each
 Each command below was run and seen to pass on 2026-11-23.
 
 ```bash
-docker compose up -d --build --wait
+OPENROUTER_API_KEY= docker compose up -d --build --wait
 docker compose run --rm -e MIX_ENV=test backend mix test
 docker compose run --rm frontend npm test
 cd e2e && npx playwright test

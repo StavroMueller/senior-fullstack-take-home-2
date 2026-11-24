@@ -9,11 +9,24 @@ stop, in French, and get corrections on what you wrote. The assignment this answ
 You need Docker.
 
 ```bash
-docker compose up --build
+./start.sh
 ```
+
+The script asks for an OpenRouter API key at a hidden prompt, saves the key to `.env`, then
+runs `docker compose up --build`. Press Enter at the prompt to run with the stub provider. Once `.env` holds a key, the script uses that key without
+asking; delete `.env` to change or drop it.
 
 Open http://localhost:5173. The GraphQL API answers at http://localhost:4000/api/graphql, and
 Postgres listens on port 55433. The map loads its tiles from OpenFreeMap, so it needs internet.
+
+## Corrections from a real model
+
+With no key, the backend uses a stub provider that knows four phrases, such as "je va" and "à le",
+so the app runs with no AI service. To get corrections from
+`anthropic/claude-haiku-5.5` through OpenRouter, give `./start.sh` your own key, or set
+`OPENROUTER_API_KEY` in a `.env` file at the repository root. The file is git-ignored. Keys come from
+https://openrouter.ai/keys, and 1000 entries cost about $0.15, measured over ten. The model is set in
+`backend/config/config.exs`.
 
 ## Test it
 
@@ -23,7 +36,12 @@ docker compose run --rm frontend npm test
 cd e2e && npm ci && npx playwright install chromium && npx playwright test
 ```
 
-The Playwright spec runs against the stack that `docker compose up` started.
+The Playwright spec asserts the stub's corrections, so start the stack without the key before
+running it:
+
+```bash
+OPENROUTER_API_KEY= docker compose up -d --build --wait
+```
 
 ## How it is built
 

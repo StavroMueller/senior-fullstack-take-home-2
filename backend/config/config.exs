@@ -23,6 +23,7 @@ config :api, Oban,
   queues: [analysis: 5]
 
 config :journal, :ai_provider, Backend.Journal.AiProvider.Stub
+config :journal, Backend.Journal.AiProvider.OpenRouter, model: "anthropic/claude-haiku-5.5"
 config :journal, :new_journey, language: "fr", level: "A1"
 
 config :phoenix, :json_library, Jason
