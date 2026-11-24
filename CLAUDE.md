@@ -405,6 +405,7 @@ frontend/       React Router 7 single-page app, tokens in app/palette.ts, theme 
 e2e/            the Playwright spec, run against the compose stack
 tools/          copy-check, the prose checker, with Wayword's banned words
 todo/           open work, one dated file each
+docs/           records a reader needs that are not open work, such as the AI provider benchmark
 ```
 
 ## Commands
