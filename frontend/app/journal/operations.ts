@@ -123,9 +123,21 @@ export const ENTRY_ON_ROUTE = gql`
   ${ROUTE_ON_MAP}
 `;
 
+export type Language = { code: string; level: string; country: string };
+
+export const LANGUAGES = gql`
+  query Languages {
+    languages {
+      code
+      level
+      country
+    }
+  }
+`;
+
 export const START_JOURNEY = gql`
-  mutation StartJourney {
-    startJourney {
+  mutation StartJourney($language: String!, $level: String!) {
+    startJourney(language: $language, level: $level) {
       id
     }
   }

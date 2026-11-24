@@ -25,6 +25,11 @@ defmodule Backend.Graphql.Schema do
       resolve(&JournalResolver.get_current_journey/3)
     end
 
+    @desc "Each language and level a journey can start in, with the country its route crosses."
+    field :languages, non_null(list_of(non_null(:language))) do
+      resolve(&JournalResolver.list_languages/3)
+    end
+
     @desc "Every entry, newest first."
     field :entries, non_null(list_of(non_null(:entry))) do
       resolve(&JournalResolver.list_entries/3)
@@ -40,6 +45,8 @@ defmodule Backend.Graphql.Schema do
   mutation do
     @desc "Starts a new journey."
     field :start_journey, non_null(:journey) do
+      arg(:language, non_null(:string))
+      arg(:level, non_null(:string))
       resolve(&JournalResolver.start_journey/3)
     end
 

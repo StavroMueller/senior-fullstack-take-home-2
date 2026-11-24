@@ -5,7 +5,7 @@ defmodule Backend.Journal do
   alias Backend.Journal.Commands
   alias Backend.Journal.Queries
 
-  defdelegate start_journey, to: Commands.StartJourney, as: :execute
+  defdelegate start_journey(language_and_level), to: Commands.StartJourney, as: :execute
   defdelegate submit_entry(attributes), to: Commands.SubmitEntry, as: :execute
   defdelegate retry_analysis(entry_id), to: Commands.RetryAnalysis, as: :execute
   defdelegate travel_on(journey_id), to: Commands.TravelOn, as: :execute
@@ -17,6 +17,7 @@ defmodule Backend.Journal do
   defdelegate get_points_of_interest(journey), to: Queries.GetPointsOfInterest, as: :run
   defdelegate get_teacher_reaction(entry), to: Queries.GetTeacherReaction, as: :run
   defdelegate list_entries, to: Queries.ListEntries, as: :run
+  defdelegate list_languages, to: Queries.ListLanguages, as: :run
   defdelegate get_data_source, to: Queries.GetDataSource, as: :run
   defdelegate subscribe_to_analysis(entry_id), to: AnalysisEvents, as: :subscribe
 end

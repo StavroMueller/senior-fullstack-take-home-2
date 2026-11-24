@@ -1,10 +1,30 @@
 import GlobalStyles from "@mui/material/GlobalStyles";
+import { useEffect, useState } from "react";
 import { palette, sizes } from "~/palette";
 
 const talkAnimation = "buddy-talk";
 const bobAnimation = "buddy-bob";
 const blinkAnimation = "buddy-blink";
 const svgPartStyle = { transformBox: "fill-box" as const, transformOrigin: "center" };
+
+export function useTalking(spokenText: string | null) {
+  const [talking, setTalking] = useState(false);
+
+  useEffect(() => {
+    if (!spokenText) return;
+    setTalking(true);
+    const timer = setTimeout(
+      () => setTalking(false),
+      Math.min(
+        spokenText.length * sizes.buddyTalkMillisecondsPerCharacter,
+        sizes.buddyLongestTalkMilliseconds,
+      ),
+    );
+    return () => clearTimeout(timer);
+  }, [spokenText]);
+
+  return talking;
+}
 
 export type BuddyExpression = "resting" | "talking" | "thinking";
 

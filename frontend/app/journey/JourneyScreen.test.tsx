@@ -2,7 +2,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { vi } from "vitest";
-import { CURRENT_JOURNEY, ENTRIES } from "~/journal/operations";
+import { CURRENT_JOURNEY, ENTRIES, LANGUAGES } from "~/journal/operations";
 import { JourneyScreen } from "~/journey/JourneyScreen";
 import { testJourney } from "~/journey/testJourney";
 
@@ -50,6 +50,7 @@ const mocks = [
     },
   },
   { request: { query: ENTRIES }, result: { data: { entries: [] } } },
+  { request: { query: LANGUAGES }, result: { data: { languages: [] } } },
 ];
 
 describe("JourneyScreen", () => {

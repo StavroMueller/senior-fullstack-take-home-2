@@ -28,7 +28,14 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
 
   def list_entries(_parent, _arguments, _resolution), do: {:ok, Journal.list_entries()}
 
-  def start_journey(_parent, _arguments, _resolution), do: Journal.start_journey()
+  def start_journey(_parent, arguments, _resolution) do
+    case Journal.start_journey(arguments) do
+      {:ok, journey} -> {:ok, journey}
+      {:error, reason} -> {:error, Atom.to_string(reason)}
+    end
+  end
+
+  def list_languages(_parent, _arguments, _resolution), do: {:ok, Journal.list_languages()}
 
   def submit_entry(_parent, %{input: input}, _resolution) do
     case Journal.submit_entry(input) do

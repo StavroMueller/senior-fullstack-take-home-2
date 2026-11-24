@@ -7,6 +7,7 @@ import { type FormEvent, useState } from "react";
 import { Buddy } from "~/journal/Buddy";
 import { EntryHistory } from "~/journal/EntryHistory";
 import { EntryView } from "~/journal/EntryView";
+import { JourneyIntro } from "~/journal/JourneyIntro";
 import {
   CURRENT_JOURNEY,
   type CurrentJourney,
@@ -14,6 +15,8 @@ import {
   ENTRY,
   type Entry,
   isAnalyzing,
+  type Language,
+  LANGUAGES,
   START_JOURNEY,
   SUBMIT_ENTRY,
   TRAVEL_ON,
@@ -38,6 +41,8 @@ export function Logbook() {
     refetchQueries: [CURRENT_JOURNEY],
     awaitRefetchQueries: true,
   });
+  const { data: languagesData } = useQuery<{ languages: Language[] }>(LANGUAGES);
+  const [introSeenJourneyId, setIntroSeenJourneyId] = useState<string>();
   const [body, setBody] = useState("");
   const [submittedEntryId, setSubmittedEntryId] = useState<string>();
   const { data: submittedEntryData } = useQuery<{ entry: Entry | null }>(ENTRY, {
@@ -51,6 +56,12 @@ export function Logbook() {
   const submittedEntry = submittedEntryData?.entry;
   const analyzingSubmittedEntry =
     submittedEntryId !== undefined && (!submittedEntry || isAnalyzing(submittedEntry));
+  const showIntro =
+    journey?.intro &&
+    currentPointOfInterestIndex === 0 &&
+    !journey.openEncounter &&
+    !journey.canTravelOn &&
+    introSeenJourneyId !== journey.id;
 
   async function sendEntry(event: FormEvent) {
     event.preventDefault();
@@ -66,10 +77,16 @@ export function Logbook() {
     setSubmittedEntryId(undefined);
   }
 
-  async function startNextJourney() {
-    await startJourney();
+  async function startJourneyIn(language: Language) {
+    await startJourney({ variables: { language: language.code, level: language.level } });
     setSubmittedEntryId(undefined);
   }
+
+  const startButtons = (languagesData?.languages ?? []).map((language) => (
+    <Button key={`${language.code}-${language.level}`} onClick={() => startJourneyIn(language)}>
+      Start a journey in {language.country}
+    </Button>
+  ));
 
   const keepGoingButton = journey?.canTravelOn && (
     <Button disabled={analyzingSubmittedEntry || traveling} onClick={keepGoing}>
@@ -84,7 +101,7 @@ export function Logbook() {
       {!loading && !journey && (
         <Stack spacing={2} sx={{ alignItems: "flex-start" }}>
           <Typography>No entries yet. Start a journey to write your first one.</Typography>
-          <Button onClick={() => startJourney()}>Start a journey</Button>
+          {startButtons}
         </Stack>
       )}
       {submittedEntryId && <EntryView entryId={submittedEntryId} />}
@@ -102,10 +119,13 @@ export function Logbook() {
             {finishedJourney.pointsOfInterest[finishedJourney.pointsOfInterest.length - 1].name},
             the end of this journey. Start a journey to keep writing.
           </Typography>
-          <Button onClick={startNextJourney}>Start a journey</Button>
+          {startButtons}
         </Stack>
       )}
-      {journey && currentPointOfInterestIndex !== null && !submittedEntryId && (
+      {journey && showIntro && journey.intro && (
+        <JourneyIntro intro={journey.intro} onStart={() => setIntroSeenJourneyId(journey.id)} />
+      )}
+      {journey && currentPointOfInterestIndex !== null && !submittedEntryId && !showIntro && (
         <Stack component="form" spacing={2} onSubmit={sendEntry} sx={{ alignItems: "flex-start" }}>
           <WritingPrompt
             journey={journey}

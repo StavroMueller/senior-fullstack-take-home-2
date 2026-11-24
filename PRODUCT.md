@@ -198,7 +198,8 @@ scene is stored in `journeys.current_place_scene`. With no key, or when the scen
 or longer than 600 characters, a hand-written scene from `place_scenes/fr-A1.json` names the town
 instead. At an encounter, the scene is the hand-written prompt for that encounter. When a journey
 starts, the teacher also gives an intro built from the route: the first and last towns and the
-towns between, stored in `journeys.intro` and shown above the first town's scene. A hand-written
+towns between, stored in `journeys.intro`. The intro is the first thing a new journey shows, alone
+with a "Let's go" button that opens the first town's scene. A hand-written
 intro from `journey_intros/fr-A1.json` stands in the same way. Both are written at the same time. Writing the
 scene adds 4 to 5 seconds to "Start a journey" and "Keep going", measured on three towns.
 
@@ -228,8 +229,10 @@ journey intros depend on the level too, so they live in `teacher_reactions/fr-A1
 `encounters/fr-A1.json`, `place_scenes/fr-A1.json` and `journey_intros/fr-A1.json`. The AI
 prompts take the language and level as arguments and name no language or country.
 
-Adding Spanish A1 means adding those five files and changes no code, except choosing the
-language: `config :journal, :new_journey` sets it for every new journey. Declined: a locale framework or
+Adding Spanish A1 means adding those five files and a `country` in `routes/es.json`, and
+changes no code. The `languages` query lists every language and level whose files all exist, the
+screen shows one "Start a journey in {country}" button for each, and `startJourney` refuses any
+other. Declined: a locale framework or
 a registry of languages, which the no-scale rule bans, and hard-coding French.
 
 Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.

@@ -16,8 +16,12 @@ test("a person writes an entry, sees its corrections, opens it again from histor
 
   const startJourney = page.getByRole("button", { name: "Start a journey" });
   const entryField = page.getByLabel("Your entry");
-  await expect(startJourney.or(entryField)).toBeVisible();
+  const letsGo = page.getByRole("button", { name: "Let's go" });
+  await expect(startJourney.or(entryField).or(letsGo)).toBeVisible();
   if (await startJourney.isVisible()) await startJourney.click();
+
+  await expect(letsGo.or(entryField)).toBeVisible();
+  if (await letsGo.isVisible()) await letsGo.click();
 
   const journeyMap = page.getByRole("region", { name: "Journey map" });
   await expect(journeyMap.getByRole("img").first()).toBeVisible();

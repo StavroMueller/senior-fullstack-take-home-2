@@ -18,7 +18,7 @@ export function testJourney(changes: Partial<Record<keyof CurrentJourney, unknow
     currentPointOfInterestIndex: 0,
     canTravelOn: false,
     currentScene: "Voilà, we made it to Nancy! Tell me in French what you see first.",
-    intro: "Bon! We walk from Nancy to La Rochelle, with 3 towns in between.",
+    intro: null,
     ...changes,
   };
 }

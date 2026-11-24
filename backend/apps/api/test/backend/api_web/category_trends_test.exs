@@ -25,7 +25,7 @@ defmodule Backend.ApiWeb.CategoryTrendsTest do
 
   test "counts the categories of analyzed entries and compares the older half with the recent half" do
     %{"data" => %{"startJourney" => %{"id" => journey_id}}} =
-      graphql("mutation { startJourney { id } }")
+      graphql(~s|mutation { startJourney(language: "fr", level: "A1") { id } }|)
 
     for body <- [
           "Hier, j'ai allé à le marché.",

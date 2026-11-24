@@ -32,6 +32,16 @@ defmodule Backend.Graphql.Types.JournalTypes do
     field :trend, :category_trend_direction
   end
 
+  @desc "A language and level a journey can start in."
+  object :language do
+    @desc "The ISO 639-1 code, such as fr."
+    field :code, non_null(:string)
+    @desc "The CEFR level, such as A1."
+    field :level, non_null(:string)
+    @desc "The country the route crosses."
+    field :country, non_null(:string)
+  end
+
   object :journey do
     field :id, non_null(:id)
     field :seed, non_null(:integer)

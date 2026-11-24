@@ -113,7 +113,9 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
 
   test "a new journey opens on the teacher's intro to its route and the scene in its first town" do
     %{"data" => %{"startJourney" => %{"pointsOfInterest" => towns}}} =
-      graphql("mutation { startJourney { pointsOfInterest { name } } }")
+      graphql(
+        ~s|mutation { startJourney(language: "fr", level: "A1") { pointsOfInterest { name } } }|
+      )
 
     [%{"name" => first_town} | _later_towns] = towns
     %{"name" => last_town} = List.last(towns)
@@ -122,6 +124,20 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
     assert journey["intro"] =~ first_town
     assert journey["intro"] =~ last_town
     assert journey["currentScene"] =~ first_town
+  end
+
+  test "lists French A1 in France as the language a journey can start in" do
+    assert %{
+             "data" => %{
+               "languages" => [%{"code" => "fr", "level" => "A1", "country" => "France"}]
+             }
+           } =
+             graphql("query { languages { code level country } }")
+  end
+
+  test "a journey in a language with no data files is refused" do
+    assert %{"errors" => [%{"message" => "language_not_offered"}]} =
+             graphql(~s|mutation { startJourney(language: "xx", level: "A1") { id } }|)
   end
 
   test "an entry for a journey that does not exist is refused" do
