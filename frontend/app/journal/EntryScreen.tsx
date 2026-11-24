@@ -25,7 +25,7 @@ export function EntryScreen({ entryId }: { entryId: string }) {
             route={entry.journey}
             highlightedPointOfInterestIndex={entry.pointOfInterestIndex}
             highlightedEncounterId={entry.encounter?.id}
-            placeLabel="Written here"
+            travelerMarkerLabel="Written here"
           />
         ) : (
           <JourneyMap />

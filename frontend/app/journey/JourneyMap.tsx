@@ -17,11 +17,16 @@ const travelerPulseAnimation = "traveler-pulse";
 
 type Coordinates = [number, number];
 
-type Place = { coordinates: Coordinates; name: string };
+type TravelerMarker = { coordinates: Coordinates; name: string };
 
-type Traveler = { marker: Marker; element: HTMLElement; label: HTMLElement; at: Coordinates };
+type DrawnTravelerMarker = {
+  marker: Marker;
+  element: HTMLElement;
+  label: HTMLElement;
+  at: Coordinates;
+};
 
-function coordinatesOf(pointOfInterest: PointOfInterest): Coordinates {
+function coordinatesOfPointOfInterest(pointOfInterest: PointOfInterest): Coordinates {
   return [pointOfInterest.longitude, pointOfInterest.latitude];
 }
 
@@ -29,16 +34,19 @@ function midpoint(start: PointOfInterest, finish: PointOfInterest): Coordinates 
   return [(start.longitude + finish.longitude) / 2, (start.latitude + finish.latitude) / 2];
 }
 
-function placeOf(
+function findTravelerMarker(
   route: RouteOnMap | undefined,
   pointOfInterestIndex: number | null,
   encounterId: string | null,
-): Place | null {
+): TravelerMarker | null {
   if (!route) return null;
   const { pointsOfInterest, encounters } = route;
   if (pointOfInterestIndex !== null) {
     const pointOfInterest = pointsOfInterest[pointOfInterestIndex];
-    return { coordinates: coordinatesOf(pointOfInterest), name: pointOfInterest.name };
+    return {
+      coordinates: coordinatesOfPointOfInterest(pointOfInterest),
+      name: pointOfInterest.name,
+    };
   }
   const encounter = encounters.find((candidate) => candidate.id === encounterId);
   if (!encounter) return null;
@@ -99,8 +107,8 @@ function easeInOut(progress: number) {
   return progress < 0.5 ? 2 * progress * progress : 1 - (-2 * progress + 2) ** 2 / 2;
 }
 
-function walk(traveler: Traveler, destination: Coordinates) {
-  const [startLongitude, startLatitude] = traveler.at;
+function walk(drawnTravelerMarker: DrawnTravelerMarker, destination: Coordinates) {
+  const [startLongitude, startLatitude] = drawnTravelerMarker.at;
   const [endLongitude, endLatitude] = destination;
   const startedAt = performance.now();
   let frame = 0;
@@ -108,7 +116,7 @@ function walk(traveler: Traveler, destination: Coordinates) {
   const step = (now: number) => {
     const progress = Math.min((now - startedAt) / sizes.travelMilliseconds, 1);
     const eased = easeInOut(progress);
-    traveler.marker.setLngLat([
+    drawnTravelerMarker.marker.setLngLat([
       startLongitude + (endLongitude - startLongitude) * eased,
       startLatitude + (endLatitude - startLatitude) * eased,
     ]);
@@ -116,7 +124,7 @@ function walk(traveler: Traveler, destination: Coordinates) {
   };
 
   frame = requestAnimationFrame(step);
-  traveler.at = destination;
+  drawnTravelerMarker.at = destination;
   return () => cancelAnimationFrame(frame);
 }
 
@@ -124,7 +132,10 @@ function routeLine(pointsOfInterest: PointOfInterest[]) {
   return {
     type: "Feature" as const,
     properties: {},
-    geometry: { type: "LineString" as const, coordinates: pointsOfInterest.map(coordinatesOf) },
+    geometry: {
+      type: "LineString" as const,
+      coordinates: pointsOfInterest.map(coordinatesOfPointOfInterest),
+    },
   };
 }
 
@@ -152,22 +163,28 @@ export function JourneyMap({
   route,
   highlightedPointOfInterestIndex = null,
   highlightedEncounterId = null,
-  placeLabel = "You are here",
+  travelerMarkerLabel = "You are here",
 }: {
   route?: RouteOnMap;
   highlightedPointOfInterestIndex?: number | null;
   highlightedEncounterId?: string | null;
-  placeLabel?: string;
+  travelerMarkerLabel?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const travelerRef = useRef<Traveler>(undefined);
+  const drawnTravelerMarkerRef = useRef<DrawnTravelerMarker>(undefined);
   const [map, setMap] = useState<MapLibreMap>();
-  const place = placeOf(route, highlightedPointOfInterestIndex, highlightedEncounterId);
-  const placeLongitude = place?.coordinates[0];
-  const placeLatitude = place?.coordinates[1];
-  const placeText = place ? `${placeLabel}: ${place.name}` : null;
-  const placeRef = useRef<Coordinates | null>(null);
-  placeRef.current = place?.coordinates ?? null;
+  const travelerMarker = findTravelerMarker(
+    route,
+    highlightedPointOfInterestIndex,
+    highlightedEncounterId,
+  );
+  const travelerMarkerLongitude = travelerMarker?.coordinates[0];
+  const travelerMarkerLatitude = travelerMarker?.coordinates[1];
+  const travelerMarkerText = travelerMarker
+    ? `${travelerMarkerLabel}: ${travelerMarker.name}`
+    : null;
+  const travelerMarkerCoordinatesRef = useRef<Coordinates | null>(null);
+  travelerMarkerCoordinatesRef.current = travelerMarker?.coordinates ?? null;
   const routeTowns = route?.pointsOfInterest
     .map((pointOfInterest) => pointOfInterest.name)
     .join("|");
@@ -190,7 +207,7 @@ export function JourneyMap({
 
     const pointOfInterestMarkers = pointsOfInterest.map((pointOfInterest) =>
       new Marker({ element: stopMarkerElement(pointOfInterest.name, palette.ink) }).setLngLat(
-        coordinatesOf(pointOfInterest),
+        coordinatesOfPointOfInterest(pointOfInterest),
       ),
     );
     const encounterMarkers = encounters.map((encounter) =>
@@ -218,7 +235,7 @@ export function JourneyMap({
     if (!map || !route) return;
     const bounds = new LngLatBounds();
     route.pointsOfInterest.forEach((pointOfInterest) =>
-      bounds.extend(coordinatesOf(pointOfInterest)),
+      bounds.extend(coordinatesOfPointOfInterest(pointOfInterest)),
     );
     map.fitBounds(bounds, {
       duration: 0,
@@ -229,28 +246,35 @@ export function JourneyMap({
         left: routePaddingPixels,
       },
     });
-    if (placeRef.current) map.jumpTo({ center: placeRef.current });
+    if (travelerMarkerCoordinatesRef.current)
+      map.jumpTo({ center: travelerMarkerCoordinatesRef.current });
   }, [map, routeTowns]);
 
   useEffect(() => {
-    if (!map || placeLongitude === undefined || placeLatitude === undefined || !placeText) return;
-    const destination: Coordinates = [placeLongitude, placeLatitude];
-    const traveler = travelerRef.current;
+    if (
+      !map ||
+      travelerMarkerLongitude === undefined ||
+      travelerMarkerLatitude === undefined ||
+      !travelerMarkerText
+    )
+      return;
+    const destination: Coordinates = [travelerMarkerLongitude, travelerMarkerLatitude];
+    const drawnTravelerMarker = drawnTravelerMarkerRef.current;
 
-    if (!traveler) {
+    if (!drawnTravelerMarker) {
       const { element, label } = travelerElements();
       const marker = new Marker({ element }).setLngLat(destination).addTo(map);
-      travelerRef.current = { marker, element, label, at: destination };
-      label.textContent = placeText;
-      element.setAttribute("aria-label", placeText);
+      drawnTravelerMarkerRef.current = { marker, element, label, at: destination };
+      label.textContent = travelerMarkerText;
+      element.setAttribute("aria-label", travelerMarkerText);
       return;
     }
 
-    traveler.label.textContent = placeText;
-    traveler.element.setAttribute("aria-label", placeText);
+    drawnTravelerMarker.label.textContent = travelerMarkerText;
+    drawnTravelerMarker.element.setAttribute("aria-label", travelerMarkerText);
     map.easeTo({ center: destination, duration: sizes.travelMilliseconds });
-    return walk(traveler, destination);
-  }, [map, placeLongitude, placeLatitude, placeText]);
+    return walk(drawnTravelerMarker, destination);
+  }, [map, travelerMarkerLongitude, travelerMarkerLatitude, travelerMarkerText]);
 
   return (
     <>
