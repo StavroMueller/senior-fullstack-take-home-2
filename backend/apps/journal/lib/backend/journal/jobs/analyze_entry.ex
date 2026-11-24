@@ -5,6 +5,7 @@ defmodule Backend.Journal.Jobs.AnalyzeEntry do
 
   alias Backend.Database.Repo
   alias Backend.Database.Schema.Entry
+  alias Backend.Journal.AiProvider
   alias Backend.Journal.AnalysisEvents
   alias Backend.Journal.Commands.FailAnalysis
   alias Backend.Journal.Commands.FinishAnalysis
@@ -15,7 +16,7 @@ defmodule Backend.Journal.Jobs.AnalyzeEntry do
     entry = Entry |> Repo.get!(entry_id) |> Repo.preload(:journey)
 
     with {:ok, response} <-
-           provider().correct_entry(entry.body, entry.journey.language, entry.journey.level),
+           AiProvider.correct_entry(entry.body, entry.journey.language, entry.journey.level),
          {:ok, corrections} <- CorrectionParser.parse(entry.body, response),
          teacher_reaction = CorrectionParser.parse_teacher_reaction(response, corrections),
          {:ok, entry} <- FinishAnalysis.execute(entry, corrections, teacher_reaction) do
@@ -35,6 +36,4 @@ defmodule Backend.Journal.Jobs.AnalyzeEntry do
     AnalysisEvents.broadcast_analysis_ended(entry.id, entry.analysis_status)
     {:cancel, reason}
   end
-
-  defp provider, do: Application.fetch_env!(:journal, :ai_provider)
 end

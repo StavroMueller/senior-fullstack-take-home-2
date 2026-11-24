@@ -171,6 +171,12 @@ Julien's standing rulings, recorded 2026-11-23.
 - **Siblings share one naming scheme.** Functions behind one screen use one verb across
   entities.
 - **One word per concept, in code and on screen.** The words are fixed under "Vocabulary".
+- **A pipe chain reads top to bottom.** Start it from the data, and pipe only into a named
+  module's function. Never pipe into a call on a module looked up at runtime, such as
+  `provider().describe_place(...)`, and never pipe into `case` to branch on a result: bind the
+  result to a name, then `case` on that name. A `Multi` chain may end in `Repo.transaction()
+  |> case do`. Ruled by Julien, 2026-11-23, after `JourneyIntro.for_journey` piped a town list
+  into the provider.
 - **Match what something is.** `%Entry{} = entry <-`, never
   `entry when not is_nil(entry) <-`.
 - **Avoid `cond` when a boolean expression does the job.**

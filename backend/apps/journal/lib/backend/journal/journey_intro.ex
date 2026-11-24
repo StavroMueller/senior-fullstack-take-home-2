@@ -2,6 +2,7 @@ defmodule Backend.Journal.JourneyIntro do
   @moduledoc "Writes the teacher's intro to a new journey from its route: the AI's, when usable, or a hand-written intro from the strings file."
 
   alias Backend.Database.Schema.Journey
+  alias Backend.Journal.AiProvider
   alias Backend.Journal.PlaceScene
   alias Backend.Journal.Route
 
@@ -9,10 +10,9 @@ defmodule Backend.Journal.JourneyIntro do
   def for_journey(%Journey{} = journey) do
     towns = journey |> Route.points_of_interest() |> Enum.map(& &1.name)
 
-    towns
-    |> provider().introduce_journey(journey.language, journey.level)
-    |> PlaceScene.usable()
-    |> case do
+    ai_intro = AiProvider.introduce_journey(towns, journey.language, journey.level)
+
+    case PlaceScene.usable(ai_intro) do
       nil -> hand_written(journey, towns)
       intro -> intro
     end
@@ -32,6 +32,4 @@ defmodule Backend.Journal.JourneyIntro do
     |> String.replace("%{finish}", List.last(towns))
     |> String.replace("%{stops}", Integer.to_string(length(towns) - 2))
   end
-
-  defp provider, do: Application.fetch_env!(:journal, :ai_provider)
 end

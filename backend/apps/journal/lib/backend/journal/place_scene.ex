@@ -2,6 +2,7 @@ defmodule Backend.Journal.PlaceScene do
   @moduledoc "Sets the scene the teacher gives on reaching a town: the AI's, when it returns a usable one, or a hand-written scene from the strings file."
 
   alias Backend.Database.Schema.Journey
+  alias Backend.Journal.AiProvider
   alias Backend.Journal.Route
 
   @longest_scene 600
@@ -10,10 +11,9 @@ defmodule Backend.Journal.PlaceScene do
   def for_arrival(%Journey{} = journey, point_of_interest_index) do
     town = Enum.at(Route.points_of_interest(journey), point_of_interest_index).name
 
-    town
-    |> provider().describe_place(journey.language, journey.level)
-    |> usable()
-    |> case do
+    ai_scene = AiProvider.describe_place(town, journey.language, journey.level)
+
+    case usable(ai_scene) do
       nil -> hand_written(journey, point_of_interest_index, town)
       scene -> scene
     end
@@ -39,6 +39,4 @@ defmodule Backend.Journal.PlaceScene do
     |> Enum.at(:erlang.phash2({journey.seed, point_of_interest_index}, length(scenes)))
     |> String.replace("%{town}", town)
   end
-
-  defp provider, do: Application.fetch_env!(:journal, :ai_provider)
 end
