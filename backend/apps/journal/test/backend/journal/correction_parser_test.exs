@@ -84,6 +84,34 @@ defmodule Backend.Journal.CorrectionParserTest do
     assert spans("Je va au parc.", [missing_fix, correction("")]) == []
   end
 
+  test "keeps the teacher's reaction, trimmed, when every correction was kept" do
+    response = %{"corrections" => [correction("Je va")], "teacher_reaction" => " Zut! One slip. "}
+    {:ok, corrections} = CorrectionParser.parse("Je va au parc.", response)
+
+    assert CorrectionParser.parse_teacher_reaction(response, corrections) == "Zut! One slip."
+  end
+
+  test "drops the teacher's reaction when a correction was dropped, so its count cannot be wrong" do
+    response = %{
+      "corrections" => [correction("Je va"), correction("nous sommes")],
+      "teacher_reaction" => "Zut! Two slips."
+    }
+
+    {:ok, corrections} = CorrectionParser.parse("Je va au parc.", response)
+
+    assert CorrectionParser.parse_teacher_reaction(response, corrections) == nil
+  end
+
+  test "drops a teacher's reaction that is blank, too long or missing" do
+    blank = %{"corrections" => [], "teacher_reaction" => "  "}
+    too_long = %{"corrections" => [], "teacher_reaction" => String.duplicate("a", 201)}
+    missing = %{"corrections" => []}
+
+    for response <- [blank, too_long, missing] do
+      assert CorrectionParser.parse_teacher_reaction(response, []) == nil
+    end
+  end
+
   test "rejects a response without a list of corrections" do
     assert CorrectionParser.parse("Je va.", %{"text" => "Je vais."}) ==
              {:error, :malformed_response}

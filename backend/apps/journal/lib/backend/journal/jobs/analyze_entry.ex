@@ -17,7 +17,8 @@ defmodule Backend.Journal.Jobs.AnalyzeEntry do
     with {:ok, response} <-
            provider().correct_entry(entry.body, entry.journey.language, entry.journey.level),
          {:ok, corrections} <- CorrectionParser.parse(entry.body, response),
-         {:ok, entry} <- FinishAnalysis.execute(entry, corrections) do
+         teacher_reaction = CorrectionParser.parse_teacher_reaction(response, corrections),
+         {:ok, entry} <- FinishAnalysis.execute(entry, corrections, teacher_reaction) do
       AnalysisEvents.broadcast_analysis_ended(entry.id, entry.analysis_status)
     else
       {:error, reason} -> retry_or_fail(entry, job, reason)

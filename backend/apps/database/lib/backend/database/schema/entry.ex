@@ -11,6 +11,7 @@ defmodule Backend.Database.Schema.Entry do
     field :body, :string
     field :analysis_status, Ecto.Enum, values: [:analyzing, :analyzed, :analysis_failed]
     field :point_of_interest_index, :integer
+    field :teacher_reaction, :string
 
     belongs_to :journey, Journey
     belongs_to :encounter, Encounter

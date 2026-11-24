@@ -1,12 +1,12 @@
 defmodule Backend.Journal.Commands.FinishAnalysis do
-  @moduledoc "Stores an entry's corrections and marks its analysis analyzed."
+  @moduledoc "Stores an entry's corrections and the AI's teacher reaction, if any, and marks its analysis analyzed."
 
   alias Backend.Database.Repo
   alias Backend.Database.Schema.Correction
   alias Backend.Database.Schema.Entry
   alias Ecto.Multi
 
-  def execute(%Entry{} = entry, corrections) do
+  def execute(%Entry{} = entry, corrections, teacher_reaction) do
     now = DateTime.utc_now(:second)
 
     rows =
@@ -16,7 +16,10 @@ defmodule Backend.Journal.Commands.FinishAnalysis do
 
     Multi.new()
     |> Multi.insert_all(:corrections, Correction, rows)
-    |> Multi.update(:entry, Ecto.Changeset.change(entry, analysis_status: :analyzed))
+    |> Multi.update(
+      :entry,
+      Ecto.Changeset.change(entry, analysis_status: :analyzed, teacher_reaction: teacher_reaction)
+    )
     |> Repo.transaction()
     |> case do
       {:ok, %{entry: entry}} -> {:ok, entry}

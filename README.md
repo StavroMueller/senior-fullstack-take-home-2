@@ -123,7 +123,7 @@ Postgres holds four tables:
 - `journeys`: `seed`, `language` and `level`. The route is drawn from the seed when read, so it is
   not stored.
 - `entries`: `body`, `analysis_status` (`analyzing`, `analyzed` or `analysis_failed`), a
-  `point_of_interest_index` or an `encounter_id`, and `inserted_at`. A check constraint requires
+  `point_of_interest_index` or an `encounter_id`, `teacher_reaction` and `inserted_at`. A check constraint requires
   exactly one place.
 - `corrections`: `entry_id`, `span_start` and `span_end` in Unicode code points, `original`,
   `fix`, `explanation` and `category`. `category` is a Postgres enum of nine values.
@@ -138,12 +138,14 @@ value. The mistake data for Stage 2 is the `corrections.category` column, counte
    transaction, and returns.
 2. The job sends the entry to the AI provider. With `OPENROUTER_API_KEY` set, the provider is
    `anthropic/claude-haiku-5.5` through OpenRouter, asked for JSON that matches a strict schema.
-   With no key, the stub answers.
+   The same call returns the teacher's reaction. With no key, the stub answers.
 3. `CorrectionParser` validates the response, the one place that does. The parser finds each
    `original` in the entry, searching forward on word boundaries, and stores its code point span.
    A correction with an unknown category, text not found in the entry, or a fix that changes
    nothing is dropped.
-4. The job stores the corrections, sets the status to `analyzed` and broadcasts the result.
+4. The job stores the corrections and the teacher's reaction, sets the status to `analyzed` and
+   broadcasts the result. The reaction is kept only when every correction survived step 3, so its
+   count matches the screen; otherwise the teacher speaks a hand-written line.
 5. When the provider fails, Oban retries up to three attempts. After the last one, the status
    becomes `analysis_failed` and the entry text stays saved.
 
