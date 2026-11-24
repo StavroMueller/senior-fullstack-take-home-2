@@ -10,6 +10,8 @@ services:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 2s
       retries: 15
+    volumes:
+      - database:/var/lib/postgresql/data
 
   backend:
     build: ./backend
@@ -46,3 +48,6 @@ services:
       retries: 40
     volumes:
       - ./frontend/app:/app/app
+
+volumes:
+  database:
