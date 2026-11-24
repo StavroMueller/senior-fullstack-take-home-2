@@ -9,4 +9,17 @@ defmodule Backend.Journal.AiProvider do
 
   @callback introduce_journey(towns :: [String.t()], language :: String.t(), level :: String.t()) ::
               {:ok, String.t()} | {:error, term()}
+
+  @doc "Asks the configured provider for corrections to an entry."
+  def correct_entry(body, language, level), do: configured().correct_entry(body, language, level)
+
+  @doc "Asks the configured provider for the scene the teacher sets in a town."
+  def describe_place(town, language, level),
+    do: configured().describe_place(town, language, level)
+
+  @doc "Asks the configured provider for the teacher's intro to a route."
+  def introduce_journey(towns, language, level),
+    do: configured().introduce_journey(towns, language, level)
+
+  defp configured, do: Application.fetch_env!(:journal, :ai_provider)
 end
