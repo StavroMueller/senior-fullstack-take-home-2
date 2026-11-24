@@ -44,6 +44,19 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
     graphql("mutation($id: ID!) { travelOn(journeyId: $id) { id } }", %{id: journey_id})
   end
 
+  defp assert_scene_names_the_town_reached do
+    case read_journey() do
+      %{"currentPointOfInterestIndex" => nil} ->
+        :finished
+
+      %{"openEncounter" => nil, "currentPointOfInterestIndex" => index} = journey ->
+        assert journey["currentScene"] =~ Enum.at(journey["pointsOfInterest"], index)["name"]
+
+      %{"openEncounter" => %{"prompt" => prompt}, "currentScene" => scene} ->
+        assert scene == prompt
+    end
+  end
+
   defp written_place(journey_id) do
     %{"data" => %{"submitEntry" => entry}} = submit_entry(journey_id, "Bonjour.")
 
@@ -87,6 +100,7 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
       for _place <- 1..6 do
         place = written_place(journey_id)
         travel_on(journey_id)
+        assert_scene_names_the_town_reached()
         place
       end
 

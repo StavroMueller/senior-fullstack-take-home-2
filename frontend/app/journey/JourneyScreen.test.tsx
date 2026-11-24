@@ -17,6 +17,8 @@ vi.mock("maplibre-gl", () => ({
       addSource: vi.fn(),
       addLayer: vi.fn(),
       fitBounds: vi.fn(),
+      jumpTo: vi.fn(),
+      easeTo: vi.fn(),
     };
   }),
   Marker: vi.fn(function FakeMarker({ element }: { element: HTMLElement }) {

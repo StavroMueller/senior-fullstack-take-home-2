@@ -41,9 +41,8 @@ defmodule Backend.Journal.Commands.TravelOn do
 
   defp leave_point_of_interest(journey, nil) do
     journey
-    |> Changeset.change(
-      current_point_of_interest_index: journey.current_point_of_interest_index + 1
-    )
+    |> Changeset.change()
+    |> arrive_at(journey.current_point_of_interest_index + 1)
     |> Repo.update()
   end
 

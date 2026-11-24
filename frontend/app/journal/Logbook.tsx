@@ -4,6 +4,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { type FormEvent, useState } from "react";
+import { Link } from "react-router";
 import { Buddy } from "~/journal/Buddy";
 import { EntryHistory } from "~/journal/EntryHistory";
 import { EntryView } from "~/journal/EntryView";
@@ -22,7 +23,7 @@ import {
   TRAVEL_ON,
 } from "~/journal/operations";
 import { WritingPrompt } from "~/journal/WritingPrompt";
-import { sizes } from "~/palette";
+import { palette, sizes } from "~/palette";
 
 type SubmittedEntry = { submitEntry: { id: string } };
 
@@ -96,7 +97,12 @@ export function Logbook() {
 
   return (
     <Stack spacing={4}>
-      <Typography variant="h1">Wayword</Typography>
+      <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "baseline" }}>
+        <Typography variant="h1">Wayword</Typography>
+        <Link to="/usual-suspects" style={{ color: palette.ink }}>
+          Usual suspects
+        </Link>
+      </Stack>
       {startingJourney && <Buddy size={sizes.thinkingBuddy} expression="thinking" />}
       {!loading && !journey && (
         <Stack spacing={2} sx={{ alignItems: "flex-start" }}>
