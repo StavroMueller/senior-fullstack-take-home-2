@@ -48,22 +48,23 @@ defmodule Backend.Journal.CorrectionParser do
       {[correction], byte_end}
     else
       {:error, reason} ->
-        Logger.warning("Dropped a correction from the AI provider: #{inspect(reason)}")
+        Logger.warning(
+          "Dropped a correction from the AI provider: #{reason}, category #{logged_category_name(item)}"
+        )
+
         {[], byte_cursor}
     end
   end
 
-  defp validate(%{"original" => unchanged_text, "fix" => unchanged_text} = item),
-    do: {:error, {:fix_changes_nothing, item}}
+  defp validate(%{"original" => unchanged_text, "fix" => unchanged_text}),
+    do: {:error, :fix_changes_nothing}
 
-  defp validate(
-         %{
-           "original" => original,
-           "fix" => fix,
-           "explanation" => explanation,
-           "category" => category_name
-         } = item
-       )
+  defp validate(%{
+         "original" => original,
+         "fix" => fix,
+         "explanation" => explanation,
+         "category" => category_name
+       })
        when is_binary(original) and original != "" and is_binary(fix) and
               is_binary(explanation) and is_binary(category_name) do
     case Map.fetch(@categories_by_name, category_name) do
@@ -77,11 +78,11 @@ defmodule Backend.Journal.CorrectionParser do
          }}
 
       :error ->
-        {:error, {:unknown_category, item}}
+        {:error, :unknown_category}
     end
   end
 
-  defp validate(item), do: {:error, {:malformed_correction, item}}
+  defp validate(_item), do: {:error, :malformed_correction}
 
   defp find(body, original, byte_cursor) do
     pattern =
@@ -92,9 +93,12 @@ defmodule Backend.Journal.CorrectionParser do
 
     case Regex.run(pattern, body, offset: byte_cursor, return: :index) do
       [{byte_start, byte_length}] -> {:ok, byte_start, byte_length}
-      nil -> {:error, {:not_found_after_previous_correction, original}}
+      nil -> {:error, :not_found_after_previous_correction}
     end
   end
+
+  defp logged_category_name(%{"category" => category_name}), do: inspect(category_name)
+  defp logged_category_name(_item), do: "missing"
 
   defp code_points_before(body, byte_offset) do
     body |> binary_part(0, byte_offset) |> String.codepoints() |> length()

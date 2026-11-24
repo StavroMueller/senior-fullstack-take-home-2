@@ -71,7 +71,7 @@ direct `Repo` call in an Absinthe resolver or a Phoenix channel.
 `defdelegate`.
 
 **ST-03: Schemas live in `database` and hold no logic.** WARN. An Ecto schema defined in another
-app, or a function in a schema module beyond `changeset/2`.
+app, or any function in a schema module. Changesets belong to the command that writes the row.
 
 **ST-04: Every module sits under its app's namespace.** WARN. A module outside
 `Backend.<App>.*`, other than `Backend.ApiWeb.*`.
@@ -84,7 +84,9 @@ pipes into `case` anywhere but the end of a `Multi` chain.
 
 ## API writes (AP)
 
-**AP-01: One operation, one mutation.** ERROR. Two mutations write the same row.
+**AP-01: One operation, one mutation.** ERROR. Two mutations perform the same operation, or one
+mutation performs two. Two operations may write the same row: `submitEntry` creates an entry and
+`retryAnalysis` sets it back to `analyzing`.
 
 ## Tests (TS)
 
@@ -132,7 +134,7 @@ and use `with`.
 **BI-04: Mutating an accumulator inside `Enum.each`.** ERROR. Rebinding inside the block changes
 nothing outside it. Use `Enum.reduce/3`.
 
-**BI-05: `any` or a non-null `!` in TypeScript.** WARN. Use the generated GraphQL types and
-narrow by shape.
+**BI-05: `any` or a non-null `!` in TypeScript.** WARN. Use the types in
+`frontend/app/journal/operations.ts`, which repeat the GraphQL schema by hand, and narrow by shape.
 
 **BI-06: `==` in TypeScript.** WARN. Use `===`.

@@ -164,9 +164,9 @@ Ruled by Julien, 2026-11-23. Source: `docker-compose.yml`, `backend/apps/databas
 ### Submitting an entry returns at once and analysis runs after
 
 `submitEntry` saves the entry with status `analyzing`, enqueues an Oban job and returns. The job
-calls the AI provider, stores the corrections and broadcasts on the `entry:<id>` channel. The
-writing screen joins that channel and refetches the entry when it hears `analysis_finished` or
-`analysis_failed`.
+calls the AI provider, stores the corrections and broadcasts on the `analysis:<id>` PubSub
+topic. `EntryChannel` relays that event to the `entry:<id>` channel. The writing screen joins
+that channel and refetches the entry when it hears `analysis_finished` or `analysis_failed`.
 
 A failed analysis keeps the entry, so nothing the person wrote is lost to a provider error.
 Declined: analyzing inside the request, an Absinthe subscription, and polling.

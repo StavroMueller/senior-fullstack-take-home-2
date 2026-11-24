@@ -2,6 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests",
+  globalSetup: "./resetDatabase.ts",
   use: {
     baseURL: process.env.WAYWORD_URL ?? "http://localhost:5173",
     trace: "retain-on-failure",
