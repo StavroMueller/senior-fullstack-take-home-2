@@ -74,6 +74,11 @@ defmodule Backend.Journal.CorrectionParserTest do
     assert spans("Je va au parc.", [correction("Je va", "verb tense")]) == []
   end
 
+  test "drops a correction whose fix is the same as its original and keeps the rest" do
+    unchanged = Map.put(correction("au parc"), "fix", "au parc")
+    assert spans("Je va au parc.", [correction("Je va"), unchanged]) == [{0, 5}]
+  end
+
   test "drops a correction with a missing or empty field" do
     missing_fix = Map.delete(correction("Je va"), "fix")
     assert spans("Je va au parc.", [missing_fix, correction("")]) == []

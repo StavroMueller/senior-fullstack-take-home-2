@@ -18,6 +18,7 @@ defmodule Backend.Database.Schema.Correction do
         :verb_agreement,
         :gender,
         :adjective_agreement,
+        :noun_number,
         :article,
         :preposition,
         :spelling,

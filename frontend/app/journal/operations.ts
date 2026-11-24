@@ -7,6 +7,7 @@ export type CorrectionCategory =
   | "VERB_AGREEMENT"
   | "GENDER"
   | "ADJECTIVE_AGREEMENT"
+  | "NOUN_NUMBER"
   | "ARTICLE"
   | "PREPOSITION"
   | "SPELLING"

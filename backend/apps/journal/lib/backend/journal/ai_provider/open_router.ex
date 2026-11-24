@@ -69,6 +69,7 @@ defmodule Backend.Journal.AiProvider.OpenRouter do
     You correct text written by a learner of the language with ISO 639-1 code "#{language}", at CEFR level #{level}.
     Return every error in the entry as one correction.
     "original" is the shortest span that contains the error, copied character for character from the entry.
+    "original" and "fix" cover whole words. When a fix joins two words, as when "je aime" becomes "j'aime", "original" holds both words.
     "fix" is the corrected span. "explanation" is one short sentence in English.
     "category" is the kind of error.
     List corrections in the order they appear in the entry.

@@ -116,8 +116,7 @@ against `anthropic/claude-haiku-5.5` came back in 6.0 s with four corrections, e
 the entry with its category and explanation. Julien ruled that the real provider gets no
 automated test.
 
-Left open:
-
-- `CorrectionParser.validate/1` accepts a correction whose `fix` equals its `original`.
-- `correction_category` has no value for noun number.
-- A fix that only elides, such as "Je" to "J'", renders as "J' aime" with a space.
+The three gaps the benchmark found are fixed: `CorrectionParser` drops a correction whose `fix`
+equals its `original`, `correction_category` has `noun_number`, and the prompt asks for both words
+of an elision in `original`. One real call returned "Je aime" to "J'aime" and put "trois chambre"
+under `noun_number`.

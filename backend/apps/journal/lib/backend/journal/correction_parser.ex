@@ -37,6 +37,9 @@ defmodule Backend.Journal.CorrectionParser do
     end
   end
 
+  defp validate(%{"original" => unchanged_text, "fix" => unchanged_text} = item),
+    do: {:error, {:fix_changes_nothing, item}}
+
   defp validate(
          %{
            "original" => original,

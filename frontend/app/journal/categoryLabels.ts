@@ -5,6 +5,7 @@ export const categoryLabels: Record<CorrectionCategory, string> = {
   VERB_AGREEMENT: "Verb agreement",
   GENDER: "Gender",
   ADJECTIVE_AGREEMENT: "Adjective agreement",
+  NOUN_NUMBER: "Singular and plural",
   ARTICLE: "Article",
   PREPOSITION: "Preposition",
   SPELLING: "Spelling and accents",

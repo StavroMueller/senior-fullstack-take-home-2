@@ -126,7 +126,7 @@ Postgres holds four tables:
   `point_of_interest_index` or an `encounter_id`, and `inserted_at`. A check constraint requires
   exactly one place.
 - `corrections`: `entry_id`, `span_start` and `span_end` in Unicode code points, `original`,
-  `fix`, `explanation` and `category`. `category` is a Postgres enum of eight values.
+  `fix`, `explanation` and `category`. `category` is a Postgres enum of nine values.
 - `encounters`: the encounters met on a journey, each placed after one point of interest.
 
 Columns with a fixed set of values are Postgres enum types, so the database rejects any other
@@ -141,7 +141,8 @@ value. The mistake data for Stage 2 is the `corrections.category` column, counte
    With no key, the stub answers.
 3. `CorrectionParser` validates the response, the one place that does. The parser finds each
    `original` in the entry, searching forward on word boundaries, and stores its code point span.
-   A correction with an unknown category or text not found in the entry is dropped.
+   A correction with an unknown category, text not found in the entry, or a fix that changes
+   nothing is dropped.
 4. The job stores the corrections, sets the status to `analyzed` and broadcasts the result.
 5. When the provider fails, Oban retries up to three attempts. After the last one, the status
    becomes `analysis_failed` and the entry text stays saved.
@@ -160,10 +161,6 @@ older half and a recent half, and each category compares corrections per entry a
   comparison would put them all in one bucket. Halves give a trend from the second entry.
 - **The parser trusts no position from the model.** It locates each correction itself, so a
   correction whose text the model changed is dropped, and no highlight lands on the wrong words.
-- **Known gaps:**
-  - A correction whose fix equals its original is accepted.
-  - The categories have no value for noun number.
-  - A fix that only elides "Je" to "J'" renders with a space.
 - **The map needs internet,** because tiles come from the public OpenFreeMap instance.
 - **The Playwright spec uses the dev database** and the stub, so the stack starts with
   `OPENROUTER_API_KEY=` blank before it runs.
