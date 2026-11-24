@@ -236,9 +236,14 @@ and picks three more real towns along that line, each within 60 km of it and in 
 These towns are the route's points of interest.
 
 Between two points of interest the seed may place an encounter, and encounters are fantastical:
-a dragon on a bridge, a talking goat at a ford. An encounter takes its own entry, the same as a
-point of interest. Encounters come from hand-written strings, so the same seed always gives the
-same route.
+a dragon on a bridge, a talking goat at a ford. Encounters come from hand-written strings, so the
+same seed always gives the same route.
+
+A person stays at a place, a point of interest or an encounter, until they choose to move on. A
+place takes as many entries as the person writes. Once it has one entry, "Keep going" appears,
+and pressing it moves the journey to the next place, where the seed may draw an encounter first.
+Sending an entry never moves the journey, so a person reads the corrections before leaving.
+Requested by Julien, 2026-11-23.
 
 Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.
 

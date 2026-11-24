@@ -18,7 +18,7 @@ export function JourneyScreen() {
           <JourneyMap
             route={journey}
             highlightedPointOfInterestIndex={
-              journey.openEncounter ? null : journey.nextPointOfInterestIndex
+              journey.openEncounter ? null : journey.currentPointOfInterestIndex
             }
             highlightedEncounterId={journey.openEncounter?.id}
           />

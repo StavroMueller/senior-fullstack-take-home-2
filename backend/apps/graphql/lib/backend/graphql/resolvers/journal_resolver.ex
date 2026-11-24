@@ -15,8 +15,8 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
   def get_open_encounter(journey, _arguments, _resolution),
     do: {:ok, Journal.get_journey_progress(journey).open_encounter}
 
-  def get_next_point_of_interest_index(journey, _arguments, _resolution),
-    do: {:ok, Journal.get_journey_progress(journey).next_point_of_interest_index}
+  def get_current_point_of_interest_index(journey, _arguments, _resolution),
+    do: {:ok, Journal.get_journey_progress(journey).current_point_of_interest_index}
 
   def get_encounter_prompt(encounter, _arguments, _resolution),
     do: {:ok, Journal.get_encounter_prompt(encounter)}
@@ -37,6 +37,16 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
       {:error, reason} -> {:error, Atom.to_string(reason)}
     end
   end
+
+  def travel_on(_parent, %{journey_id: journey_id}, _resolution) do
+    case Journal.travel_on(journey_id) do
+      {:ok, journey} -> {:ok, journey}
+      {:error, reason} -> {:error, Atom.to_string(reason)}
+    end
+  end
+
+  def get_can_travel_on(journey, _arguments, _resolution),
+    do: {:ok, Journal.get_journey_progress(journey).can_travel_on}
 
   def retry_analysis(_parent, %{entry_id: entry_id}, _resolution) do
     case Journal.retry_analysis(entry_id) do

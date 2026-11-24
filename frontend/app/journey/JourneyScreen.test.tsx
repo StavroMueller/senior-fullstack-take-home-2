@@ -44,7 +44,7 @@ const mocks = [
       data: {
         currentJourney: testJourney({
           encounters: [encounter],
-          nextPointOfInterestIndex: 1,
+          currentPointOfInterestIndex: 1,
         }),
       },
     },

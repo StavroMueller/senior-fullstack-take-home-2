@@ -49,6 +49,12 @@ defmodule Backend.Graphql.Schema do
       resolve(&JournalResolver.submit_entry/3)
     end
 
+    @desc "Moves the journey on to its next place, once the current place has an entry."
+    field :travel_on, non_null(:journey) do
+      arg(:journey_id, non_null(:id))
+      resolve(&JournalResolver.travel_on/3)
+    end
+
     @desc "Runs a failed analysis again."
     field :retry_analysis, non_null(:entry) do
       arg(:entry_id, non_null(:id))

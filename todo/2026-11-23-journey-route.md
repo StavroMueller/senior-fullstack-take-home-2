@@ -49,6 +49,12 @@ interest, encounter. The product ruling is "Encounters along the route are fanta
    - Vitest covers the prompt and the finished state.
    - Playwright follows the journey from `/`.
 
+## Changed after merge
+
+On 2026-11-23 Julien asked for several entries per place and a "Keep going" button. The unique
+indexes on `entries` became plain indexes, `journeys` stores the current place, and the new
+`travelOn` mutation draws encounters. The rulings below about one entry per place no longer hold.
+
 ## State
 
 Merged into `main` with pull request #5, after every check under "Commands" in `CLAUDE.md` passed.

@@ -45,12 +45,15 @@ defmodule Backend.Graphql.Types.JournalTypes do
     @desc "The encounters met so far, each placed after one point of interest."
     field :encounters, non_null(list_of(non_null(:encounter))), resolve: dataloader(:journal)
 
-    @desc "The encounter waiting for an entry, or null when none is."
+    @desc "The encounter the person is at, or null when they are at a point of interest."
     field :open_encounter, :encounter, resolve: &JournalResolver.get_open_encounter/3
 
-    @desc "The index of the next point of interest to write at, or null once the journey is finished."
-    field :next_point_of_interest_index, :integer,
-      resolve: &JournalResolver.get_next_point_of_interest_index/3
+    @desc "Whether the current place has an entry, so the journey can move on."
+    field :can_travel_on, non_null(:boolean), resolve: &JournalResolver.get_can_travel_on/3
+
+    @desc "The index of the point of interest the person is at, or null once the journey is finished."
+    field :current_point_of_interest_index, :integer,
+      resolve: &JournalResolver.get_current_point_of_interest_index/3
   end
 
   @desc "One real town on a route."

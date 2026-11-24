@@ -6,14 +6,13 @@ export const pointOfInterestPrompt = "Write about today's stop. Three sentences 
 
 export function WritingPrompt({
   journey,
-  nextPointOfInterestIndex,
+  currentPointOfInterestIndex,
 }: {
   journey: CurrentJourney;
-  nextPointOfInterestIndex: number;
+  currentPointOfInterestIndex: number;
 }) {
-  const nextPointOfInterest = journey.pointsOfInterest[nextPointOfInterestIndex];
-
   if (journey.openEncounter) {
+    const nextPointOfInterest = journey.pointsOfInterest[currentPointOfInterestIndex + 1];
     return (
       <Stack spacing={1}>
         <Typography variant="h2">On the road to {nextPointOfInterest.name}</Typography>
@@ -24,7 +23,9 @@ export function WritingPrompt({
 
   return (
     <Stack spacing={1}>
-      <Typography variant="h2">{nextPointOfInterest.name}</Typography>
+      <Typography variant="h2">
+        {journey.pointsOfInterest[currentPointOfInterestIndex].name}
+      </Typography>
       <Typography>{pointOfInterestPrompt}</Typography>
     </Stack>
   );

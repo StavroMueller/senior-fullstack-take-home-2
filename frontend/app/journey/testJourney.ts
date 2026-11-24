@@ -15,7 +15,8 @@ export function testJourney(changes: Partial<Record<keyof CurrentJourney, unknow
     pointsOfInterest: towns.map((town) => ({ __typename: "PointOfInterest", ...town })),
     encounters: [],
     openEncounter: null,
-    nextPointOfInterestIndex: 0,
+    currentPointOfInterestIndex: 0,
+    canTravelOn: false,
     ...changes,
   };
 }

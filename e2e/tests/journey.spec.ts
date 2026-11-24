@@ -33,6 +33,11 @@ test("a person writes an entry, sees its corrections, opens it again from histor
     page.getByRole("complementary", { name: "Your teacher" }),
   ).toContainText("2 corrections");
 
+  const keepGoing = page.getByRole("button", { name: "Keep going" });
+  await expect(keepGoing).toBeEnabled();
+  await keepGoing.click();
+  await expect(entryField).toBeVisible();
+
   await page
     .getByRole("link", { name: /2 corrections/ })
     .first()

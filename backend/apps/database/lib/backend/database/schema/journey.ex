@@ -1,5 +1,5 @@
 defmodule Backend.Database.Schema.Journey do
-  @moduledoc "One generated adventure: the seed that draws its route, and the language and level it is written in."
+  @moduledoc "One generated adventure: the seed that draws its route, its language and level, and the place the person is at."
 
   use Ecto.Schema
 
@@ -10,6 +10,10 @@ defmodule Backend.Database.Schema.Journey do
     field :seed, :integer
     field :language, :string
     field :level, :string
+    field :current_point_of_interest_index, :integer, default: 0
+    field :finished_at, :utc_datetime
+
+    belongs_to :current_encounter, Encounter
 
     has_many :entries, Entry
     has_many :encounters, Encounter

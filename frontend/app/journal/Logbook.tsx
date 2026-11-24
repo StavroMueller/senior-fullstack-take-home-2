@@ -10,8 +10,12 @@ import {
   CURRENT_JOURNEY,
   type CurrentJourney,
   ENTRIES,
+  ENTRY,
+  type Entry,
+  isAnalyzing,
   START_JOURNEY,
   SUBMIT_ENTRY,
+  TRAVEL_ON,
 } from "~/journal/operations";
 import { WritingPrompt } from "~/journal/WritingPrompt";
 
@@ -25,12 +29,23 @@ export function Logbook() {
   const [submitEntry, { loading: submitting }] = useMutation<SubmittedEntry>(SUBMIT_ENTRY, {
     refetchQueries: [ENTRIES, CURRENT_JOURNEY],
   });
+  const [travelOn, { loading: traveling }] = useMutation(TRAVEL_ON, {
+    refetchQueries: [CURRENT_JOURNEY],
+    awaitRefetchQueries: true,
+  });
   const [body, setBody] = useState("");
   const [submittedEntryId, setSubmittedEntryId] = useState<string>();
+  const { data: submittedEntryData } = useQuery<{ entry: Entry | null }>(ENTRY, {
+    variables: { id: submittedEntryId },
+    skip: !submittedEntryId,
+  });
 
   const journey = journeyData?.currentJourney;
-  const nextPointOfInterestIndex = journey ? journey.nextPointOfInterestIndex : null;
-  const finishedJourney = journey && nextPointOfInterestIndex === null ? journey : undefined;
+  const currentPointOfInterestIndex = journey ? journey.currentPointOfInterestIndex : null;
+  const finishedJourney = journey && currentPointOfInterestIndex === null ? journey : undefined;
+  const submittedEntry = submittedEntryData?.entry;
+  const analyzingSubmittedEntry =
+    submittedEntryId !== undefined && (!submittedEntry || isAnalyzing(submittedEntry));
 
   async function sendEntry(event: FormEvent) {
     event.preventDefault();
@@ -41,10 +56,21 @@ export function Logbook() {
     setBody("");
   }
 
+  async function keepGoing() {
+    await travelOn({ variables: { journeyId: journey?.id } });
+    setSubmittedEntryId(undefined);
+  }
+
   async function startNextJourney() {
     await startJourney();
     setSubmittedEntryId(undefined);
   }
+
+  const keepGoingButton = journey?.canTravelOn && (
+    <Button disabled={analyzingSubmittedEntry || traveling} onClick={keepGoing}>
+      Keep going
+    </Button>
+  );
 
   return (
     <Stack spacing={4}>
@@ -56,10 +82,11 @@ export function Logbook() {
         </Stack>
       )}
       {submittedEntryId && <EntryView entryId={submittedEntryId} />}
-      {submittedEntryId && journey && nextPointOfInterestIndex !== null && (
-        <Button sx={{ alignSelf: "flex-start" }} onClick={() => setSubmittedEntryId(undefined)}>
-          Write another entry
-        </Button>
+      {submittedEntryId && (
+        <Stack direction="row" spacing={2}>
+          <Button onClick={() => setSubmittedEntryId(undefined)}>Write another entry</Button>
+          {keepGoingButton}
+        </Stack>
       )}
       {finishedJourney && (
         <Stack spacing={2} sx={{ alignItems: "flex-start" }}>
@@ -71,9 +98,12 @@ export function Logbook() {
           <Button onClick={startNextJourney}>Start a journey</Button>
         </Stack>
       )}
-      {journey && nextPointOfInterestIndex !== null && !submittedEntryId && (
+      {journey && currentPointOfInterestIndex !== null && !submittedEntryId && (
         <Stack component="form" spacing={2} onSubmit={sendEntry} sx={{ alignItems: "flex-start" }}>
-          <WritingPrompt journey={journey} nextPointOfInterestIndex={nextPointOfInterestIndex} />
+          <WritingPrompt
+            journey={journey}
+            currentPointOfInterestIndex={currentPointOfInterestIndex}
+          />
           <TextField
             label="Your entry"
             multiline
@@ -82,9 +112,12 @@ export function Logbook() {
             value={body}
             onChange={(event) => setBody(event.target.value)}
           />
-          <Button type="submit" disabled={body.trim() === "" || submitting}>
-            Send entry
-          </Button>
+          <Stack direction="row" spacing={2}>
+            <Button type="submit" disabled={body.trim() === "" || submitting}>
+              Send entry
+            </Button>
+            {keepGoingButton}
+          </Stack>
         </Stack>
       )}
       <EntryHistory />
