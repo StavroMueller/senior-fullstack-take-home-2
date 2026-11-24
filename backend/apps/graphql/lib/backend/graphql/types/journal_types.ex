@@ -8,10 +8,30 @@ defmodule Backend.Graphql.Types.JournalTypes do
   alias Backend.Database.Schema.Correction
   alias Backend.Database.Schema.Entry
   alias Backend.Graphql.Resolvers.JournalResolver
+  alias Backend.Journal.CategoryTrends
 
   enum :analysis_status, values: Ecto.Enum.values(Entry, :analysis_status)
 
   enum :correction_category, values: Ecto.Enum.values(Correction, :category)
+
+  @desc "How often a mistake category shows up in the recent half of the analyzed entries, against the older half."
+  enum :category_trend_direction, values: CategoryTrends.trends()
+
+  @desc "Each mistake category counted over the analyzed entries, most frequent first."
+  object :category_trends do
+    field :analyzed_entry_count, non_null(:integer)
+    field :older_entry_count, non_null(:integer)
+    field :recent_entry_count, non_null(:integer)
+    field :categories, non_null(list_of(non_null(:category_trend)))
+  end
+
+  object :category_trend do
+    field :category, non_null(:correction_category)
+    field :count, non_null(:integer)
+
+    @desc "Null until two entries are analyzed."
+    field :trend, :category_trend_direction
+  end
 
   object :journey do
     field :id, non_null(:id)
