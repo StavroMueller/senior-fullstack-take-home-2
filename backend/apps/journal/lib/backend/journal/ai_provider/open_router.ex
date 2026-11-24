@@ -1,5 +1,5 @@
 defmodule Backend.Journal.AiProvider.OpenRouter do
-  @moduledoc "An AI provider that asks a pinned model on OpenRouter for an entry's corrections and the teacher's reaction as schema-checked JSON, and for the teacher's scene in a town."
+  @moduledoc "An AI provider that asks a pinned model on OpenRouter for an entry's corrections and the teacher's reaction as schema-checked JSON, and for the teacher's intro to a journey and scene in a town."
 
   @behaviour Backend.Journal.AiProvider
 
@@ -60,6 +60,17 @@ defmodule Backend.Journal.AiProvider.OpenRouter do
     })
   end
 
+  @impl true
+  def introduce_journey(towns, language, level) do
+    settings = Application.fetch_env!(:journal, __MODULE__)
+
+    post(settings, %{
+      model: Keyword.fetch!(settings, :model),
+      max_tokens: @max_output_tokens,
+      messages: [%{role: "user", content: intro_instructions(towns, language, level)}]
+    })
+  end
+
   defp post(settings, request_body) do
     @endpoint
     |> Req.post(
@@ -77,11 +88,20 @@ defmodule Backend.Journal.AiProvider.OpenRouter do
     end
   end
 
+  defp intro_instructions(towns, language, level) do
+    """
+    You are a friendly teacher about to travel with a learner of the language with ISO 639-1 code "#{language}", at CEFR level #{level}. The route, in order, is: #{Enum.join(towns, ", ")}.
+    Write what you say as the journey begins, in English, as "I", in two or three short sentences. Name the first and the last town, and one thing to look forward to on the way.
+    Open with an interjection in that language that a learner at that level can read. Mention only facts you are sure of.
+    Tease dryly and never gush. Stay under 350 characters. Reply with the words you say and nothing else.
+    """
+  end
+
   defp scene_instructions(town, language, level) do
     """
-    You are a friendly teacher traveling across France with a learner of the language with ISO 639-1 code "#{language}", at CEFR level #{level}. The two of you just arrived in #{town}.
-    Write what you say on arrival, in English, as "I", in two or three short sentences, then one sentence asking the learner to write a few sentences in French about something specific to see or do here.
-    Open with a French interjection a beginner can read. Mention one real thing #{town} is known for, and only facts you are sure of.
+    You are a friendly teacher traveling with a learner of the language with ISO 639-1 code "#{language}", at CEFR level #{level}. The two of you just arrived in #{town}.
+    Write what you say on arrival, in English, as "I", in two or three short sentences, then one sentence asking the learner to write a few sentences in that language about something specific to see or do here.
+    Open with an interjection in that language that a learner at that level can read. Mention one real thing #{town} is known for, and only facts you are sure of.
     Tease dryly and never gush. Stay under 400 characters. Reply with the words you say and nothing else.
     """
   end
@@ -111,7 +131,7 @@ defmodule Backend.Journal.AiProvider.OpenRouter do
     Do not correct style or word choice that is already correct. If the entry has no errors, return an empty list.
 
     "teacher_reaction" is one line, under 160 characters, from the teacher who set the entry.
-    The teacher speaks English as "I", opens with a French interjection a beginner can read, and names one real fact: the number of corrections or the most common kind of error.
+    The teacher speaks English as "I", opens with an interjection in the language they are learning that a learner at that level can read, and names one real fact: the number of corrections or the most common kind of error.
     The teacher teases dryly and never gushes, and praises only what the entry earned.
     Examples of the voice:
     Oh là là! You crossed the pass in a storm and only tripped on two verbs. Bravo!

@@ -64,6 +64,23 @@ describe("Logbook", () => {
     expect(screen.getByText("Mon dieu, a dragon is asleep on the bridge!")).toBeInTheDocument();
   });
 
+  it("opens the journey with the teacher's intro above the first town's scene", async () => {
+    renderLogbook(testJourney());
+
+    expect(
+      await screen.findByText("Bon! We walk from Nancy to La Rochelle, with 3 towns in between."),
+    ).toBeInTheDocument();
+  });
+
+  it("drops the intro once the journey has left its first town", async () => {
+    renderLogbook(testJourney({ currentPointOfInterestIndex: 2 }));
+
+    expect(await screen.findByRole("heading", { name: "Bourges" })).toBeInTheDocument();
+    expect(
+      screen.queryByText("Bon! We walk from Nancy to La Rochelle, with 3 towns in between."),
+    ).not.toBeInTheDocument();
+  });
+
   it("offers to keep going only once the current place has an entry", async () => {
     renderLogbook(testJourney({ canTravelOn: true }));
 

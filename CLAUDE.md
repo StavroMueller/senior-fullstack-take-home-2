@@ -225,6 +225,9 @@ Julien's standing rulings, recorded 2026-11-23.
   function, and every screen and query calls that function.
 - **Lint passes with zero issues** before work is called done: `mix credo --strict` and
   `tsc`. When linting a subset, confirm the tool scanned the files.
+- **AI prompts take the language and level as arguments.** A prompt names no language, country
+  or level in its text; it refers to "that language" and the CEFR level it is given, so a new
+  language needs data files and no prompt edits. Ruled by Julien, 2026-11-23.
 - **No speculative cache work.** Select the fields the screen renders and nothing extra. Touch
   Apollo cache behavior only for a reproduced bug.
 

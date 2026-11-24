@@ -14,6 +14,7 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
   currentPointOfInterestIndex
   canTravelOn
   currentScene
+  intro
   """
 
   @ghost_baker_prompt "Tiens! The bakery at the crossroads is open, but the baker is a ghost. The croissants smell real, at least. Order our breakfast in French: what do you want, and how many?"
@@ -110,11 +111,17 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
     assert %{"errors" => [%{"message" => "journey_finished"}]} = travel_on(journey_id)
   end
 
-  test "a new journey opens on the teacher's scene in its first town" do
-    %{"data" => %{"startJourney" => %{"pointsOfInterest" => [%{"name" => first_town} | _towns]}}} =
+  test "a new journey opens on the teacher's intro to its route and the scene in its first town" do
+    %{"data" => %{"startJourney" => %{"pointsOfInterest" => towns}}} =
       graphql("mutation { startJourney { pointsOfInterest { name } } }")
 
-    assert read_journey()["currentScene"] =~ first_town
+    [%{"name" => first_town} | _later_towns] = towns
+    %{"name" => last_town} = List.last(towns)
+    journey = read_journey()
+
+    assert journey["intro"] =~ first_town
+    assert journey["intro"] =~ last_town
+    assert journey["currentScene"] =~ first_town
   end
 
   test "an entry for a journey that does not exist is refused" do

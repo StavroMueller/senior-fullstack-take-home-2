@@ -1,5 +1,5 @@
 defmodule Backend.Journal.AiProvider.Stub do
-  @moduledoc "An AI provider that returns canned French A1 corrections for the phrases it knows and no scenes, with no network call."
+  @moduledoc "An AI provider that returns canned French A1 corrections for the phrases it knows and no scenes or intros, with no network call."
 
   @behaviour Backend.Journal.AiProvider
 
@@ -32,6 +32,9 @@ defmodule Backend.Journal.AiProvider.Stub do
 
   @impl true
   def describe_place(_town, _language, _level), do: {:error, :stub_writes_no_scenes}
+
+  @impl true
+  def introduce_journey(_towns, _language, _level), do: {:error, :stub_writes_no_intros}
 
   @impl true
   def correct_entry(body, _language, _level) do

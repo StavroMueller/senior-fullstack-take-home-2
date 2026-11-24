@@ -196,7 +196,10 @@ so the person always has something to write about.
 In a town, Haiku writes the scene on arrival, naming one real thing the town is known for, and the
 scene is stored in `journeys.current_place_scene`. With no key, or when the scene comes back empty
 or longer than 600 characters, a hand-written scene from `place_scenes/fr-A1.json` names the town
-instead. At an encounter, the scene is the hand-written prompt for that encounter. Writing the
+instead. At an encounter, the scene is the hand-written prompt for that encounter. When a journey
+starts, the teacher also gives an intro built from the route: the first and last towns and the
+towns between, stored in `journeys.intro` and shown above the first town's scene. A hand-written
+intro from `journey_intros/fr-A1.json` stands in the same way. Both are written at the same time. Writing the
 scene adds 4 to 5 seconds to "Start a journey" and "Keep going", measured on three towns.
 
 Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/lib/backend/journal/place_scene.ex`.
@@ -220,10 +223,13 @@ Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`, `backend/config/ru
 Each journey stores a `language` (an ISO code such as `fr`) and a `level` (a CEFR level such as
 `A1`), and each entry carries both into the AI prompt. Hand-written strings live in data files
 under `backend/apps/journal/priv/`, and only French A1 exists. Towns depend on the language alone,
-so `routes/fr.json` covers every French level. Teacher reactions and encounter prompts depend on
-the level too, so they live in `teacher_reactions/fr-A1.json` and `encounters/fr-A1.json`.
+so `routes/fr.json` covers every French level. Teacher reactions, encounter scenes, town scenes and
+journey intros depend on the level too, so they live in `teacher_reactions/fr-A1.json`,
+`encounters/fr-A1.json`, `place_scenes/fr-A1.json` and `journey_intros/fr-A1.json`. The AI
+prompts take the language and level as arguments and name no language or country.
 
-Adding Spanish A1 means adding those three files and changes no code. Declined: a locale framework or
+Adding Spanish A1 means adding those five files and changes no code, except choosing the
+language: `config :journal, :new_journey` sets it for every new journey. Declined: a locale framework or
 a registry of languages, which the no-scale rule bans, and hard-coding French.
 
 Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.

@@ -65,6 +65,7 @@ export type CurrentJourney = RouteOnMap & {
   currentPointOfInterestIndex: number | null;
   canTravelOn: boolean;
   currentScene: string | null;
+  intro: string | null;
 };
 
 export type EntryOnRoute = {
@@ -99,6 +100,7 @@ export const CURRENT_JOURNEY = gql`
       currentPointOfInterestIndex
       canTravelOn
       currentScene
+      intro
     }
   }
   ${ROUTE_ON_MAP}

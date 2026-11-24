@@ -12,19 +12,20 @@ defmodule Backend.Journal.PlaceScene do
 
     town
     |> provider().describe_place(journey.language, journey.level)
-    |> usable_scene()
+    |> usable()
     |> case do
       nil -> hand_written(journey, point_of_interest_index, town)
       scene -> scene
     end
   end
 
-  defp usable_scene({:ok, scene}) when is_binary(scene) do
-    trimmed_scene = String.trim(scene)
-    if trimmed_scene != "" and String.length(trimmed_scene) <= @longest_scene, do: trimmed_scene
+  @doc "Returns the teacher's line from a provider result when it is not blank and fits the longest scene, trimmed, or nil."
+  def usable({:ok, line}) when is_binary(line) do
+    trimmed_line = String.trim(line)
+    if trimmed_line != "" and String.length(trimmed_line) <= @longest_scene, do: trimmed_line
   end
 
-  defp usable_scene(_failure), do: nil
+  def usable(_failure), do: nil
 
   defp hand_written(journey, point_of_interest_index, town) do
     scenes =

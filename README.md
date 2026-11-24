@@ -76,7 +76,8 @@ screen shows which kinds of error keep coming back and which have dropped off.
 - **Writing.** The left half is a map of France with the journey's route. On the right, the
   teacher, drawn as a travel buddy, sets the scene at the current stop and asks for a few French
   sentences about it, above an entry field. In a town the scene names something the town is known
-  for; some stops are fantastical encounters with their own scene. A stop takes
+  for; some stops are fantastical encounters with their own scene. A new journey opens with the
+  teacher's intro to the route, from the first town to the last. A stop takes
   as many entries as you like, and once it has one, "Keep going" moves you on: the "You are here"
   marker walks along the trail to the next stop.
 - **Waiting.** After you send an entry, it shows "Checking your entry" until analysis ends. The
