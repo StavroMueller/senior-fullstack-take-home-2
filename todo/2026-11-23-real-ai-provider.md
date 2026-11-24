@@ -101,3 +101,9 @@ Categories were judged by reading each correction.
 - No model flagged the entry that has no errors.
 - `correction_category` has no value for noun number, so "trois chambre" landed in `spelling`,
   `adjective_agreement` or `verb_agreement` depending on the model.
+
+## Decision
+
+Julien picked `anthropic/claude-haiku-5.5` on 2026-11-23, from the benchmark above: every
+category right, no broken fix, a median of 1.8 s and $0.15 per 1000 entries measured. The
+adapter calls OpenRouter with the request shape the benchmark used.
