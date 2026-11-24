@@ -251,15 +251,18 @@ export function JourneyMap({
   }, [map, routeTowns]);
 
   useEffect(() => {
+    if (!map) return;
+    const drawnTravelerMarker = drawnTravelerMarkerRef.current;
     if (
-      !map ||
       travelerMarkerLongitude === undefined ||
       travelerMarkerLatitude === undefined ||
       !travelerMarkerText
-    )
+    ) {
+      drawnTravelerMarker?.marker.remove();
+      drawnTravelerMarkerRef.current = undefined;
       return;
+    }
     const destination: Coordinates = [travelerMarkerLongitude, travelerMarkerLatitude];
-    const drawnTravelerMarker = drawnTravelerMarkerRef.current;
 
     if (!drawnTravelerMarker) {
       const { element, label } = travelerElements();

@@ -1,34 +1,24 @@
 import { useQuery } from "@apollo/client";
-import Grid from "@mui/material/Grid";
+import { useEffect } from "react";
 import { Logbook } from "~/journal/Logbook";
 import { CURRENT_JOURNEY, type CurrentJourney } from "~/journal/operations";
-import { JourneyMap } from "~/journey/JourneyMap";
+import { useShowOnJourneyMap } from "~/journey/JourneyLayout";
 
 export function JourneyScreen() {
   const { data } = useQuery<{ currentJourney: CurrentJourney | null }>(CURRENT_JOURNEY);
   const journey = data?.currentJourney;
+  const showOnJourneyMap = useShowOnJourneyMap();
 
-  return (
-    <Grid container sx={{ minHeight: "100vh" }}>
-      <Grid
-        size={{ xs: 12, md: 6 }}
-        sx={{ height: { xs: "50vh", md: "100vh" }, position: { md: "sticky" }, top: 0 }}
-      >
-        {journey ? (
-          <JourneyMap
-            route={journey}
-            highlightedPointOfInterestIndex={
-              journey.openEncounter ? null : journey.currentPointOfInterestIndex
-            }
-            highlightedEncounterId={journey.openEncounter?.id}
-          />
-        ) : (
-          <JourneyMap />
-        )}
-      </Grid>
-      <Grid size={{ xs: 12, md: 6 }} sx={{ padding: 4 }}>
-        <Logbook />
-      </Grid>
-    </Grid>
-  );
+  useEffect(() => {
+    if (!journey) return;
+    showOnJourneyMap({
+      route: journey,
+      highlightedPointOfInterestIndex: journey.openEncounter
+        ? null
+        : journey.currentPointOfInterestIndex,
+      highlightedEncounterId: journey.openEncounter?.id,
+    });
+  }, [showOnJourneyMap, journey]);
+
+  return <Logbook />;
 }

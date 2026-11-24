@@ -55,8 +55,19 @@ test("a person writes an entry, sees its corrections, opens it again from histor
     page.getByRole("heading", { name: "Your entries" }),
   ).toBeVisible();
 
+  const mapCanvas = page
+    .getByRole("region", { name: "Journey map" })
+    .locator("canvas");
+  await mapCanvas.evaluate((canvas) => {
+    canvas.dataset.drawnBeforeNavigation = "true";
+  });
+
   await page.getByRole("link", { name: /Usual suspects/ }).click();
   await expect(page).toHaveURL(/\/usual-suspects$/);
+  await expect(mapCanvas).toHaveAttribute(
+    "data-drawn-before-navigation",
+    "true",
+  );
   await expect(
     page.getByRole("heading", { name: "Usual suspects" }),
   ).toBeVisible();
