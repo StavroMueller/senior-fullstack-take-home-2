@@ -14,19 +14,14 @@ test("a person writes an entry, sees its corrections, opens it again from histor
 }) => {
   await page.goto("/");
 
-  const startJourney = page.getByRole("button", { name: "Start a journey" });
-  const entryField = page.getByLabel("Your entry");
-  const letsGo = page.getByRole("button", { name: "Let's go" });
-  await expect(startJourney.or(entryField).or(letsGo)).toBeVisible();
-  if (await startJourney.isVisible()) await startJourney.click();
-
-  await expect(letsGo.or(entryField)).toBeVisible();
-  if (await letsGo.isVisible()) await letsGo.click();
+  await page.getByRole("button", { name: "Start a journey" }).click();
+  await page.getByRole("button", { name: "Let's go" }).click();
 
   const journeyMap = page.getByRole("region", { name: "Journey map" });
   await expect(journeyMap.getByRole("img").first()).toBeVisible();
   expect(await journeyMap.getByRole("img").count()).toBeGreaterThanOrEqual(5);
 
+  const entryField = page.getByLabel("Your entry");
   await entryField.fill("Hier, j'ai allé à le marché.");
   await page.getByRole("button", { name: "Send entry" }).click();
 
@@ -42,10 +37,7 @@ test("a person writes an entry, sees its corrections, opens it again from histor
   await keepGoing.click();
   await expect(entryField).toBeVisible();
 
-  await page
-    .getByRole("link", { name: /2 corrections/ })
-    .first()
-    .click();
+  await page.getByRole("link", { name: /2 corrections/ }).click();
 
   await expect(page).toHaveURL(/\/entries\/\d+$/);
   await expect(page.getByRole("heading", { name: "Your entry" })).toBeVisible();

@@ -1,6 +1,8 @@
 defmodule Backend.Journal.CorrectionParserTest do
   use ExUnit.Case, async: true
 
+  import ExUnit.CaptureLog
+
   alias Backend.Journal.CorrectionParser
 
   @moduletag :capture_log
@@ -110,6 +112,19 @@ defmodule Backend.Journal.CorrectionParserTest do
     for response <- [blank, too_long, missing] do
       assert CorrectionParser.parse_teacher_reaction(response, []) == nil
     end
+  end
+
+  test "logs why a correction was dropped and its category, with no text from the entry" do
+    body = "Mon secret: je va au parc."
+
+    log =
+      capture_log(fn ->
+        CorrectionParser.parse(body, %{"corrections" => [correction("je vais", "verb_tense")]})
+      end)
+
+    assert log =~ "not_found_after_previous_correction, category \"verb_tense\""
+    refute log =~ "je va"
+    refute log =~ "secret"
   end
 
   test "rejects a response without a list of corrections" do

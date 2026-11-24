@@ -18,12 +18,12 @@ defmodule Backend.ApiWeb.EntryChannel do
   end
 
   @impl true
-  def handle_info({:analysis_ended, _entry_id, :analyzed}, socket) do
+  def handle_info({:analysis_ended, :analyzed}, socket) do
     push(socket, "analysis_finished", %{})
     {:noreply, socket}
   end
 
-  def handle_info({:analysis_ended, _entry_id, :analysis_failed}, socket) do
+  def handle_info({:analysis_ended, :analysis_failed}, socket) do
     push(socket, "analysis_failed", %{})
     {:noreply, socket}
   end

@@ -36,8 +36,8 @@ docker compose run --rm frontend npm test
 cd e2e && npm ci && npx playwright install chromium && npx playwright test
 ```
 
-The Playwright spec asserts the stub's corrections, so start the stack without the key before
-running it:
+The Playwright spec deletes every journey and entry in the dev database, then asserts the
+stub's corrections, so start the stack without the key before running it:
 
 ```bash
 OPENROUTER_API_KEY= docker compose up -d --build --wait
@@ -172,5 +172,10 @@ older half and a recent half, and each category compares corrections per entry a
 - **The parser trusts no position from the model.** It locates each correction itself, so a
   correction whose text the model changed is dropped, and no highlight lands on the wrong words.
 - **The map needs internet,** because tiles come from the public OpenFreeMap instance.
-- **The Playwright spec uses the dev database** and the stub, so the stack starts with
-  `OPENROUTER_API_KEY=` blank before it runs.
+- **The Playwright spec empties the dev database before it runs,** so every journey and entry
+  written in the app is deleted. A second database for tests would keep them, at the cost of a
+  second backend in compose. The spec also asserts the stub's corrections, so the stack starts
+  with `OPENROUTER_API_KEY=` blank before it runs.
+- **The frontend types repeat two GraphQL enums by hand.** `AnalysisStatus` and
+  `CorrectionCategory` in `frontend/app/journal/operations.ts` match the schema with no code
+  generation, so a new enum value is added in both places.
