@@ -1,5 +1,5 @@
 defmodule Backend.Journal.EncounterPrompt do
-  @moduledoc "Reads the teacher's hand-written writing prompt for an encounter from the strings file for its language and level."
+  @moduledoc "Reads the teacher's hand-written scene for an encounter from the strings file for its language and level."
 
   alias Backend.Database.Schema.Encounter
   alias Backend.Database.Schema.Journey

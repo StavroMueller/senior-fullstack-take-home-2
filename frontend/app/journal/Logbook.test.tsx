@@ -45,7 +45,7 @@ describe("Logbook", () => {
 
     expect(await screen.findByRole("heading", { name: "Bourges" })).toBeInTheDocument();
     expect(
-      screen.getByText("Write about today's stop. Three sentences is enough."),
+      screen.getByText("Voilà, we made it to Nancy! Tell me in French what you see first."),
     ).toBeInTheDocument();
   });
 
@@ -53,11 +53,8 @@ describe("Logbook", () => {
     renderLogbook(
       testJourney({
         currentPointOfInterestIndex: 0,
-        openEncounter: {
-          __typename: "Encounter",
-          id: "7",
-          prompt: "Mon dieu, a dragon is asleep on the bridge!",
-        },
+        openEncounter: { __typename: "Encounter", id: "7" },
+        currentScene: "Mon dieu, a dragon is asleep on the bridge!",
       }),
     );
 

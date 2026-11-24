@@ -1,5 +1,5 @@
 defmodule Backend.Journal.AiProvider.OpenRouter do
-  @moduledoc "An AI provider that asks a pinned model on OpenRouter for an entry's corrections and the teacher's reaction as schema-checked JSON."
+  @moduledoc "An AI provider that asks a pinned model on OpenRouter for an entry's corrections and the teacher's reaction as schema-checked JSON, and for the teacher's scene in a town."
 
   @behaviour Backend.Journal.AiProvider
 
@@ -43,13 +43,47 @@ defmodule Backend.Journal.AiProvider.OpenRouter do
   def correct_entry(body, language, level) do
     settings = Application.fetch_env!(:journal, __MODULE__)
 
+    with {:ok, content} <-
+           post(settings, request_body(Keyword.fetch!(settings, :model), body, language, level)) do
+      decode_corrections(content)
+    end
+  end
+
+  @impl true
+  def describe_place(town, language, level) do
+    settings = Application.fetch_env!(:journal, __MODULE__)
+
+    post(settings, %{
+      model: Keyword.fetch!(settings, :model),
+      max_tokens: @max_output_tokens,
+      messages: [%{role: "user", content: scene_instructions(town, language, level)}]
+    })
+  end
+
+  defp post(settings, request_body) do
     @endpoint
     |> Req.post(
       auth: {:bearer, Keyword.fetch!(settings, :api_key)},
-      json: request_body(Keyword.fetch!(settings, :model), body, language, level),
+      json: request_body,
       retry: false
     )
-    |> read_corrections()
+    |> read_message()
+  end
+
+  defp decode_corrections(content) do
+    case Jason.decode(content) do
+      {:ok, corrections_response} -> {:ok, corrections_response}
+      {:error, _decode_error} -> {:error, :response_not_json}
+    end
+  end
+
+  defp scene_instructions(town, language, level) do
+    """
+    You are a friendly teacher traveling across France with a learner of the language with ISO 639-1 code "#{language}", at CEFR level #{level}. The two of you just arrived in #{town}.
+    Write what you say on arrival, in English, as "I", in two or three short sentences, then one sentence asking the learner to write a few sentences in French about something specific to see or do here.
+    Open with a French interjection a beginner can read. Mention one real thing #{town} is known for, and only facts you are sure of.
+    Tease dryly and never gush. Stay under 400 characters. Reply with the words you say and nothing else.
+    """
   end
 
   defp request_body(model, body, language, level) do
@@ -86,7 +120,7 @@ defmodule Backend.Journal.AiProvider.OpenRouter do
     """
   end
 
-  defp read_corrections(
+  defp read_message(
          {:ok,
           %Req.Response{
             status: 200,
@@ -95,27 +129,24 @@ defmodule Backend.Journal.AiProvider.OpenRouter do
             }
           }}
        ) do
-    case Jason.decode(content) do
-      {:ok, corrections_response} -> {:ok, corrections_response}
-      {:error, _decode_error} -> {:error, :response_not_json}
-    end
+    {:ok, content}
   end
 
-  defp read_corrections(
+  defp read_message(
          {:ok, %Req.Response{status: 200, body: %{"choices" => [%{"finish_reason" => reason}]}}}
        ) do
     {:error, {:response_unfinished, reason}}
   end
 
-  defp read_corrections(
+  defp read_message(
          {:ok, %Req.Response{status: status, body: %{"error" => %{"message" => message}}}}
        ) do
     {:error, {:openrouter_status, status, message}}
   end
 
-  defp read_corrections({:ok, %Req.Response{status: status}}) do
+  defp read_message({:ok, %Req.Response{status: status}}) do
     {:error, {:openrouter_status, status}}
   end
 
-  defp read_corrections({:error, _exception} = failure), do: failure
+  defp read_message({:error, _exception} = failure), do: failure
 end

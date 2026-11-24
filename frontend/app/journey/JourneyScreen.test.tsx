@@ -64,7 +64,7 @@ describe("JourneyScreen", () => {
 
     expect(screen.getByRole("region", { name: "Journey map" })).toBeInTheDocument();
     expect(
-      await screen.findByText("Write about today's stop. Three sentences is enough."),
+      await screen.findByText("Voilà, we made it to Nancy! Tell me in French what you see first."),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Your entry")).toBeInTheDocument();
 

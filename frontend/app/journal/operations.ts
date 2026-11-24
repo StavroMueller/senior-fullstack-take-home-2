@@ -61,9 +61,10 @@ export type RouteOnMap = {
 
 export type CurrentJourney = RouteOnMap & {
   id: string;
-  openEncounter: Pick<Encounter, "id" | "prompt"> | null;
+  openEncounter: Pick<Encounter, "id"> | null;
   currentPointOfInterestIndex: number | null;
   canTravelOn: boolean;
+  currentScene: string | null;
 };
 
 export type EntryOnRoute = {
@@ -94,10 +95,10 @@ export const CURRENT_JOURNEY = gql`
       ...RouteOnMap
       openEncounter {
         id
-        prompt
       }
       currentPointOfInterestIndex
       canTravelOn
+      currentScene
     }
   }
   ${ROUTE_ON_MAP}

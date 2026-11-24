@@ -48,6 +48,9 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
   def get_can_travel_on(journey, _arguments, _resolution),
     do: {:ok, Journal.get_journey_progress(journey).can_travel_on}
 
+  def get_current_scene(journey, _arguments, _resolution),
+    do: {:ok, Journal.get_journey_progress(journey).current_scene}
+
   def retry_analysis(_parent, %{entry_id: entry_id}, _resolution) do
     case Journal.retry_analysis(entry_id) do
       {:ok, entry} -> {:ok, entry}

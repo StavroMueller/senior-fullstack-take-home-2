@@ -17,6 +17,7 @@ export function testJourney(changes: Partial<Record<keyof CurrentJourney, unknow
     openEncounter: null,
     currentPointOfInterestIndex: 0,
     canTravelOn: false,
+    currentScene: "Voilà, we made it to Nancy! Tell me in French what you see first.",
     ...changes,
   };
 }

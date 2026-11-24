@@ -13,9 +13,10 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
   openEncounter { id prompt }
   currentPointOfInterestIndex
   canTravelOn
+  currentScene
   """
 
-  @ghost_baker_prompt "Tiens! A ghost runs the bakery at the crossroads. Order your breakfast in French."
+  @ghost_baker_prompt "Tiens! The bakery at the crossroads is open, but the baker is a ghost. The croissants smell real, at least. Order our breakfast in French: what do you want, and how many?"
 
   defp read_journey do
     %{"data" => %{"currentJourney" => journey}} =
@@ -72,18 +73,23 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
     assert written_place(journey_id) == {:point_of_interest, 0}
     travel_on(journey_id)
 
-    %{"openEncounter" => %{"id" => ghost_baker_id, "prompt" => @ghost_baker_prompt}} =
-      read_journey()
+    %{
+      "openEncounter" => %{"id" => _ghost_baker_id, "prompt" => @ghost_baker_prompt},
+      "currentScene" => @ghost_baker_prompt
+    } = read_journey()
+
+    assert %{"data" => %{"submitEntry" => _entry}} = submit_entry(journey_id, "Un croissant.")
+    travel_on(journey_id)
+    assert read_journey()["currentScene"] =~ "Vichy"
 
     places =
-      for _place <- 1..7 do
+      for _place <- 1..6 do
         place = written_place(journey_id)
         travel_on(journey_id)
         place
       end
 
     assert [
-             {:encounter, ^ghost_baker_id},
              {:point_of_interest, 1},
              {:point_of_interest, 2},
              {:encounter, _lost_knight_id},
@@ -102,6 +108,13 @@ defmodule Backend.ApiWeb.JourneyRouteTest do
              submit_entry(journey_id, "Encore un mot.")
 
     assert %{"errors" => [%{"message" => "journey_finished"}]} = travel_on(journey_id)
+  end
+
+  test "a new journey opens on the teacher's scene in its first town" do
+    %{"data" => %{"startJourney" => %{"pointsOfInterest" => [%{"name" => first_town} | _towns]}}} =
+      graphql("mutation { startJourney { pointsOfInterest { name } } }")
+
+    assert read_journey()["currentScene"] =~ first_town
   end
 
   test "an entry for a journey that does not exist is refused" do

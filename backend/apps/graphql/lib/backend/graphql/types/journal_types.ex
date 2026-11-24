@@ -48,6 +48,9 @@ defmodule Backend.Graphql.Types.JournalTypes do
     @desc "The encounter the person is at, or null when they are at a point of interest."
     field :open_encounter, :encounter, resolve: &JournalResolver.get_open_encounter/3
 
+    @desc "What the teacher says at the current place, to write about; null once the journey is finished."
+    field :current_scene, :string, resolve: &JournalResolver.get_current_scene/3
+
     @desc "Whether the current place has an entry, so the journey can move on."
     field :can_travel_on, non_null(:boolean), resolve: &JournalResolver.get_can_travel_on/3
 

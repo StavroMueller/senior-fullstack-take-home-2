@@ -181,11 +181,25 @@ the voice set under "Voice and copy", stored in `entries.teacher_reaction`.
 
 The parser keeps the reaction only when it is one short line and every correction in the
 response survived parsing, so its count matches the screen. Otherwise, and with the stub, the
-teacher speaks a hand-written line picked by the seed. The map, the journey events and the
-writing prompts stay seeded and hand-written, so the same seed always gives the same journey.
+teacher speaks a hand-written line picked by the seed. The map and the journey events stay
+seeded, so the same seed always gives the same route.
 
 This reverses the ruling "AI corrects entries and does nothing else", once the real provider
 returned valid corrections. Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`.
+
+### The teacher travels with you and sets the scene at each place
+
+The teacher is a travel buddy walking the road with the person. At each place the buddy says, in
+the voice set under "Voice and copy", what is there and asks for a few French sentences about it,
+so the person always has something to write about.
+
+In a town, Haiku writes the scene on arrival, naming one real thing the town is known for, and the
+scene is stored in `journeys.current_place_scene`. With no key, or when the scene comes back empty
+or longer than 600 characters, a hand-written scene from `place_scenes/fr-A1.json` names the town
+instead. At an encounter, the scene is the hand-written prompt for that encounter. Writing the
+scene adds 4 to 5 seconds to "Start a journey" and "Keep going", measured on three towns.
+
+Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/lib/backend/journal/place_scene.ex`.
 
 ### Claude Haiku 5.5 corrects entries through OpenRouter when a key is set
 

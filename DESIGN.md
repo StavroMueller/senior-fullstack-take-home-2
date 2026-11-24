@@ -52,6 +52,8 @@ never drift into the cream band. Ruled by Julien, 2026-11-23.
 | --- | --- | --- | --- |
 | `mapLand` | `#C8A46E` | Land on the map | L 0.739, C 0.083, h 77 |
 | `mapInk` | `#8B6B3E` | Water at half opacity, shorelines, roads and place names on the map | L 0.549, C 0.074, h 75 |
+| `buddySkin` | `#F4B98F` | The teacher buddy's face | not measured |
+| `buddySkinShade` | `#E39A70` | The teacher buddy's ears and jaw shadow | not measured |
 
 The two hex values are defaults, not yet ruled on. The trail itself is drawn in `action`.
 
@@ -59,6 +61,11 @@ The two hex values are defaults, not yet ruled on. The trail itself is drawn in 
 roads and borders look inked by hand. The trail is a dashed line in `action` with round caps, and
 place names are set in Noto Sans Italic, the italic face the OpenFreeMap glyph server offers.
 Requested by Julien, 2026-11-23.
+
+**The Teacher Buddy.** The teacher appears as an original flat character: a round face in
+`buddySkin` with `buddySkinShade` ears and jaw, a `teacherEdge` beret, a scarf in `action` and a
+`teacher` coat. The buddy sits beside the scene at each place, which reads as a speech bubble. No
+feature of the buddy comes from a Duolingo character. Requested by Julien, 2026-11-23.
 
 **The Traveler.** One marker in `action`, larger than a stop, with a pulsing ring and an `ink`
 label, marks the current place: "You are here: {town}" on the journey screen, "Written here:

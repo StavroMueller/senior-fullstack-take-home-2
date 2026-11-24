@@ -1,0 +1,8 @@
+{
+  "scenes": [
+    "Voilà, we made it to %{town}! I smell fresh bread somewhere, and my feet hurt. Tell me in French what you see first, and what you want to do here.",
+    "Bon, here we are in %{town}. The square is busy and everyone seems to be going somewhere. Tell me in French where we should eat tonight, and why.",
+    "Enfin, %{town}! It's raining a little, but the café on the corner looks warm. Tell me in French what you order, and who sits at the next table.",
+    "Oh là là, %{town} at last. There's a market today, with fruit, cheese and a man selling hats. Tell me in French what you buy, and how much it costs."
+  ]
+}

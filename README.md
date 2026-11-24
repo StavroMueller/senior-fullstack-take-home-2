@@ -73,9 +73,10 @@ screen shows which kinds of error keep coming back and which have dropped off.
 
 ## How the interface supports writing and review
 
-- **Writing.** The left half is a map of France with the journey's route. The right half gives a
-  prompt for the current stop, such as "Write about today's stop. Three sentences is enough.",
-  and an entry field. Some stops are fantastical encounters with their own prompt. A stop takes
+- **Writing.** The left half is a map of France with the journey's route. On the right, the
+  teacher, drawn as a travel buddy, sets the scene at the current stop and asks for a few French
+  sentences about it, above an entry field. In a town the scene names something the town is known
+  for; some stops are fantastical encounters with their own scene. A stop takes
   as many entries as you like, and once it has one, "Keep going" moves you on: the "You are here"
   marker walks along the trail to the next stop.
 - **Waiting.** After you send an entry, it shows "Checking your entry" until analysis ends. The

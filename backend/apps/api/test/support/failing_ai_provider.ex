@@ -4,5 +4,8 @@ defmodule Backend.ApiWeb.Test.FailingAiProvider do
   @behaviour Backend.Journal.AiProvider
 
   @impl true
+  def describe_place(_town, _language, _level), do: {:error, :provider_unavailable}
+
+  @impl true
   def correct_entry(_body, _language, _level), do: {:error, :provider_unavailable}
 end
