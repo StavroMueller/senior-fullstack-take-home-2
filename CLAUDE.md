@@ -167,7 +167,9 @@ Julien's standing rulings, recorded 2026-11-23.
 - **Name the specific thing, never the generic one.** A generic noun such as "line", "item" or
   "text" fits many things, so a reader has to guess which one is meant. Name what the thing is:
   `TeacherReaction`, never `TeacherLine`. When no word under "Vocabulary" fits, propose one
-  before writing the code. Ruled by Julien, 2026-11-23.
+  before writing the code. Ruled by Julien, 2026-11-23. A generic noun is fine when the thing
+  covers several specific kinds and an owner qualifies it: `TeacherText` checks both a town
+  scene and a journey intro. Ruled by Julien, 2026-11-23.
 - **Siblings share one naming scheme.** Functions behind one screen use one verb across
   entities.
 - **One word per concept, in code and on screen.** The words are fixed under "Vocabulary".

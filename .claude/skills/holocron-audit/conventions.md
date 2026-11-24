@@ -45,7 +45,8 @@ logs and returns a default.
 
 **CD-03: No speculative structure.** WARN. A helper with one caller, a behaviour with one
 implementation other than the AI provider, an option nothing sets, any structure the no-scale
-rule in `CLAUDE.md` bans.
+rule in `CLAUDE.md` bans. The functions in `Backend.Journal.AiProvider` that call the configured
+provider are exempt: each one replaces a copy of the provider lookup.
 
 **CD-04: One rule, one function.** ERROR. The same predicate about an entry, a correction or a
 journey written in two places.
@@ -73,6 +74,10 @@ app, or a function in a schema module beyond `changeset/2`.
 
 **ST-05: No dependency cycle between umbrella apps.** ERROR.
 
+**ST-06: A pipe chain reads top to bottom.** WARN. A chain that starts from something other
+than the data, pipes into a call on a module looked up at runtime such as `provider().x()`, or
+pipes into `case` anywhere but the end of a `Multi` chain.
+
 ## API writes (AP)
 
 **AP-01: One operation, one mutation.** ERROR. Two mutations write the same row.
@@ -97,11 +102,9 @@ number.
 
 ## Wayword rulings (WW)
 
-**WW-01: The AI response is validated in one place.** ERROR. Provider output used anywhere
-before it passes the one parser that turns it into corrections, or a second parser.
-
-**WW-02: The AI corrects entries and does nothing else.** ERROR. An AI call that writes teacher
-lines, journey events or prompts, while that ruling in `PRODUCT.md` stands.
+**WW-01: Each kind of AI response is validated in one place.** ERROR. Provider corrections or
+a teacher reaction used before `CorrectionParser`, a scene or intro used before
+`TeacherText.usable/1`, or a second validator for either.
 
 **WW-03: Language and level are data.** WARN. `"fr"` or `"A1"` hard-coded outside the strings
 files and the seeds.

@@ -1,7 +1,7 @@
 {
   "intros": [
-    "Bon! We walk from %{start} to %{finish}, with %{stops} towns in between. Pack light, and bring your French.",
-    "Allez, a long road from %{start} to %{finish}. I count %{stops} towns on the way, and I expect a few strange things too.",
-    "Voilà the plan: %{start} today, %{finish} at the end, %{stops} towns in the middle. I talk, you write. Ça va?"
+    "Bon! We walk from %{start} to %{finish}, with %{towns_between} towns in between. Pack light, and bring your French.",
+    "Allez, a long road from %{start} to %{finish}. I count %{towns_between} towns on the way, and I expect a few strange things too.",
+    "Voilà the plan: %{start} today, %{finish} at the end, %{towns_between} towns in the middle. I talk, you write. Ça va?"
   ]
 }

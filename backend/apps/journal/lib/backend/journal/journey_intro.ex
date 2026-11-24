@@ -3,8 +3,8 @@ defmodule Backend.Journal.JourneyIntro do
 
   alias Backend.Database.Schema.Journey
   alias Backend.Journal.AiProvider
-  alias Backend.Journal.PlaceScene
   alias Backend.Journal.Route
+  alias Backend.Journal.TeacherText
 
   @doc "Returns the teacher's intro naming the journey's start, end and the towns between."
   def for_journey(%Journey{} = journey) do
@@ -12,9 +12,9 @@ defmodule Backend.Journal.JourneyIntro do
 
     ai_intro = AiProvider.introduce_journey(towns, journey.language, journey.level)
 
-    case PlaceScene.usable(ai_intro) do
-      nil -> hand_written(journey, towns)
-      intro -> intro
+    case TeacherText.usable(ai_intro) do
+      {:ok, intro} -> intro
+      :error -> hand_written(journey, towns)
     end
   end
 
@@ -30,6 +30,6 @@ defmodule Backend.Journal.JourneyIntro do
     |> Enum.at(:erlang.phash2(journey.seed, length(intros)))
     |> String.replace("%{start}", List.first(towns))
     |> String.replace("%{finish}", List.last(towns))
-    |> String.replace("%{stops}", Integer.to_string(length(towns) - 2))
+    |> String.replace("%{towns_between}", Integer.to_string(length(towns) - 2))
   end
 end

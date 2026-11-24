@@ -203,7 +203,7 @@ with a "Let's go" button that opens the first town's scene. A hand-written
 intro from `journey_intros/fr-A1.json` stands in the same way. Both are written at the same time. Writing the
 scene adds 4 to 5 seconds to "Start a journey" and "Keep going", measured on three towns.
 
-Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/lib/backend/journal/place_scene.ex`.
+Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/lib/backend/journal/place_scene.ex`, `journey_intro.ex` and `teacher_text.ex`, which holds the 600-character cap.
 
 ### Claude Haiku 5.5 corrects entries through OpenRouter when a key is set
 

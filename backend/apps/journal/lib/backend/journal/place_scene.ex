@@ -4,8 +4,7 @@ defmodule Backend.Journal.PlaceScene do
   alias Backend.Database.Schema.Journey
   alias Backend.Journal.AiProvider
   alias Backend.Journal.Route
-
-  @longest_scene 600
+  alias Backend.Journal.TeacherText
 
   @doc "Returns the teacher's scene for the journey's point of interest at the index."
   def for_arrival(%Journey{} = journey, point_of_interest_index) do
@@ -13,19 +12,11 @@ defmodule Backend.Journal.PlaceScene do
 
     ai_scene = AiProvider.describe_place(town, journey.language, journey.level)
 
-    case usable(ai_scene) do
-      nil -> hand_written(journey, point_of_interest_index, town)
-      scene -> scene
+    case TeacherText.usable(ai_scene) do
+      {:ok, scene} -> scene
+      :error -> hand_written(journey, point_of_interest_index, town)
     end
   end
-
-  @doc "Returns the teacher's line from a provider result when it is not blank and fits the longest scene, trimmed, or nil."
-  def usable({:ok, line}) when is_binary(line) do
-    trimmed_line = String.trim(line)
-    if trimmed_line != "" and String.length(trimmed_line) <= @longest_scene, do: trimmed_line
-  end
-
-  def usable(_failure), do: nil
 
   defp hand_written(journey, point_of_interest_index, town) do
     scenes =
