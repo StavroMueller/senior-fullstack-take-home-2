@@ -32,13 +32,14 @@ defmodule Backend.Journal.Commands.SubmitEntry do
   end
 
   defp save(entry_changeset) do
-    Multi.new()
-    |> Multi.insert(:entry, entry_changeset)
-    |> Oban.insert(:analysis_job, fn %{entry: entry} ->
-      AnalyzeEntry.new(%{entry_id: entry.id})
-    end)
-    |> Repo.transaction()
-    |> case do
+    multi =
+      Multi.new()
+      |> Multi.insert(:entry, entry_changeset)
+      |> Oban.insert(:analysis_job, fn %{entry: entry} ->
+        AnalyzeEntry.new(%{entry_id: entry.id})
+      end)
+
+    case Repo.transaction(multi) do
       {:ok, %{entry: entry}} -> {:ok, entry}
       {:error, :entry, changeset, _changes} -> {:error, changeset}
     end

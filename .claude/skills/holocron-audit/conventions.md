@@ -81,7 +81,7 @@ defined in another app, a function in a schema module other than a changeset, or
 
 **ST-06: A pipe chain reads top to bottom.** WARN. A chain that starts from something other
 than the data, pipes into a call on a module looked up at runtime such as `provider().x()`, or
-pipes into `case` anywhere but the end of a `Multi` chain.
+pipes into `case` anywhere, including after `Repo.transaction()` at the end of a `Multi` chain.
 
 ## API writes (AP)
 

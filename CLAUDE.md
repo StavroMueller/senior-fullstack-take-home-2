@@ -194,9 +194,11 @@ Julien's standing rulings, recorded 2026-11-23.
 - **A pipe chain reads top to bottom.** Start it from the data, and pipe only into a named
   module's function. Never pipe into a call on a module looked up at runtime, such as
   `provider().describe_point_of_interest(...)`, and never pipe into `case` to branch on a result: bind the
-  result to a name, then `case` on that name. A `Multi` chain may end in `Repo.transaction()
-  |> case do`. Ruled by Julien, 2026-11-23, after `JourneyIntro.for_journey` piped a town list
-  into the provider.
+  result to a name, then `case` on that name. Ruled by Julien, 2026-11-23, after
+  `JourneyIntro.for_journey` piped a town list into the provider. A `Multi` chain follows the same
+  rule: bind it as `multi`, then `case Repo.transaction(multi) do`. This is the only accepted form.
+  Ruled by Julien, 2026-11-24, which removes the earlier exception for
+  `Repo.transaction() |> case do`. Gate: the Credo check `PipeIntoCase` fails on any `|> case`.
 - **Match what something is.** `%Entry{} = entry <-`, never
   `entry when not is_nil(entry) <-`.
 - **Avoid `cond` when a boolean expression does the job.**
@@ -447,7 +449,7 @@ over a per-feature spec, and a per-feature spec wins over any tool's generic def
 | --- | --- | --- |
 | Writing rules, banned words, em dashes | Prose checker | `node tools/copy-check/check.mjs <files>` |
 | No comments, `@moduledoc` at most two lines | Credo `CommentRules`, ExUnit `NoCommentsTest`, Vitest `noComments.test.ts` | `mix credo --strict`, `mix test`, `npm test` |
-| No single-letter names, no `||` default, no catch-all rescue, no `Repo` in a resolver | Custom Credo checks in `backend/credo_checks/` | `mix credo --strict` |
+| No single-letter names, no `||` default, no catch-all rescue, no `Repo` in a resolver, no pipe into `case` | Custom Credo checks in `backend/credo_checks/` | `mix credo --strict` |
 | Lint passes with zero issues | Credo strict, `tsc`, Prettier, `mix format` | the backend and frontend commands above |
 | A change is done when the live journey passes | Playwright | `cd e2e && npx playwright test` |
 | Pull requests and pushes go to the fork only | `PreToolUse` hook | `.claude/hooks/fork-only.sh`, on every shell command |

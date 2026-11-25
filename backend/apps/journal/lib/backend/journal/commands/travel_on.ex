@@ -38,17 +38,18 @@ defmodule Backend.Journal.Commands.TravelOn do
     do: arrive_at(journey, journey.current_point_of_interest_index + 1)
 
   defp leave_point_of_interest(journey, encounter_kind) do
-    Multi.new()
-    |> Multi.insert(:encounter, %Encounter{
-      journey_id: journey.id,
-      after_point_of_interest_index: journey.current_point_of_interest_index,
-      kind: encounter_kind
-    })
-    |> Multi.update(:journey, fn %{encounter: encounter} ->
-      Journey.current_encounter_changeset(journey, encounter.id)
-    end)
-    |> Repo.transaction()
-    |> case do
+    multi =
+      Multi.new()
+      |> Multi.insert(:encounter, %Encounter{
+        journey_id: journey.id,
+        after_point_of_interest_index: journey.current_point_of_interest_index,
+        kind: encounter_kind
+      })
+      |> Multi.update(:journey, fn %{encounter: encounter} ->
+        Journey.current_encounter_changeset(journey, encounter.id)
+      end)
+
+    case Repo.transaction(multi) do
       {:ok, %{journey: journey}} -> {:ok, journey}
       {:error, _operation, reason, _changes} -> {:error, reason}
     end

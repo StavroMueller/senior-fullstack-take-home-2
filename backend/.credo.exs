@@ -12,6 +12,7 @@
       checks: %{
         extra: [
           {Backend.CredoChecks.BooleanOperatorDefault, []},
+          {Backend.CredoChecks.PipeIntoCase, []},
           {Backend.CredoChecks.CatchAllRescue, []},
           {Backend.CredoChecks.CommentRules, []},
           {Backend.CredoChecks.RepoInResolver, []},

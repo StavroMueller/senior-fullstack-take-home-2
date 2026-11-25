@@ -14,11 +14,12 @@ defmodule Backend.Journal.Commands.FinishAnalysis do
         Map.merge(correction, %{entry_id: entry.id, inserted_at: now, updated_at: now})
       end)
 
-    Multi.new()
-    |> Multi.insert_all(:corrections, Correction, rows)
-    |> Multi.update(:entry, Entry.analyzed_changeset(entry, teacher_reaction))
-    |> Repo.transaction()
-    |> case do
+    multi =
+      Multi.new()
+      |> Multi.insert_all(:corrections, Correction, rows)
+      |> Multi.update(:entry, Entry.analyzed_changeset(entry, teacher_reaction))
+
+    case Repo.transaction(multi) do
       {:ok, %{entry: entry}} -> {:ok, entry}
       {:error, _operation, reason, _changes} -> {:error, reason}
     end
