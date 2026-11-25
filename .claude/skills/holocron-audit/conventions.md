@@ -71,8 +71,8 @@ direct `Repo` call in an Absinthe resolver or a Phoenix channel.
 `defdelegate`.
 
 **ST-03: Schemas live in `database` and hold no logic but their changesets.** WARN. An Ecto schema
-defined in another app, a function in a schema module other than a changeset, or a `cast` or
-validation written in a command instead of the schema's `changeset/2`.
+defined in another app, a function in a schema module other than a changeset, or a changeset built in a command with
+`Ecto.Changeset` instead of a `*_changeset` function on the schema.
 
 **ST-04: Every module sits under its app's namespace.** WARN. A module outside
 `Backend.<App>.*`, other than `Backend.ApiWeb.*` and a Mix task named `Mix.Tasks.<App>.<Name>`.

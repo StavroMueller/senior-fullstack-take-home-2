@@ -16,7 +16,7 @@ defmodule Backend.Journal.Commands.RetryAnalysis do
 
   defp analyze_again(entry) do
     Multi.new()
-    |> Multi.update(:entry, Ecto.Changeset.change(entry, analysis_status: :analyzing))
+    |> Multi.update(:entry, Entry.analyzing_changeset(entry))
     |> Oban.insert(:analysis_job, AnalyzeEntry.new(%{entry_id: entry.id}))
     |> Repo.transaction()
     |> case do

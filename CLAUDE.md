@@ -126,9 +126,9 @@ Julien's standing rulings, recorded 2026-11-23.
   data definitions and hold no logic. Ruled by Julien, 2026-11-23: the app namespace wins over
   a bare `Backend.Schema.*`.
 - **A changeset is the one piece of logic a schema holds.** A changeset is tied to its schema,
-  so the `cast` and validations for a write live in the schema as `changeset/2`, and the command
-  that writes the row calls it. A command that sets known values, such as a status, calls
-  `Ecto.Changeset.change/2` itself. Ruled by Julien, 2026-11-24.
+  so every changeset lives in the schema as a function named for the write, such as
+  `Entry.submission_changeset/2` or `Journey.arrival_changeset/3`. Commands call those functions and
+  never call `Ecto.Changeset` to build one. Ruled by Julien, 2026-11-24.
 - **Every module is namespaced under its app: `Backend.<App>.*`.** Two exceptions:
   `Backend.ApiWeb.*` keeps Phoenix's web segment, and a Mix task is named `Mix.Tasks.<App>.<Name>`,
   because Mix finds a task only under `Mix.Tasks`. Ruled by Julien, 2026-11-24.

@@ -53,9 +53,8 @@ defmodule Backend.Database.Commands.LoadExampleJourneys do
     Enum.each(recorded_journey["entries"], &insert_entry(&1, journey, encounter_ids, now))
 
     journey
-    |> Ecto.Changeset.change(
-      current_encounter_id:
-        encounter_ids[recorded_journey["current_encounter_after_point_of_interest_index"]]
+    |> Journey.current_encounter_changeset(
+      encounter_ids[recorded_journey["current_encounter_after_point_of_interest_index"]]
     )
     |> Repo.update!()
   end

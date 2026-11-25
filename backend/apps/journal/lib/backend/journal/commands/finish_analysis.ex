@@ -16,10 +16,7 @@ defmodule Backend.Journal.Commands.FinishAnalysis do
 
     Multi.new()
     |> Multi.insert_all(:corrections, Correction, rows)
-    |> Multi.update(
-      :entry,
-      Ecto.Changeset.change(entry, analysis_status: :analyzed, teacher_reaction: teacher_reaction)
-    )
+    |> Multi.update(:entry, Entry.analyzed_changeset(entry, teacher_reaction))
     |> Repo.transaction()
     |> case do
       {:ok, %{entry: entry}} -> {:ok, entry}

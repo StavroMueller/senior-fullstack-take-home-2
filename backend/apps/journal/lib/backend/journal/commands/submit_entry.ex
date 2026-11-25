@@ -45,7 +45,7 @@ defmodule Backend.Journal.Commands.SubmitEntry do
   end
 
   defp entry_changeset(journey, body, route_position) do
-    Entry.changeset(
+    Entry.submission_changeset(
       %Entry{analysis_status: :analyzing, journey_id: journey.id},
       Map.put(route_position, :body, body)
     )
