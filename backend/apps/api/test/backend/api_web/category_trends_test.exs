@@ -52,4 +52,24 @@ defmodule Backend.ApiWeb.CategoryTrendsTest do
              ]
            }
   end
+
+  test "a journey counts the categories of its own entries only" do
+    %{"data" => %{"startJourney" => %{"id" => first_journey_id}}} =
+      graphql(~s|mutation { startJourney(language: "fr", level: "A1") { id } }|)
+
+    %{"data" => %{"startJourney" => %{"id" => second_journey_id}}} =
+      graphql(~s|mutation { startJourney(language: "fr", level: "A1") { id } }|)
+
+    submit_entry(first_journey_id, "Le maison est grande.")
+    submit_entry(second_journey_id, "Je va à la plage.")
+    run_analysis_jobs()
+
+    %{"data" => %{"journey" => %{"categoryTrends" => category_trends}}} =
+      graphql(
+        "query(\$id: ID!) { journey(id: \$id) { categoryTrends { categories { category count } } } }",
+        %{id: first_journey_id}
+      )
+
+    assert category_trends == %{"categories" => [%{"category" => "GENDER", "count" => 1}]}
+  end
 end

@@ -94,7 +94,10 @@ screen shows which kinds of error keep coming back and which have dropped off.
 
 - **Journeys.** The opening page lists every journey, newest first. Each card names the route by
   its first and last town, then where you are and how many entries you wrote. "Start a journey in
-  France" starts a new one and opens it.
+  France" starts a new one and opens it. Each card is marked "Finished" or "In progress".
+- **Journey recap.** A finished journey opens on its recap: the mistake categories of that
+  journey with their counts and trends, then every correction grouped by category. "Keep going"
+  at the last town opens it.
 - **Writing.** The left half is a map of France with the journey's route. On the right, the
   teacher, drawn as a travel buddy, sets the scene at the current stop and asks for a few French
   sentences about it, above an entry field. In a town the scene names something the town is known
@@ -138,7 +141,7 @@ is one mutation or query, and resolvers only map arguments to the `journal` app.
 | `travelOn(journeyId)` | Moves the journey to its next route position, once the current route position has an entry |
 | `languages` | Each language and level a journey can start in, with its country |
 | `journeys` | Every journey, newest first, with its country, route and entries |
-| `journey(id)` | One journey, with its route, the route position you are at, `canTravelOn` and its entries |
+| `journey(id)` | One journey, with its route, the route position you are at, `canTravelOn`, its entries and its `categoryTrends` |
 | `entry(id)` | One entry with its corrections and the teacher's reaction |
 | `categoryTrends` | Each mistake category with its count and trend |
 

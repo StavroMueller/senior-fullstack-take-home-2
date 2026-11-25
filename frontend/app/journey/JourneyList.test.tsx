@@ -62,14 +62,19 @@ describe("JourneyList", () => {
     expect(screen.getByRole("button", { name: "Start a journey in France" })).toBeInTheDocument();
   });
 
-  it("links each journey by its route and says where the person is", async () => {
+  it("marks each journey finished or in progress, and links a finished one to its recap", async () => {
     renderJourneyList([
       summary({ id: "2", openEncounter: { __typename: "Encounter", id: "7" } }),
       summary({ id: "1", currentPointOfInterestIndex: null, entries: [] }),
     ]);
 
     const links = await screen.findAllByRole("link", { name: "Amiens to Bayonne" });
-    expect(links.map((link) => link.getAttribute("href"))).toEqual(["/journeys/2", "/journeys/1"]);
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      "/journeys/2",
+      "/journeys/1/recap",
+    ]);
+    expect(screen.getByText("In progress")).toBeInTheDocument();
+    expect(screen.getByText("Finished")).toBeInTheDocument();
     expect(screen.getByText("France, started Nov 1, 1 entry.")).toBeInTheDocument();
     expect(screen.getByText("On the road to Bayonne")).toBeInTheDocument();
     expect(screen.getByText("France, started Nov 1, 0 entries.")).toBeInTheDocument();

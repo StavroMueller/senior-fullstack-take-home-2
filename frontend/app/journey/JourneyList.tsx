@@ -11,8 +11,10 @@ import {
   lastTown,
   routePositionName,
 } from "~/journal/operations";
+import { entriesLabel } from "~/journal/countLabels";
 import { StartJourneyButtons } from "~/journal/StartJourneyButtons";
 import { useShowOnJourneyMap } from "~/journey/JourneyLayout";
+import { JourneyStatus } from "~/journey/JourneyStatus";
 import { palette } from "~/palette";
 
 const startedDate = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" });
@@ -24,8 +26,10 @@ function whereThePersonIs(journey: JourneySummary) {
     : routePositionName(journey, currentPointOfInterestIndex);
 }
 
-function entryCountLabel(journey: JourneySummary) {
-  return journey.entries.length === 1 ? "1 entry" : `${journey.entries.length} entries`;
+function journeyAddress(journey: JourneySummary) {
+  return isFinished(journey.currentPointOfInterestIndex)
+    ? `/journeys/${journey.id}/recap`
+    : `/journeys/${journey.id}`;
 }
 
 export function JourneyList() {
@@ -55,12 +59,20 @@ export function JourneyList() {
           <Stack component="ul" spacing={2} sx={{ listStyle: "none", padding: 0, margin: 0 }}>
             {journeys.map((journey) => (
               <Paper component="li" key={journey.id} sx={{ padding: 2 }}>
-                <Link to={`/journeys/${journey.id}`} style={{ color: palette.ink }}>
-                  {journey.pointsOfInterest[0].name} to {lastTown(journey)}
-                </Link>
+                <Stack
+                  direction="row"
+                  sx={{ justifyContent: "space-between", alignItems: "baseline", gap: 2 }}
+                >
+                  <Link to={journeyAddress(journey)} style={{ color: palette.ink }}>
+                    {journey.pointsOfInterest[0].name} to {lastTown(journey)}
+                  </Link>
+                  <JourneyStatus
+                    currentPointOfInterestIndex={journey.currentPointOfInterestIndex}
+                  />
+                </Stack>
                 <Typography>
                   {journey.country}, started {startedDate.format(new Date(journey.insertedAt))},{" "}
-                  {entryCountLabel(journey)}.
+                  {entriesLabel(journey.entries.length)}.
                 </Typography>
                 <Typography>{whereThePersonIs(journey)}</Typography>
               </Paper>

@@ -337,3 +337,16 @@ recording sends different prompts.
 
 Requested by Julien, 2026-11-24. Source: `backend/apps/database/lib/backend/database/commands/load_example_journeys.ex`,
 `backend/apps/api/lib/mix/tasks/api.record_example_journeys.ex`.
+
+### A finished journey ends on its recap
+
+Each journey card on `/` is marked "Finished" or "In progress". A finished card opens the
+journey recap at `/journeys/<id>/recap`, and "Keep going" at the last town opens the recap too.
+
+The recap counts the mistake categories of that journey's analyzed entries with the same
+older-half and recent-half trends as Usual suspects. Below the counts, every correction of the
+journey is listed under its category, original then fix. A recap of a journey still in progress
+opens from its address and reads "In progress".
+
+Requested by Julien, 2026-11-24. Source: `frontend/app/journey/JourneyRecapScreen.tsx`,
+`backend/apps/journal/lib/backend/journal/queries/get_category_trends.ex`.

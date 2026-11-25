@@ -4,7 +4,10 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
   alias Backend.Journal
 
   def get_category_trends(_parent, _arguments, _resolution),
-    do: {:ok, Journal.get_category_trends()}
+    do: {:ok, Journal.get_category_trends(:every_journey)}
+
+  def get_journey_category_trends(journey, _arguments, _resolution),
+    do: {:ok, Journal.get_category_trends(journey)}
 
   def list_journeys(_parent, _arguments, _resolution), do: {:ok, Journal.list_journeys()}
 

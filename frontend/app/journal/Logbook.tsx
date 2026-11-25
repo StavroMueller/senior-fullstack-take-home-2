@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { type FormEvent, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Buddy } from "~/journal/Buddy";
 import { EntryHistory } from "~/journal/EntryHistory";
 import { EntryView } from "~/journal/EntryView";
@@ -26,6 +26,8 @@ import { palette, sizes } from "~/palette";
 
 type SubmittedEntry = { submitEntry: { id: string } };
 
+type TraveledJourney = { travelOn: { id: string; currentPointOfInterestIndex: number | null } };
+
 export function Logbook({ journeyId }: { journeyId: string }) {
   const { data: journeyData, loading } = useQuery<{ journey: Journey | null }>(JOURNEY, {
     variables: { id: journeyId },
@@ -33,7 +35,8 @@ export function Logbook({ journeyId }: { journeyId: string }) {
   const [submitEntry, { loading: submitting }] = useMutation<SubmittedEntry>(SUBMIT_ENTRY, {
     refetchQueries: [JOURNEY],
   });
-  const [travelOn, { loading: traveling }] = useMutation(TRAVEL_ON, {
+  const navigate = useNavigate();
+  const [travelOn, { loading: traveling }] = useMutation<TraveledJourney>(TRAVEL_ON, {
     refetchQueries: [JOURNEY],
     awaitRefetchQueries: true,
   });
@@ -69,8 +72,10 @@ export function Logbook({ journeyId }: { journeyId: string }) {
   }
 
   async function keepGoing() {
-    await travelOn({ variables: { journeyId } });
+    const result = await travelOn({ variables: { journeyId } });
     setSubmittedEntryId(undefined);
+    if (result.data && isFinished(result.data.travelOn.currentPointOfInterestIndex))
+      navigate(`/journeys/${journeyId}/recap`);
   }
 
   const keepGoingButton = journey?.canTravelOn && (
@@ -105,6 +110,9 @@ export function Logbook({ journeyId }: { journeyId: string }) {
             You reached {lastTown(finishedJourney)}, the end of this journey. Start a journey to
             keep writing.
           </Typography>
+          <Link to={`/journeys/${journeyId}/recap`} style={{ color: palette.ink }}>
+            See the recap of this journey
+          </Link>
           <StartJourneyButtons />
         </Stack>
       )}

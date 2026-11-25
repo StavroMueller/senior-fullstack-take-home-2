@@ -3,6 +3,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router";
 import { analysisFailedMessage, analyzingMessage } from "~/journal/analysisCopy";
+import { correctionsLabel } from "~/journal/countLabels";
 import { analysisFailed, type EntrySummary, isAnalyzing } from "~/journal/operations";
 import { palette } from "~/palette";
 
@@ -11,8 +12,7 @@ const entryDate = new Intl.DateTimeFormat("en-US", { month: "short", day: "numer
 function analysisSummary(entry: EntrySummary) {
   if (isAnalyzing(entry)) return analyzingMessage;
   if (analysisFailed(entry)) return analysisFailedMessage;
-  const count = entry.corrections.length;
-  return count === 1 ? "1 correction" : `${count} corrections`;
+  return correctionsLabel(entry.corrections.length);
 }
 
 export function EntryHistory({ entries }: { entries: EntrySummary[] }) {

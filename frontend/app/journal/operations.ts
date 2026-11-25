@@ -230,8 +230,50 @@ export const TRAVEL_ON = gql`
   mutation TravelOn($journeyId: ID!) {
     travelOn(journeyId: $journeyId) {
       id
+      currentPointOfInterestIndex
     }
   }
+`;
+
+export type JourneyRecap = RouteOnMap & {
+  id: string;
+  country: string;
+  currentPointOfInterestIndex: number | null;
+  entries: {
+    id: string;
+    corrections: Omit<Correction, "spanStart" | "spanEnd" | "explanation">[];
+  }[];
+  categoryTrends: CategoryTrends;
+};
+
+export const JOURNEY_RECAP = gql`
+  query JourneyRecap($id: ID!) {
+    journey(id: $id) {
+      id
+      country
+      ...RouteOnMap
+      currentPointOfInterestIndex
+      entries {
+        id
+        corrections {
+          id
+          original
+          fix
+          category
+        }
+      }
+      categoryTrends {
+        olderEntryCount
+        recentEntryCount
+        categories {
+          category
+          count
+          trend
+        }
+      }
+    }
+  }
+  ${ROUTE_ON_MAP}
 `;
 
 export const RETRY_ANALYSIS = gql`

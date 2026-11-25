@@ -55,6 +55,10 @@ defmodule Backend.Graphql.Types.JournalTypes do
     @desc "Every entry written on the journey, newest first."
     field :entries, non_null(list_of(non_null(:entry))), resolve: dataloader(:journal)
 
+    @desc "Each mistake category counted over the journey's analyzed entries, with its trend."
+    field :category_trends, non_null(:category_trends),
+      resolve: &JournalResolver.get_journey_category_trends/3
+
     @desc "The real towns on the route, start first."
     field :points_of_interest, non_null(list_of(non_null(:point_of_interest))),
       resolve: &JournalResolver.get_points_of_interest/3

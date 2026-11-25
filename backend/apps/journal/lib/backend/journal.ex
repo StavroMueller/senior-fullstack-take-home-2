@@ -9,7 +9,7 @@ defmodule Backend.Journal do
   defdelegate submit_entry(attributes), to: Commands.SubmitEntry, as: :execute
   defdelegate retry_analysis(entry_id), to: Commands.RetryAnalysis, as: :execute
   defdelegate travel_on(journey_id), to: Commands.TravelOn, as: :execute
-  defdelegate get_category_trends, to: Queries.GetCategoryTrends, as: :run
+  defdelegate get_category_trends(scope), to: Queries.GetCategoryTrends, as: :run
   defdelegate get_country(journey), to: Queries.GetCountry, as: :run
   defdelegate get_journey(journey_id), to: Queries.GetJourney, as: :run
   defdelegate get_encounter_prompt(encounter), to: Queries.GetEncounterPrompt, as: :run

@@ -151,6 +151,7 @@ Each word has one meaning in code and on screen. Ruled by Julien, 2026-11-23.
 | route position | One point of interest or one encounter on the route: where the person is, and where an entry is written. `route_position` in code | a map coordinate, a URL route |
 | teacher | The character who travels with the person, sets the scene at each route position and reacts to an entry; replaces "persona" and "buddy" | the AI provider, a real person |
 | example journey | One of the journeys `seeds.exs` loads from `example_journeys.json`, recorded once from the real model | a test fixture, a route seed |
+| journey recap | The page at the end of a journey that counts its mistake categories and lists every correction: `JourneyRecap` in code | the journey list, Usual suspects |
 | teacher reaction | The line the teacher says about one analyzed entry, written by the AI or hand-written: `TeacherReaction` in code, `teacherReaction` in GraphQL | a writing prompt, a correction |
 
 "Feedback" and "mistake" on its own are banned in code because each could mean two of the above.
