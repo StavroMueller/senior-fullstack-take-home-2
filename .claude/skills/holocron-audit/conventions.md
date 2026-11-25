@@ -74,7 +74,7 @@ direct `Repo` call in an Absinthe resolver or a Phoenix channel.
 app, or any function in a schema module. Changesets belong to the command that writes the row.
 
 **ST-04: Every module sits under its app's namespace.** WARN. A module outside
-`Backend.<App>.*`, other than `Backend.ApiWeb.*`.
+`Backend.<App>.*`, other than `Backend.ApiWeb.*` and a Mix task named `Mix.Tasks.<App>.<Name>`.
 
 **ST-05: No dependency cycle between umbrella apps.** ERROR.
 

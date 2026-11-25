@@ -2,13 +2,12 @@ import { MockedProvider, type MockedResponse } from "@apollo/client/testing";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { Logbook } from "~/journal/Logbook";
-import { CURRENT_JOURNEY, ENTRIES, LANGUAGES } from "~/journal/operations";
+import { JOURNEY, LANGUAGES } from "~/journal/operations";
 import { testJourney } from "~/journey/testJourney";
 
-function renderLogbook(currentJourney: ReturnType<typeof testJourney> | null) {
+function renderLogbook(journey: ReturnType<typeof testJourney> | null) {
   const mocks: MockedResponse[] = [
-    { request: { query: CURRENT_JOURNEY }, result: { data: { currentJourney } } },
-    { request: { query: ENTRIES }, result: { data: { entries: [] } } },
+    { request: { query: JOURNEY, variables: { id: "1" } }, result: { data: { journey } } },
     {
       request: { query: LANGUAGES },
       result: {
@@ -22,22 +21,17 @@ function renderLogbook(currentJourney: ReturnType<typeof testJourney> | null) {
   render(
     <MockedProvider mocks={mocks}>
       <MemoryRouter>
-        <Logbook />
+        <Logbook journeyId="1" />
       </MemoryRouter>
     </MockedProvider>,
   );
 }
 
 describe("Logbook", () => {
-  it("offers to start a journey before the first one", async () => {
+  it("says so when no journey has the id in the address", async () => {
     renderLogbook(null);
 
-    expect(
-      await screen.findByText("No entries yet. Start a journey to write your first one."),
-    ).toBeInTheDocument();
-    expect(
-      await screen.findByRole("button", { name: "Start a journey in France" }),
-    ).toBeInTheDocument();
+    expect(await screen.findByText("No journey has this address.")).toBeInTheDocument();
   });
 
   it("enables sending only once the entry has text", async () => {

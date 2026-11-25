@@ -2,7 +2,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Buddy, useTalking } from "~/journal/Buddy";
-import type { CurrentJourney } from "~/journal/operations";
+import { type Journey, routePositionName } from "~/journal/operations";
 import { sizes } from "~/palette";
 
 export function WritingPrompt({
@@ -10,14 +10,12 @@ export function WritingPrompt({
   currentPointOfInterestIndex,
   thinking,
 }: {
-  journey: CurrentJourney;
+  journey: Journey;
   currentPointOfInterestIndex: number;
   thinking: boolean;
 }) {
   const talking = useTalking(journey.currentScene);
-  const heading = journey.openEncounter
-    ? `On the road to ${journey.pointsOfInterest[currentPointOfInterestIndex + 1].name}`
-    : journey.pointsOfInterest[currentPointOfInterestIndex].name;
+  const heading = routePositionName(journey, currentPointOfInterestIndex);
 
   return (
     <Stack spacing={2} sx={{ width: "100%" }}>

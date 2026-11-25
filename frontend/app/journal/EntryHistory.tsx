@@ -1,10 +1,9 @@
-import { useQuery } from "@apollo/client";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router";
 import { analysisFailedMessage, analyzingMessage } from "~/journal/analysisCopy";
-import { analysisFailed, ENTRIES, type EntrySummary, isAnalyzing } from "~/journal/operations";
+import { analysisFailed, type EntrySummary, isAnalyzing } from "~/journal/operations";
 import { palette } from "~/palette";
 
 const entryDate = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" });
@@ -16,10 +15,7 @@ function analysisSummary(entry: EntrySummary) {
   return count === 1 ? "1 correction" : `${count} corrections`;
 }
 
-export function EntryHistory() {
-  const { data } = useQuery<{ entries: EntrySummary[] }>(ENTRIES);
-  const entries = data?.entries ?? [];
-
+export function EntryHistory({ entries }: { entries: EntrySummary[] }) {
   if (entries.length === 0) return null;
 
   return (

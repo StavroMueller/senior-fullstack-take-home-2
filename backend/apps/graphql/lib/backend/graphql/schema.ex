@@ -20,19 +20,20 @@ defmodule Backend.Graphql.Schema do
       resolve(&JournalResolver.get_category_trends/3)
     end
 
-    @desc "The journey started most recently, or null before the first one."
-    field :current_journey, :journey do
-      resolve(&JournalResolver.get_current_journey/3)
+    @desc "Every journey, the one started most recently first."
+    field :journeys, non_null(list_of(non_null(:journey))) do
+      resolve(&JournalResolver.list_journeys/3)
+    end
+
+    @desc "One journey, or null when no journey has that id."
+    field :journey, :journey do
+      arg(:id, non_null(:id))
+      resolve(&JournalResolver.get_journey/3)
     end
 
     @desc "Each language and level a journey can start in, with the country its route crosses."
     field :languages, non_null(list_of(non_null(:language))) do
       resolve(&JournalResolver.list_languages/3)
-    end
-
-    @desc "Every entry, newest first."
-    field :entries, non_null(list_of(non_null(:entry))) do
-      resolve(&JournalResolver.list_entries/3)
     end
 
     @desc "One entry, or null when no entry has that id."

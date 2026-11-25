@@ -19,6 +19,23 @@ asking; delete `.env` to change or drop it.
 Open http://localhost:5173. The GraphQL API answers at http://localhost:4000/api/graphql, and
 Postgres listens on port 55433. The map loads its tiles from OpenFreeMap, so it needs internet.
 
+## Example journeys
+
+To fill the app with three example journeys, with entries, corrections and teacher reactions
+recorded from the real model:
+
+```bash
+docker compose exec backend mix run apps/database/priv/repo/seeds.exs
+```
+
+This empties every journey and entry first. Loading reads
+`backend/apps/database/priv/repo/example_journeys.json` and makes no AI call. On the host,
+`cd backend && mix ecto.setup` creates the database, migrates it and loads the same journeys.
+
+`mix api.record_example_journeys`, run from `backend` with `OPENROUTER_API_KEY` set,
+writes that file again. It plays three journeys through the real commands on a scratch
+database, with the model writing each learner entry and correcting it.
+
 ## Corrections from a real model
 
 With no key, the backend uses a stub provider that knows four phrases, such as "je va" and "à le",
@@ -42,6 +59,8 @@ stub's corrections, so start the stack without the key before running it:
 ```bash
 OPENROUTER_API_KEY= docker compose up -d --build --wait
 ```
+
+Load the example journeys again afterward, as shown under "Example journeys".
 
 ## How it is built
 
@@ -73,6 +92,9 @@ screen shows which kinds of error keep coming back and which have dropped off.
 
 ## How the interface supports writing and review
 
+- **Journeys.** The opening page lists every journey, newest first. Each card names the route by
+  its first and last town, then where you are and how many entries you wrote. "Start a journey in
+  France" starts a new one and opens it.
 - **Writing.** The left half is a map of France with the journey's route. On the right, the
   teacher, drawn as a travel buddy, sets the scene at the current stop and asks for a few French
   sentences about it, above an entry field. In a town the scene names something the town is known
@@ -87,7 +109,7 @@ screen shows which kinds of error keep coming back and which have dropped off.
   teacher's reaction sums up the entry, and one card per correction shows the original crossed
   out, the fix, the category and the explanation.
 - **Failure.** When analysis fails, the entry is kept and a "Try again" button runs it again.
-- **Review.** "Your entries" lists past entries, newest first, with their correction count. Each
+- **Review.** On a journey's page, "Your entries" lists that journey's entries, newest first, with their correction count. Each
   one opens on its own page, with its route position marked on the map.
 - **Usual suspects.** Each mistake category with its count, most frequent first. A label says
   whether the category shows up fewer times lately, more times lately, about the same, or not at
@@ -115,8 +137,8 @@ is one mutation or query, and resolvers only map arguments to the `journal` app.
 | `retryAnalysis(entryId)` | Runs a failed analysis again |
 | `travelOn(journeyId)` | Moves the journey to its next route position, once the current route position has an entry |
 | `languages` | Each language and level a journey can start in, with its country |
-| `currentJourney` | The newest journey, with its route, the route position you are at and `canTravelOn` |
-| `entries` | Every entry, newest first |
+| `journeys` | Every journey, newest first, with its country, route and entries |
+| `journey(id)` | One journey, with its route, the route position you are at, `canTravelOn` and its entries |
 | `entry(id)` | One entry with its corrections and the teacher's reaction |
 | `categoryTrends` | Each mistake category with its count and trend |
 

@@ -9,7 +9,14 @@ defmodule Backend.MixProject do
       version: "0.1.0",
       start_permanent: Mix.env() == :prod,
       listeners: [Phoenix.CodeReloader],
+      aliases: aliases(),
       deps: deps()
+    ]
+  end
+
+  defp aliases do
+    [
+      "ecto.setup": ["ecto.create", "ecto.migrate", "run apps/database/priv/repo/seeds.exs"]
     ]
   end
 

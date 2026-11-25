@@ -47,6 +47,13 @@ defmodule Backend.Graphql.Types.JournalTypes do
     field :seed, non_null(:integer)
     field :language, non_null(:string)
     field :level, non_null(:string)
+    field :inserted_at, non_null(:datetime)
+
+    @desc "The country the route crosses."
+    field :country, non_null(:string), resolve: &JournalResolver.get_country/3
+
+    @desc "Every entry written on the journey, newest first."
+    field :entries, non_null(list_of(non_null(:entry))), resolve: dataloader(:journal)
 
     @desc "The real towns on the route, start first."
     field :points_of_interest, non_null(list_of(non_null(:point_of_interest))),

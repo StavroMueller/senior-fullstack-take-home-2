@@ -125,8 +125,9 @@ Julien's standing rulings, recorded 2026-11-23.
   `Backend.Database.Schema.*`.** Domain apps use them and never define their own. Schemas are
   data definitions and hold no logic. Ruled by Julien, 2026-11-23: the app namespace wins over
   a bare `Backend.Schema.*`.
-- **Every module is namespaced under its app: `Backend.<App>.*`.** The one exception is
-  `Backend.ApiWeb.*`, which keeps Phoenix's web segment.
+- **Every module is namespaced under its app: `Backend.<App>.*`.** Two exceptions:
+  `Backend.ApiWeb.*` keeps Phoenix's web segment, and a Mix task is named `Mix.Tasks.<App>.<Name>`,
+  because Mix finds a task only under `Mix.Tasks`. Ruled by Julien, 2026-11-24.
 - **Resolvers map arguments and delegate.** All logic lives in domain commands and queries.
   There are no accounts, so no resolver checks permissions.
 - **One mutation per operation, one entry per call.** `submitEntry(input)` takes one entry. A
@@ -149,6 +150,7 @@ Each word has one meaning in code and on screen. Ruled by Julien, 2026-11-23.
 | encounter | One fantastical event the seed places by chance between two points of interest, with its own entry | a journey event, a stop |
 | route position | One point of interest or one encounter on the route: where the person is, and where an entry is written. `route_position` in code | a map coordinate, a URL route |
 | teacher | The character who travels with the person, sets the scene at each route position and reacts to an entry; replaces "persona" and "buddy" | the AI provider, a real person |
+| example journey | One of the journeys `seeds.exs` loads from `example_journeys.json`, recorded once from the real model | a test fixture, a route seed |
 | teacher reaction | The line the teacher says about one analyzed entry, written by the AI or hand-written: `TeacherReaction` in code, `teacherReaction` in GraphQL | a writing prompt, a correction |
 
 "Feedback" and "mistake" on its own are banned in code because each could mean two of the above.
@@ -421,6 +423,8 @@ cd backend && mix format --check-formatted && mix compile --warnings-as-errors &
 cd frontend && npm run format:check && npm run typecheck && npm test
 node tools/copy-check/check.mjs <files>
 cd backend/apps/database && mix ecto.gen.migration <name>
+docker compose exec backend mix run apps/database/priv/repo/seeds.exs
+cd backend && OPENROUTER_API_KEY=<key> mix api.record_example_journeys
 ```
 
 Run the backend on the host against the compose database: it listens on port 55433, which is

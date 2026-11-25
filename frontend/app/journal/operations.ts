@@ -59,8 +59,9 @@ export type RouteOnMap = {
   encounters: Pick<Encounter, "id" | "afterPointOfInterestIndex">[];
 };
 
-export type CurrentJourney = RouteOnMap & {
+export type Journey = RouteOnMap & {
   id: string;
+  entries: EntrySummary[];
   openEncounter: Pick<Encounter, "id"> | null;
   currentPointOfInterestIndex: number | null;
   canTravelOn: boolean;
@@ -72,7 +73,7 @@ export type EntryOnRoute = {
   id: string;
   pointOfInterestIndex: number | null;
   encounter: Pick<Encounter, "id"> | null;
-  journey: RouteOnMap;
+  journey: RouteOnMap & { id: string };
 };
 
 const ROUTE_ON_MAP = gql`
@@ -89,11 +90,50 @@ const ROUTE_ON_MAP = gql`
   }
 `;
 
-export const CURRENT_JOURNEY = gql`
-  query CurrentJourney {
-    currentJourney {
+export type JourneySummary = {
+  id: string;
+  country: string;
+  insertedAt: string;
+  pointsOfInterest: Pick<PointOfInterest, "name">[];
+  currentPointOfInterestIndex: number | null;
+  openEncounter: Pick<Encounter, "id"> | null;
+  entries: Pick<Entry, "id">[];
+};
+
+export const JOURNEYS = gql`
+  query Journeys {
+    journeys {
+      id
+      country
+      insertedAt
+      pointsOfInterest {
+        name
+      }
+      currentPointOfInterestIndex
+      openEncounter {
+        id
+      }
+      entries {
+        id
+      }
+    }
+  }
+`;
+
+export const JOURNEY = gql`
+  query Journey($id: ID!) {
+    journey(id: $id) {
       id
       ...RouteOnMap
+      entries {
+        id
+        body
+        analysisStatus
+        insertedAt
+        corrections {
+          id
+        }
+      }
       openEncounter {
         id
       }
@@ -164,20 +204,6 @@ export const ENTRY = gql`
   }
 `;
 
-export const ENTRIES = gql`
-  query Entries {
-    entries {
-      id
-      body
-      analysisStatus
-      insertedAt
-      corrections {
-        id
-      }
-    }
-  }
-`;
-
 export const CATEGORY_TRENDS = gql`
   query CategoryTrends {
     categoryTrends {
@@ -227,4 +253,25 @@ export function analysisFailed(entry: Pick<Entry, "analysisStatus">) {
 
 export function isAnalyzed(entry: Pick<Entry, "analysisStatus">) {
   return entry.analysisStatus === "ANALYZED";
+}
+
+type RouteNames = { pointsOfInterest: Pick<PointOfInterest, "name">[] };
+
+export function isFinished(
+  currentPointOfInterestIndex: number | null,
+): currentPointOfInterestIndex is null {
+  return currentPointOfInterestIndex === null;
+}
+
+export function lastTown(journey: RouteNames) {
+  return journey.pointsOfInterest[journey.pointsOfInterest.length - 1].name;
+}
+
+export function routePositionName(
+  journey: RouteNames & { openEncounter: Pick<Encounter, "id"> | null },
+  currentPointOfInterestIndex: number,
+) {
+  return journey.openEncounter
+    ? `On the road to ${journey.pointsOfInterest[currentPointOfInterestIndex + 1].name}`
+    : journey.pointsOfInterest[currentPointOfInterestIndex].name;
 }

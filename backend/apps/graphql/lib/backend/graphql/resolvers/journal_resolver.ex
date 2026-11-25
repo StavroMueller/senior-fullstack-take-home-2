@@ -6,8 +6,12 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
   def get_category_trends(_parent, _arguments, _resolution),
     do: {:ok, Journal.get_category_trends()}
 
-  def get_current_journey(_parent, _arguments, _resolution),
-    do: {:ok, Journal.get_current_journey()}
+  def list_journeys(_parent, _arguments, _resolution), do: {:ok, Journal.list_journeys()}
+
+  def get_journey(_parent, %{id: journey_id}, _resolution),
+    do: {:ok, Journal.get_journey(journey_id)}
+
+  def get_country(journey, _arguments, _resolution), do: {:ok, Journal.get_country(journey)}
 
   def get_points_of_interest(journey, _arguments, _resolution),
     do: {:ok, Journal.get_points_of_interest(journey)}
@@ -25,8 +29,6 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
 
   def get_teacher_reaction(entry, _arguments, _resolution),
     do: {:ok, Journal.get_teacher_reaction(entry)}
-
-  def list_entries(_parent, _arguments, _resolution), do: {:ok, Journal.list_entries()}
 
   def start_journey(_parent, arguments, _resolution) do
     case Journal.start_journey(arguments) do

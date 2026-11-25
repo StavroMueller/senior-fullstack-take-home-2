@@ -1,10 +1,10 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Map as MapLibreMap } from "maplibre-gl";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { vi } from "vitest";
 import { UsualSuspectsScreen } from "~/journal/UsualSuspectsScreen";
-import { CATEGORY_TRENDS, CURRENT_JOURNEY, ENTRIES, LANGUAGES } from "~/journal/operations";
+import { CATEGORY_TRENDS, JOURNEY, LANGUAGES } from "~/journal/operations";
 import { JourneyLayout } from "~/journey/JourneyLayout";
 import { JourneyScreen } from "~/journey/JourneyScreen";
 import { testJourney } from "~/journey/testJourney";
@@ -49,17 +49,16 @@ const encounter = { __typename: "Encounter", id: "7", afterPointOfInterestIndex:
 
 const mocks = [
   {
-    request: { query: CURRENT_JOURNEY },
+    request: { query: JOURNEY, variables: { id: "1" } },
     result: {
       data: {
-        currentJourney: testJourney({
+        journey: testJourney({
           encounters: [encounter],
           currentPointOfInterestIndex: 1,
         }),
       },
     },
   },
-  { request: { query: ENTRIES }, result: { data: { entries: [] } } },
   { request: { query: LANGUAGES }, result: { data: { languages: [] } } },
   {
     request: { query: CATEGORY_TRENDS },
@@ -79,10 +78,10 @@ const mocks = [
 function renderJourney() {
   render(
     <MockedProvider mocks={mocks}>
-      <MemoryRouter>
+      <MemoryRouter initialEntries={["/journeys/1"]}>
         <Routes>
           <Route element={<JourneyLayout />}>
-            <Route index element={<JourneyScreen />} />
+            <Route path="journeys/1" element={<JourneyScreen journeyId="1" />} />
             <Route path="usual-suspects" element={<UsualSuspectsScreen />} />
           </Route>
         </Routes>
@@ -111,6 +110,7 @@ describe("JourneyLayout", () => {
       await screen.findByText("Voilà, we made it to Nancy! Tell me in French what you see first."),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Your entry")).toBeInTheDocument();
+    await waitFor(() => expect(shownMarkerLabels()).toContain("Nancy"));
     expect(shownMarkerLabels()).toEqual([
       "Nancy",
       "Troyes",

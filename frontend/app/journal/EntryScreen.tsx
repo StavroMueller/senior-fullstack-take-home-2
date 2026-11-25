@@ -27,9 +27,11 @@ export function EntryScreen({ entryId }: { entryId: string }) {
 
   return (
     <Stack spacing={4}>
-      <Link to="/" style={{ color: palette.ink }}>
-        Back to your entries
-      </Link>
+      {entry && (
+        <Link to={`/journeys/${entry.journey.id}`} style={{ color: palette.ink }}>
+          Back to this journey
+        </Link>
+      )}
       <Typography variant="h1">Your entry</Typography>
       <EntryView entryId={entryId} />
     </Stack>

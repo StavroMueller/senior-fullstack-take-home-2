@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("the journey screen shows the map of France beside the logbook", async ({
+test("the journey list shows the map of France beside the journeys", async ({
   page,
 }) => {
   await page.goto("/");
@@ -14,7 +14,8 @@ test("a person writes an entry, sees its corrections, opens it again from histor
 }) => {
   await page.goto("/");
 
-  await page.getByRole("button", { name: "Start a journey" }).click();
+  await page.getByRole("button", { name: "Start a journey in France" }).click();
+  await expect(page).toHaveURL(/\/journeys\/\d+$/);
   await page.getByRole("button", { name: "Let's go" }).click();
 
   const journeyMap = page.getByRole("region", { name: "Journey map" });
@@ -50,10 +51,18 @@ test("a person writes an entry, sees its corrections, opens it again from histor
     page.getByRole("complementary", { name: "Your teacher" }),
   ).toContainText("verb tense");
 
-  await page.getByRole("link", { name: "Back to your entries" }).click();
+  await page.getByRole("link", { name: "Back to this journey" }).click();
   await expect(
     page.getByRole("heading", { name: "Your entries" }),
   ).toBeVisible();
+  const journeyUrl = page.url();
+
+  await page.getByRole("link", { name: "Back to your journeys" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Your journeys" }),
+  ).toBeVisible();
+  await page.getByRole("link", { name: / to / }).first().click();
+  await expect(page).toHaveURL(journeyUrl);
 
   const mapCanvas = page
     .getByRole("region", { name: "Journey map" })

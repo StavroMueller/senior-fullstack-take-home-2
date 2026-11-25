@@ -1,12 +1,14 @@
 import { useQuery } from "@apollo/client";
 import { useEffect } from "react";
 import { Logbook } from "~/journal/Logbook";
-import { CURRENT_JOURNEY, type CurrentJourney } from "~/journal/operations";
+import { JOURNEY, type Journey } from "~/journal/operations";
 import { useShowOnJourneyMap } from "~/journey/JourneyLayout";
 
-export function JourneyScreen() {
-  const { data } = useQuery<{ currentJourney: CurrentJourney | null }>(CURRENT_JOURNEY);
-  const journey = data?.currentJourney;
+export function JourneyScreen({ journeyId }: { journeyId: string }) {
+  const { data } = useQuery<{ journey: Journey | null }>(JOURNEY, {
+    variables: { id: journeyId },
+  });
+  const journey = data?.journey;
   const showOnJourneyMap = useShowOnJourneyMap();
 
   useEffect(() => {
@@ -20,5 +22,5 @@ export function JourneyScreen() {
     });
   }, [showOnJourneyMap, journey]);
 
-  return <Logbook />;
+  return <Logbook key={journeyId} journeyId={journeyId} />;
 }
