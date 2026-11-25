@@ -21,22 +21,22 @@ Postgres listens on port 55433. The map loads its tiles from OpenFreeMap, so it 
 
 ## Example journeys
 
-Every time the backend container starts, it loads three example journeys, with entries,
-corrections and teacher reactions recorded from the real model. The load empties every journey and
-entry first, so anything written in the app is gone after a restart. To load them again without a
+The backend container loads three example journeys at every start, with entries, corrections and
+teacher reactions recorded once from the real model. Loading empties every journey and entry
+first, so a restart deletes anything written in the app. To load the examples again without a
 restart:
 
 ```bash
 docker compose exec backend mix run apps/database/priv/repo/seeds.exs
 ```
 
-Loading reads
-`backend/apps/database/priv/repo/example_journeys.json` and makes no AI call. On the host,
-`cd backend && mix ecto.setup` creates the database, migrates it and loads the same journeys.
+The examples come from `backend/apps/database/priv/repo/example_journeys.json`, and loading them
+makes no AI call. On the host, `cd backend && mix ecto.setup` creates the database, runs
+the migrations and loads the same journeys.
 
-`mix api.record_example_journeys`, run from `backend` with `OPENROUTER_API_KEY` set,
-writes that file again. It plays three journeys through the real commands on a scratch
-database, with the model writing each learner entry and correcting it.
+To record that file again, run `mix api.record_example_journeys` from `backend` with
+`OPENROUTER_API_KEY` set. The task plays three journeys through the real commands on a scratch
+database. The model writes each learner entry, then corrects the entry.
 
 ## Corrections from a real model
 
@@ -76,46 +76,55 @@ The product and design decisions, with the reason for each, are in `PRODUCT.md` 
 
 ## Correction approach
 
-Wayword gives feedback after writing. You write a few sentences at each stop on the trail, send
-the entry, and read the corrections once analysis finishes. Nothing interrupts you while you write.
+Of the options in the assignment, Wayword combines three kinds of correction: a fix for each
+error, a one-sentence explanation of the fix and a mistake category. You see the corrections after
+you send an entry, with no help on screen while you write.
 
-Each correction names one span of your entry, the fix, a one-sentence explanation in English and
-a mistake category, such as verb tense or gender. Corrections stay small on purpose: grammar and
-spelling errors only, with no style rewrites and no fully rewritten version.
+Each correction covers one span of your entry and holds the original words, the fix, the
+explanation in English and a category such as verb tense or gender. Claude Haiku 5.5 finds the
+errors through OpenRouter. The backend then looks up each original span in the entry on word
+boundaries, so no highlight depends on a position the model counted.
+
+Corrections fix errors only: grammar, spelling, agreement and a wrong word. No correction
+suggests a style change or rewrites the whole entry. On screen, the corrected spans are
+highlighted inside the entry, one card per correction sits below the entry, and the teacher adds a
+short reaction.
 
 ## Why it helps a learner
 
-Writing first and checking after makes you produce French from memory, which is the practice.
-Seeing the error in place, with a short reason, tells you which rule broke and leaves the rest of
-your sentence as you wrote it.
+Writing first and reading the corrections after makes you recall French with no hint on screen.
+Seeing each error in place, with a one-sentence reason, shows which rule broke and leaves the
+rest of your sentence as you wrote it.
 
-Categories turn single corrections into patterns. Over several entries, the "Usual suspects"
-screen shows which kinds of error keep coming back and which have dropped off.
+Categories turn single corrections into patterns. The recap of a finished journey counts its
+categories, and "Usual suspects" compares your older entries with your recent ones. The two
+screens show which kinds of error come back and which have dropped off.
 
 ## How the interface supports writing and review
 
-- **Journeys.** The opening page lists every journey, newest first. Each card names the route by
-  its first and last town, then where you are and how many entries you wrote. "Start a journey in
-  France" starts a new one and opens it. Each card is marked "Finished" or "In progress".
-- **Journey recap.** A finished journey opens on its recap: the mistake categories of that
-  journey with their counts and trends, then every correction grouped by category. "Keep going"
-  at the last town opens it.
+- **Journeys.** The opening page lists every journey, newest first, under a "Start a journey in
+  France" button. Each card shows the route from its first town to its last, marked "Finished" or
+  "In progress". Under the route come the country, the start date, the entry count, and the town
+  you are in or the town where the journey finished.
 - **Writing.** The left half is a map of France with the journey's route. On the right, the
-  teacher, drawn as a travel buddy, sets the scene at the current stop and asks for a few French
-  sentences about it, above an entry field. In a town the scene names something the town is known
-  for; some stops are fantastical encounters with their own scene. A new journey opens on the
-  teacher's intro to the route, from the first town to the last, and "Let's go" moves on to the
-  first town. "Start a journey in France" shows one button per language with data files. A stop
-  takes as many entries as you like, and once it has one, "Keep going" moves you on: the "You are
-  here" marker walks along the trail to the next stop.
-- **Waiting.** After you send an entry, it shows "Checking your entry" until analysis ends. The
-  page hears the result over a Phoenix channel, with no reload.
-- **Reading corrections.** Each corrected span is highlighted inside the entry. Below it, the
-  teacher's reaction sums up the entry, and one card per correction shows the original crossed
-  out, the fix, the category and the explanation.
-- **Failure.** When analysis fails, the entry is kept and a "Try again" button runs it again.
-- **Review.** On a journey's page, "Your entries" lists that journey's entries, newest first, with their correction count. Each
-  one opens on its own page, with its route position marked on the map.
+  teacher, drawn as a travel buddy, sets the scene at the current route position and asks for a
+  few French sentences, above an entry field. At a town the scene names something the town is
+  known for. Between two towns the journey may meet a fantastical encounter with its own scene.
+- **Moving on.** A new journey opens on the teacher's intro to the route, and "Let's go" moves to
+  the first town. A route position takes as many entries as you like. Once the route position has
+  an entry, "Keep going" moves the journey on, and the "You are here" marker walks along the route.
+- **Waiting.** After you send an entry, the page shows "Checking your entry" until analysis ends.
+  The browser gets the result over a Phoenix channel, with no reload.
+- **Reading corrections.** The entry sits in its own card, with each corrected span highlighted.
+  Below the entry come the teacher's reaction and one card per correction, showing the original
+  crossed out, the fix, the category and the explanation.
+- **Failure.** When analysis fails, the entry is kept, and "Try again" runs the analysis again.
+- **Review.** On a journey's page, "Your entries" lists that journey's entries, newest first, with
+  their correction count. Each entry opens on its own page, with its route position marked on the
+  map.
+- **Journey recap.** The card of a finished journey opens its recap page, and so does "Keep going"
+  at the last town. The recap counts that journey's mistake categories with their trends, then
+  lists every correction under its category.
 - **Usual suspects.** Each mistake category with its count, most frequent first. A label says
   whether the category shows up fewer times lately, more times lately, about the same, or not at
   all lately.
@@ -124,7 +133,9 @@ screen shows which kinds of error keep coming back and which have dropped off.
 
 - Help while writing: hints, translation, autocomplete and vocabulary lookup.
 - Style suggestions and a corrected full version of the entry.
+- Editing or deleting an entry after you send it.
 - Accounts and sign-in: Wayword has one user.
+- Keeping your entries across a restart: the example journeys replace every journey at each boot.
 - Languages other than French at A1. Language and level are columns, and a second language needs
   new data files, which `PRODUCT.md` lists.
 - A phone layout, an accessibility audit and deployment.

@@ -542,3 +542,35 @@ the open pull request, #23.
 Asked to resolve conflicts, the agent began by checking the pull requests of both Wayword and the
 starter kit. Julien stopped the call and named the challenge pull request. Work on the repository
 the request names.
+
+### Copy is read against every writing rule, past the checker
+
+The agent ran the prose checker on its README sections, saw 0 failures, and stopped there.
+Julien said the copy sounded off. `CLAUDE.md` already called the checker the floor and asked for a
+read against each writing rule, and the agent had skipped that read.
+
+Rejected, in the README:
+
+```markdown
+Every time the backend container starts, it loads three example journeys, with entries,
+corrections and teacher reactions recorded from the real model.
+
+- **Journeys.** The opening page lists every journey, newest first. Each card names the route by
+  its first and last town, then where you are and how many entries you wrote. "Start a journey in
+  France" starts a new one and opens it. Each card is marked "Finished" or "In progress".
+```
+
+The faults: "it" standing in for a noun five times, a clause with no verb, the card's facts split
+around a sentence about a button, and "starts" twice in one sentence.
+
+Write instead:
+
+```markdown
+The backend container loads three example journeys at every start, with entries, corrections and
+teacher reactions recorded once from the real model.
+
+- **Journeys.** The opening page lists every journey, newest first, under a "Start a journey in
+  France" button. Each card shows the route from its first town to its last, marked "Finished" or
+  "In progress". Under the route come the country, the start date, the entry count, and the town
+  you are in or the town where the journey finished.
+```
