@@ -21,14 +21,16 @@ Postgres listens on port 55433. The map loads its tiles from OpenFreeMap, so it 
 
 ## Example journeys
 
-To fill the app with three example journeys, with entries, corrections and teacher reactions
-recorded from the real model:
+Every time the backend container starts, it loads three example journeys, with entries,
+corrections and teacher reactions recorded from the real model. The load empties every journey and
+entry first, so anything written in the app is gone after a restart. To load them again without a
+restart:
 
 ```bash
 docker compose exec backend mix run apps/database/priv/repo/seeds.exs
 ```
 
-This empties every journey and entry first. Loading reads
+Loading reads
 `backend/apps/database/priv/repo/example_journeys.json` and makes no AI call. On the host,
 `cd backend && mix ecto.setup` creates the database, migrates it and loads the same journeys.
 
@@ -60,7 +62,7 @@ stub's corrections, so start the stack without the key before running it:
 OPENROUTER_API_KEY= docker compose up -d --build --wait
 ```
 
-Load the example journeys again afterward, as shown under "Example journeys".
+Restart the stack afterward to load the example journeys again.
 
 ## How it is built
 

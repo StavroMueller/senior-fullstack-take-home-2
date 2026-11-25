@@ -287,7 +287,9 @@ Ruled by Julien, 2026-11-23.
   `execute/2` and read through `Ecto.Enum` in the schema. The database rejects any other value.
   Ruled by Julien, 2026-11-23.
 - **Migrations run at boot** in the backend container. A migration that raises stops the stack
-  from starting, so run `docker compose up` after adding one.
+  from starting, so run `docker compose up` after adding one. The example journeys load right
+  after the migrations, emptying the journal tables first, so a restart deletes every entry
+  written since the last one. Ruled by Julien, 2026-11-24.
 - **A migration that did not run is fixed by restarting the stack,** with `docker compose down`
   and `./start.sh`. The backend source is mounted, so a pulled change reaches the running
   container without a boot, and its migrations wait for the next one. No code works around a

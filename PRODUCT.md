@@ -318,10 +318,15 @@ Requested by Julien, 2026-11-24. Source: `frontend/app/journey/JourneyList.tsx`,
 
 ### Example journeys are recorded once and loaded from a file
 
-Running `seeds.exs` empties the journal tables and loads three example journeys from
+The backend container runs `seeds.exs` on every boot, after the migrations. The script empties
+the journal tables and loads three example journeys from
 `backend/apps/database/priv/repo/example_journeys.json`: one finished, one partway along its
 route and one just started. Loading them makes no AI call. Each timestamp in the file is counted
 back from the moment of loading, so the entries stay recent and Usual suspects shows trends.
+
+Loading at every boot deletes whatever the person wrote since the last start. Julien chose that
+over loading only into an empty journal, so every start shows the same three journeys. Ruled by
+Julien, 2026-11-24. Source: `docker-compose.yml`.
 
 `mix api.record_example_journeys` writes that file. The task plays each journey through the
 real commands on a scratch database, `wayword_example_journeys`.
