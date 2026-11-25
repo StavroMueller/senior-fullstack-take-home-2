@@ -599,3 +599,22 @@ Most of the work was done on Monday afternoon and evening.
 
 The page keeps one line per day and a diagram of four boxes: browser, Elixir backend, OpenRouter
 and Postgres.
+
+### No label fragment to open a paragraph
+
+On the same summary page, the agent opened the Monday card with a verbless line that claimed scope
+before any fact. Julien called it a blatant copy smell. The line breaks rule 5 (no fragment as a
+label) and rule 13 (no totalizing claim) under "Writing rules" in `CLAUDE.md`, and the checker did
+not flag it.
+
+Rejected:
+
+```text
+The whole app in one sitting. You write an entry and see each AI correction highlighted in place.
+```
+
+Write instead:
+
+```text
+You write an entry and see each AI correction highlighted in place.
+```
