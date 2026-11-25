@@ -32,6 +32,7 @@ Every value lives in `frontend/app/palette.ts`. Palette "Sky and tomato", ruled 
 | `teacher` | `#7B4DFF` | The teacher's speech bubble, grape | white text on it 4.83; as text on `ground` 4.29 |
 | `fix` | `#12A876` | Corrected text, green-teal | as text on `ground` 2.71; white text on it 3.05 |
 | `error` | `#D7263D` | What the person wrote, red | as text on `ground` 4.40; white text on it 4.96 |
+| `errorTint` | `#FFDCE0` | Behind each corrected span inside the entry, pale red | `error` on it 3.91; `ink` on it 12.69 |
 
 The ratios are a record from 2026-11-23 and nothing asserts them. Julien ruled accessibility out
 of scope for the code challenge, so no contrast floor applies and no test recomputes these

@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import type { Correction } from "~/journal/operations";
 import { palette, sizes } from "~/palette";
@@ -31,26 +32,36 @@ export function splitByCorrections(
 
 export function CorrectedText({ body, corrections }: { body: string; corrections: Correction[] }) {
   return (
-    <Typography sx={{ whiteSpace: "pre-wrap" }}>
-      {splitByCorrections(body, corrections).map((segment, index) =>
-        segment.isCorrected ? (
-          <Box
-            component="mark"
-            key={index}
-            sx={{
-              backgroundColor: "transparent",
-              color: palette.error,
-              fontWeight: 700,
-              textDecoration: "underline",
-              textDecorationThickness: sizes.correctionUnderline,
-            }}
-          >
-            {segment.text}
-          </Box>
-        ) : (
-          <span key={index}>{segment.text}</span>
-        ),
-      )}
-    </Typography>
+    <Paper sx={{ padding: 3 }}>
+      <Typography
+        sx={{
+          whiteSpace: "pre-wrap",
+          fontSize: sizes.entryFontSize,
+          lineHeight: sizes.entryLineHeight,
+        }}
+      >
+        {splitByCorrections(body, corrections).map((segment, index) =>
+          segment.isCorrected ? (
+            <Box
+              component="mark"
+              key={index}
+              sx={{
+                backgroundColor: palette.errorTint,
+                borderRadius: sizes.correctedSpanRadius,
+                padding: sizes.correctedSpanPadding,
+                color: palette.error,
+                fontWeight: 700,
+                textDecoration: "underline",
+                textDecorationThickness: sizes.correctionUnderline,
+              }}
+            >
+              {segment.text}
+            </Box>
+          ) : (
+            <span key={index}>{segment.text}</span>
+          ),
+        )}
+      </Typography>
+    </Paper>
   );
 }

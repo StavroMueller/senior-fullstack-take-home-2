@@ -8,6 +8,7 @@ export const palette = {
   teacherEdge: "#5A30D9",
   fix: "#12A876",
   error: "#D7263D",
+  errorTint: "#FFDCE0",
   surface: "#FFFFFF",
   surfaceEdge: "#B9D9EE",
   mapLand: "#C8A46E",
@@ -24,6 +25,10 @@ export const fonts = {
 export const sizes = {
   thinkingBuddy: 64,
   correctionUnderline: 2,
+  entryFontSize: "1.25rem",
+  entryLineHeight: 1.8,
+  correctedSpanPadding: "0 2px",
+  correctedSpanRadius: "4px",
   edgeHeight: 4,
   pressedEdgeHeight: 2,
   buddy: 96,
