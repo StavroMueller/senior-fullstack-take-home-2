@@ -101,7 +101,10 @@ Ruled by Julien, 2026-11-23.
   - `database`: the Ecto repo, schemas and migrations.
   - `journal`: entries, corrections, mistakes, the journey generator and the AI provider
     `@behaviour`, with write operations in `commands/` modules.
-  - `graphql`: the Absinthe schema, with Dataloader.
+  - `graphql`: the Absinthe schema. Association fields read what the journal queries preloaded:
+    `Backend.Journal.LoadedAssociations` names the preloads for a journey and an entry, and each
+    mutation's resolver returns its row read back through `GetJourney` or `GetEntry`. Dataloader
+    was removed as overkill for one person's journal. Ruled by Julien, 2026-11-24.
   - `api`: Phoenix, absinthe_plug and the `entry:<id>` channel.
 - **Async analysis:** `submitEntry` saves the entry and enqueues an Oban job. The job stores the
   corrections and broadcasts on Phoenix PubSub, and the channel pushes `analysis_finished` or
@@ -129,6 +132,9 @@ Julien's standing rulings, recorded 2026-11-23.
   so every changeset lives in the schema as a function named for the write, such as
   `Entry.submission_changeset/2` or `Journey.arrival_changeset/3`. Commands call those functions and
   never call `Ecto.Changeset` to build one. Ruled by Julien, 2026-11-24.
+- **An association's order is declared on the schema with `preload_order`,** such as entries
+  newest first and corrections by `span_start`, so every preload returns the same order. Ruled by
+  Julien, 2026-11-24.
 - **Every module is namespaced under its app: `Backend.<App>.*`.** Two exceptions:
   `Backend.ApiWeb.*` keeps Phoenix's web segment, and a Mix task is named `Mix.Tasks.<App>.<Name>`,
   because Mix finds a task only under `Mix.Tasks`. Ruled by Julien, 2026-11-24.

@@ -3,8 +3,6 @@ defmodule Backend.Graphql.Types.JournalTypes do
 
   use Absinthe.Schema.Notation
 
-  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
-
   alias Backend.Database.Schema.Correction
   alias Backend.Database.Schema.Entry
   alias Backend.Graphql.Resolvers.JournalResolver
@@ -53,7 +51,7 @@ defmodule Backend.Graphql.Types.JournalTypes do
     field :country, non_null(:string), resolve: &JournalResolver.get_country/3
 
     @desc "Every entry written on the journey, newest first."
-    field :entries, non_null(list_of(non_null(:entry))), resolve: dataloader(:journal)
+    field :entries, non_null(list_of(non_null(:entry)))
 
     @desc "Each mistake category counted over the journey's analyzed entries, with its trend."
     field :category_trends, non_null(:category_trends),
@@ -64,7 +62,7 @@ defmodule Backend.Graphql.Types.JournalTypes do
       resolve: &JournalResolver.get_points_of_interest/3
 
     @desc "The encounters met so far, each placed after one point of interest."
-    field :encounters, non_null(list_of(non_null(:encounter))), resolve: dataloader(:journal)
+    field :encounters, non_null(list_of(non_null(:encounter)))
 
     @desc "The encounter the person is at, or null when they are at a point of interest."
     field :open_encounter, :encounter, resolve: &JournalResolver.get_open_encounter/3
@@ -107,14 +105,14 @@ defmodule Backend.Graphql.Types.JournalTypes do
     field :point_of_interest_index, :integer
 
     @desc "The encounter the entry was written at, or null for a point of interest entry."
-    field :encounter, :encounter, resolve: dataloader(:journal)
+    field :encounter, :encounter
 
-    field :journey, non_null(:journey), resolve: dataloader(:journal)
+    field :journey, non_null(:journey)
 
     @desc "The teacher's reaction to the entry, or null until its analysis finishes."
     field :teacher_reaction, :string, resolve: &JournalResolver.get_teacher_reaction/3
 
-    field :corrections, non_null(list_of(non_null(:correction))), resolve: dataloader(:journal)
+    field :corrections, non_null(list_of(non_null(:correction)))
   end
 
   @desc "One suggested change. The span counts Unicode code points in the entry body, end excluded."

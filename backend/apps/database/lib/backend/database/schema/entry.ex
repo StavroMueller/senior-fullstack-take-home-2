@@ -19,7 +19,7 @@ defmodule Backend.Database.Schema.Entry do
 
     belongs_to :journey, Journey
     belongs_to :encounter, Encounter
-    has_many :corrections, Correction
+    has_many :corrections, Correction, preload_order: [asc: :span_start]
 
     timestamps(type: :utc_datetime)
   end

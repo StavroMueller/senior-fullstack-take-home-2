@@ -19,8 +19,8 @@ defmodule Backend.Database.Schema.Journey do
 
     belongs_to :current_encounter, Encounter
 
-    has_many :entries, Entry
-    has_many :encounters, Encounter
+    has_many :entries, Entry, preload_order: [desc: :inserted_at, desc: :id]
+    has_many :encounters, Encounter, preload_order: [asc: :after_point_of_interest_index]
 
     timestamps(type: :utc_datetime)
   end

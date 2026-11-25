@@ -19,6 +19,5 @@ defmodule Backend.Journal do
   defdelegate get_teacher_reaction(entry), to: Queries.GetTeacherReaction, as: :run
   defdelegate list_journeys, to: Queries.ListJourneys, as: :run
   defdelegate list_languages, to: Queries.ListLanguages, as: :run
-  defdelegate get_data_source, to: Queries.GetDataSource, as: :run
   defdelegate subscribe_to_analysis(entry_id), to: AnalysisEvents, as: :subscribe
 end

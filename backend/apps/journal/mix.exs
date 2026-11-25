@@ -29,7 +29,6 @@ defmodule Backend.Journal.MixProject do
       {:database, in_umbrella: true},
       {:oban, "~> 2.19"},
       {:phoenix_pubsub, "~> 2.1"},
-      {:dataloader, "~> 2.0"},
       {:jason, "~> 1.4"},
       {:req, "~> 0.5"}
     ]

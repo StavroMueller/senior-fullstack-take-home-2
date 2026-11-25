@@ -4,7 +4,6 @@ defmodule Backend.Graphql.Schema do
   use Absinthe.Schema
 
   alias Backend.Graphql.Resolvers.JournalResolver
-  alias Backend.Journal
 
   import_types Absinthe.Type.Custom
   import_types Backend.Graphql.Types.JournalTypes
@@ -69,11 +68,4 @@ defmodule Backend.Graphql.Schema do
       resolve(&JournalResolver.retry_analysis/3)
     end
   end
-
-  def context(context) do
-    loader = Dataloader.add_source(Dataloader.new(), :journal, Journal.get_data_source())
-    Map.put(context, :loader, loader)
-  end
-
-  def plugins, do: [Absinthe.Middleware.Dataloader | Absinthe.Plugin.defaults()]
 end
