@@ -1,11 +1,27 @@
 import Grid from "@mui/material/Grid";
 import { type ComponentProps, useState } from "react";
 import { Outlet, useOutletContext } from "react-router";
+import type { Encounter, RouteOnMap } from "~/journal/operations";
 import { JourneyMap } from "~/journey/JourneyMap";
 
 type JourneyMapView = ComponentProps<typeof JourneyMap>;
 
 type ShowOnJourneyMap = (journeyMapView: JourneyMapView) => void;
+
+type JourneyAtRoutePosition = RouteOnMap & {
+  currentPointOfInterestIndex: number | null;
+  openEncounter: Pick<Encounter, "id"> | null;
+};
+
+export function currentRoutePositionView(journey: JourneyAtRoutePosition): JourneyMapView {
+  return {
+    route: journey,
+    highlightedPointOfInterestIndex: journey.openEncounter
+      ? null
+      : journey.currentPointOfInterestIndex,
+    highlightedEncounterId: journey.openEncounter?.id,
+  };
+}
 
 export function JourneyLayout() {
   const [journeyMapView, setJourneyMapView] = useState<JourneyMapView>({});

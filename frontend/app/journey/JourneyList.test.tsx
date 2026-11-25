@@ -1,16 +1,29 @@
 import { MockedProvider, type MockedResponse } from "@apollo/client/testing";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { JOURNEYS, LANGUAGES } from "~/journal/operations";
+import { JOURNEYS, LANGUAGES, type RouteOnMap } from "~/journal/operations";
 import { JourneyLayout } from "~/journey/JourneyLayout";
 import { JourneyList } from "~/journey/JourneyList";
 
-vi.mock("~/journey/JourneyMap", () => ({ JourneyMap: () => null }));
-
-const towns = ["Amiens", "Poitiers", "Bayonne"].map((name) => ({
-  __typename: "PointOfInterest",
-  name,
+vi.mock("~/journey/JourneyMap", () => ({
+  JourneyMap: ({ route }: { route?: RouteOnMap }) =>
+    route ? (
+      <p>
+        Map of {route.pointsOfInterest.map((pointOfInterest) => pointOfInterest.name).join(", ")}
+      </p>
+    ) : null,
 }));
+
+function townsOnRoute(names: string[]) {
+  return names.map((name, index) => ({
+    __typename: "PointOfInterest",
+    name,
+    longitude: index,
+    latitude: index,
+  }));
+}
+
+const towns = townsOnRoute(["Amiens", "Poitiers", "Bayonne"]);
 
 function summary(changes: Record<string, unknown>) {
   return {
@@ -19,6 +32,7 @@ function summary(changes: Record<string, unknown>) {
     country: "France",
     insertedAt: "2026-11-01T09:00:00Z",
     pointsOfInterest: towns,
+    encounters: [],
     currentPointOfInterestIndex: 1,
     openEncounter: null,
     entries: [{ __typename: "Entry", id: "10" }],
@@ -79,5 +93,14 @@ describe("JourneyList", () => {
     expect(screen.getByText("On the road to Bayonne")).toBeInTheDocument();
     expect(screen.getByText("France, started Nov 1, 0 entries.")).toBeInTheDocument();
     expect(screen.getByText("Finished in Bayonne")).toBeInTheDocument();
+  });
+
+  it("draws the newest journey's route on the map", async () => {
+    renderJourneyList([
+      summary({ id: "2", pointsOfInterest: townsOnRoute(["Lille", "Reims"]) }),
+      summary({ id: "1" }),
+    ]);
+
+    expect(await screen.findByText("Map of Lille, Reims")).toBeInTheDocument();
   });
 });

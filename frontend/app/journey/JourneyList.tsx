@@ -13,7 +13,7 @@ import {
 } from "~/journal/operations";
 import { entriesLabel } from "~/journal/countLabels";
 import { StartJourneyButtons } from "~/journal/StartJourneyButtons";
-import { useShowOnJourneyMap } from "~/journey/JourneyLayout";
+import { currentRoutePositionView, useShowOnJourneyMap } from "~/journey/JourneyLayout";
 import { JourneyStatus } from "~/journey/JourneyStatus";
 import { palette } from "~/palette";
 
@@ -37,9 +37,11 @@ export function JourneyList() {
   const journeys = data?.journeys ?? [];
   const showOnJourneyMap = useShowOnJourneyMap();
 
+  const newestJourney = data?.journeys[0];
+
   useEffect(() => {
-    showOnJourneyMap({});
-  }, [showOnJourneyMap]);
+    showOnJourneyMap(newestJourney ? currentRoutePositionView(newestJourney) : {});
+  }, [showOnJourneyMap, newestJourney]);
 
   return (
     <Stack spacing={4}>
