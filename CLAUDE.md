@@ -101,7 +101,10 @@ Ruled by Julien, 2026-11-23.
   - `database`: the Ecto repo, schemas and migrations.
   - `journal`: entries, corrections, mistakes, the journey generator and the AI provider
     `@behaviour`, with write operations in `commands/` modules.
-  - `graphql`: the Absinthe schema, with Dataloader.
+  - `graphql`: the Absinthe schema. Association fields read what the journal queries preloaded:
+    `GetJourney`, `ListJourneys` and `GetEntry` each call `Repo.preload` with their own list, and
+    each mutation's resolver returns its row read back through `GetJourney` or `GetEntry`.
+    Dataloader was removed as overkill for one person's journal. Ruled by Julien, 2026-11-24.
   - `api`: Phoenix, absinthe_plug and the `entry:<id>` channel.
 - **Async analysis:** `submitEntry` saves the entry and enqueues an Oban job. The job stores the
   corrections and broadcasts on Phoenix PubSub, and the channel pushes `analysis_finished` or
@@ -125,8 +128,16 @@ Julien's standing rulings, recorded 2026-11-23.
   `Backend.Database.Schema.*`.** Domain apps use them and never define their own. Schemas are
   data definitions and hold no logic. Ruled by Julien, 2026-11-23: the app namespace wins over
   a bare `Backend.Schema.*`.
-- **Every module is namespaced under its app: `Backend.<App>.*`.** The one exception is
-  `Backend.ApiWeb.*`, which keeps Phoenix's web segment.
+- **A changeset is the one piece of logic a schema holds.** A changeset is tied to its schema,
+  so every changeset lives in the schema as a function named for the write, such as
+  `Entry.submission_changeset/2` or `Journey.arrival_changeset/3`. Commands call those functions and
+  never call `Ecto.Changeset` to build one. Ruled by Julien, 2026-11-24.
+- **An association's order is declared on the schema with `preload_order`,** such as entries
+  newest first and corrections by `span_start`, so every preload returns the same order. Ruled by
+  Julien, 2026-11-24.
+- **Every module is namespaced under its app: `Backend.<App>.*`.** Two exceptions:
+  `Backend.ApiWeb.*` keeps Phoenix's web segment, and a Mix task is named `Mix.Tasks.<App>.<Name>`,
+  because Mix finds a task only under `Mix.Tasks`. Ruled by Julien, 2026-11-24.
 - **Resolvers map arguments and delegate.** All logic lives in domain commands and queries.
   There are no accounts, so no resolver checks permissions.
 - **One mutation per operation, one entry per call.** `submitEntry(input)` takes one entry. A
@@ -149,6 +160,8 @@ Each word has one meaning in code and on screen. Ruled by Julien, 2026-11-23.
 | encounter | One fantastical event the seed places by chance between two points of interest, with its own entry | a journey event, a stop |
 | route position | One point of interest or one encounter on the route: where the person is, and where an entry is written. `route_position` in code | a map coordinate, a URL route |
 | teacher | The character who travels with the person, sets the scene at each route position and reacts to an entry; replaces "persona" and "buddy" | the AI provider, a real person |
+| example journey | One of the journeys `seeds.exs` loads from `example_journeys.json`, recorded once from the real model | a test fixture, a route seed |
+| journey recap | The page at the end of a journey that counts its mistake categories and lists every correction: `JourneyRecap` in code | the journey list, Usual suspects |
 | teacher reaction | The line the teacher says about one analyzed entry, written by the AI or hand-written: `TeacherReaction` in code, `teacherReaction` in GraphQL | a writing prompt, a correction |
 
 "Feedback" and "mistake" on its own are banned in code because each could mean two of the above.
@@ -187,9 +200,11 @@ Julien's standing rulings, recorded 2026-11-23.
 - **A pipe chain reads top to bottom.** Start it from the data, and pipe only into a named
   module's function. Never pipe into a call on a module looked up at runtime, such as
   `provider().describe_point_of_interest(...)`, and never pipe into `case` to branch on a result: bind the
-  result to a name, then `case` on that name. A `Multi` chain may end in `Repo.transaction()
-  |> case do`. Ruled by Julien, 2026-11-23, after `JourneyIntro.for_journey` piped a town list
-  into the provider.
+  result to a name, then `case` on that name. Ruled by Julien, 2026-11-23, after
+  `JourneyIntro.for_journey` piped a town list into the provider. A `Multi` chain follows the same
+  rule: bind it as `multi`, then `case Repo.transaction(multi) do`. This is the only accepted form.
+  Ruled by Julien, 2026-11-24, which removes the earlier exception for
+  `Repo.transaction() |> case do`. Gate: the Credo check `PipeIntoCase` fails on any `|> case`.
 - **Match what something is.** `%Entry{} = entry <-`, never
   `entry when not is_nil(entry) <-`.
 - **Avoid `cond` when a boolean expression does the job.**
@@ -278,7 +293,9 @@ Ruled by Julien, 2026-11-23.
   `execute/2` and read through `Ecto.Enum` in the schema. The database rejects any other value.
   Ruled by Julien, 2026-11-23.
 - **Migrations run at boot** in the backend container. A migration that raises stops the stack
-  from starting, so run `docker compose up` after adding one.
+  from starting, so run `docker compose up` after adding one. The example journeys load right
+  after the migrations, emptying the journal tables first, so a restart deletes every entry
+  written since the last one. Ruled by Julien, 2026-11-24.
 - **A migration that did not run is fixed by restarting the stack,** with `docker compose down`
   and `./start.sh`. The backend source is mounted, so a pulled change reaches the running
   container without a boot, and its migrations wait for the next one. No code works around a
@@ -321,6 +338,9 @@ Julien's standing rulings, recorded 2026-11-23.
 
 ## Planning
 
+- **Every ruling against the agent's work goes into `docs/agent-rulings.md` the same day,** with
+  the rejected code and the code to write instead. Read that file before writing code. The rule
+  itself also goes into this file. Ruled by Julien, 2026-11-24.
 - **No CI. Every check runs locally before work is called done.** Hosted runs cost money and
   slow the loop. Run the commands under "Commands" and show their output. Declined: a GitHub
   Actions workflow, which passed once on 2026-11-23 and was deleted. Ruled by Julien,
@@ -405,6 +425,7 @@ frontend/       React Router 7 single-page app, tokens in app/palette.ts, theme 
 e2e/            the Playwright spec, run against the compose stack
 tools/          copy-check, the prose checker, with Wayword's banned words
 todo/           open work, one dated file each
+docs/           the provider benchmark and agent-rulings.md, the log of Julien's rulings with examples
 docs/           records a reader needs that are not open work, such as the AI provider benchmark
 ```
 
@@ -422,6 +443,8 @@ cd backend && mix format --check-formatted && mix compile --warnings-as-errors &
 cd frontend && npm run format:check && npm run typecheck && npm test
 node tools/copy-check/check.mjs <files>
 cd backend/apps/database && mix ecto.gen.migration <name>
+docker compose exec backend mix run apps/database/priv/repo/seeds.exs
+cd backend && OPENROUTER_API_KEY=<key> mix api.record_example_journeys
 ```
 
 Run the backend on the host against the compose database: it listens on port 55433, which is
@@ -439,7 +462,7 @@ over a per-feature spec, and a per-feature spec wins over any tool's generic def
 | --- | --- | --- |
 | Writing rules, banned words, em dashes | Prose checker | `node tools/copy-check/check.mjs <files>` |
 | No comments, `@moduledoc` at most two lines | Credo `CommentRules`, ExUnit `NoCommentsTest`, Vitest `noComments.test.ts` | `mix credo --strict`, `mix test`, `npm test` |
-| No single-letter names, no `||` default, no catch-all rescue, no `Repo` in a resolver | Custom Credo checks in `backend/credo_checks/` | `mix credo --strict` |
+| No single-letter names, no `||` default, no catch-all rescue, no `Repo` in a resolver, no pipe into `case` | Custom Credo checks in `backend/credo_checks/` | `mix credo --strict` |
 | Lint passes with zero issues | Credo strict, `tsc`, Prettier, `mix format` | the backend and frontend commands above |
 | A change is done when the live journey passes | Playwright | `cd e2e && npx playwright test` |
 | Pull requests and pushes go to the fork only | `PreToolUse` hook | `.claude/hooks/fork-only.sh`, on every shell command |

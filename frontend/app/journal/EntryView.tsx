@@ -10,11 +10,11 @@ import { CorrectionList } from "~/journal/CorrectionList";
 import { analysisFailedMessage, analyzingMessage } from "~/journal/analysisCopy";
 import {
   analysisFailed,
-  ENTRIES,
   ENTRY,
   type Entry,
   isAnalyzed,
   isAnalyzing,
+  JOURNEY,
   RETRY_ANALYSIS,
 } from "~/journal/operations";
 import { TeacherReaction } from "~/journal/TeacherReaction";
@@ -26,7 +26,7 @@ export function EntryView({ entryId }: { entryId: string }) {
   });
   const [retryAnalysis] = useMutation(RETRY_ANALYSIS, {
     variables: { entryId },
-    refetchQueries: [ENTRIES],
+    refetchQueries: [JOURNEY],
   });
 
   const entry = data?.entry;

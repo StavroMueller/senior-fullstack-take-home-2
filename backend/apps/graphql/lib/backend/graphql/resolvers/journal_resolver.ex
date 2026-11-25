@@ -4,10 +4,17 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
   alias Backend.Journal
 
   def get_category_trends(_parent, _arguments, _resolution),
-    do: {:ok, Journal.get_category_trends()}
+    do: {:ok, Journal.get_category_trends(:every_journey)}
 
-  def get_current_journey(_parent, _arguments, _resolution),
-    do: {:ok, Journal.get_current_journey()}
+  def get_journey_category_trends(journey, _arguments, _resolution),
+    do: {:ok, Journal.get_category_trends(journey)}
+
+  def list_journeys(_parent, _arguments, _resolution), do: {:ok, Journal.list_journeys()}
+
+  def get_journey(_parent, %{id: journey_id}, _resolution),
+    do: {:ok, Journal.get_journey(journey_id)}
+
+  def get_country(journey, _arguments, _resolution), do: {:ok, Journal.get_country(journey)}
 
   def get_points_of_interest(journey, _arguments, _resolution),
     do: {:ok, Journal.get_points_of_interest(journey)}
@@ -26,11 +33,9 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
   def get_teacher_reaction(entry, _arguments, _resolution),
     do: {:ok, Journal.get_teacher_reaction(entry)}
 
-  def list_entries(_parent, _arguments, _resolution), do: {:ok, Journal.list_entries()}
-
   def start_journey(_parent, arguments, _resolution) do
     case Journal.start_journey(arguments) do
-      {:ok, journey} -> {:ok, journey}
+      {:ok, journey} -> {:ok, Journal.get_journey(journey.id)}
       {:error, reason} -> {:error, Atom.to_string(reason)}
     end
   end
@@ -39,7 +44,7 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
 
   def submit_entry(_parent, %{input: input}, _resolution) do
     case Journal.submit_entry(input) do
-      {:ok, entry} -> {:ok, entry}
+      {:ok, entry} -> {:ok, Journal.get_entry(entry.id)}
       {:error, %Ecto.Changeset{} = changeset} -> {:error, error_messages(changeset)}
       {:error, reason} -> {:error, Atom.to_string(reason)}
     end
@@ -47,7 +52,7 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
 
   def travel_on(_parent, %{journey_id: journey_id}, _resolution) do
     case Journal.travel_on(journey_id) do
-      {:ok, journey} -> {:ok, journey}
+      {:ok, journey} -> {:ok, Journal.get_journey(journey.id)}
       {:error, reason} -> {:error, Atom.to_string(reason)}
     end
   end
@@ -60,7 +65,7 @@ defmodule Backend.Graphql.Resolvers.JournalResolver do
 
   def retry_analysis(_parent, %{entry_id: entry_id}, _resolution) do
     case Journal.retry_analysis(entry_id) do
-      {:ok, entry} -> {:ok, entry}
+      {:ok, entry} -> {:ok, Journal.get_entry(entry.id)}
       {:error, reason} -> {:error, Atom.to_string(reason)}
     end
   end

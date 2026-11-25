@@ -8,7 +8,6 @@ defmodule Backend.Journal.Commands.TravelOn do
   alias Backend.Journal.PointOfInterestScene
   alias Backend.Journal.Queries.GetJourneyProgress
   alias Backend.Journal.Route
-  alias Ecto.Changeset
   alias Ecto.Multi
 
   def execute(journey_id) do
@@ -24,50 +23,43 @@ defmodule Backend.Journal.Commands.TravelOn do
   defp travel_on(_journey, %{can_travel_on: false}), do: {:error, :no_entry_here}
 
   defp travel_on(%Journey{current_encounter_id: encounter_id} = journey, _progress)
-       when not is_nil(encounter_id) do
-    journey
-    |> Changeset.change(current_encounter_id: nil)
-    |> arrive_at(journey.current_point_of_interest_index + 1)
-    |> Repo.update()
-  end
+       when not is_nil(encounter_id),
+       do: arrive_at(journey, journey.current_point_of_interest_index + 1)
 
   defp travel_on(%Journey{current_point_of_interest_index: index} = journey, _progress) do
     if index == Route.point_of_interest_count() - 1 do
-      journey |> Changeset.change(finished_at: DateTime.utc_now(:second)) |> Repo.update()
+      journey |> Journey.finished_changeset(DateTime.utc_now(:second)) |> Repo.update()
     else
       leave_point_of_interest(journey, EncounterDraw.after_point_of_interest(journey, index))
     end
   end
 
-  defp leave_point_of_interest(journey, nil) do
-    journey
-    |> Changeset.change()
-    |> arrive_at(journey.current_point_of_interest_index + 1)
-    |> Repo.update()
-  end
+  defp leave_point_of_interest(journey, nil),
+    do: arrive_at(journey, journey.current_point_of_interest_index + 1)
 
   defp leave_point_of_interest(journey, encounter_kind) do
-    Multi.new()
-    |> Multi.insert(:encounter, %Encounter{
-      journey_id: journey.id,
-      after_point_of_interest_index: journey.current_point_of_interest_index,
-      kind: encounter_kind
-    })
-    |> Multi.update(:journey, fn %{encounter: encounter} ->
-      Changeset.change(journey, current_encounter_id: encounter.id)
-    end)
-    |> Repo.transaction()
-    |> case do
+    multi =
+      Multi.new()
+      |> Multi.insert(:encounter, %Encounter{
+        journey_id: journey.id,
+        after_point_of_interest_index: journey.current_point_of_interest_index,
+        kind: encounter_kind
+      })
+      |> Multi.update(:journey, fn %{encounter: encounter} ->
+        Journey.current_encounter_changeset(journey, encounter.id)
+      end)
+
+    case Repo.transaction(multi) do
       {:ok, %{journey: journey}} -> {:ok, journey}
       {:error, _operation, reason, _changes} -> {:error, reason}
     end
   end
 
-  defp arrive_at(%Changeset{data: journey} = changeset, point_of_interest_index) do
-    Changeset.change(changeset,
-      current_point_of_interest_index: point_of_interest_index,
-      current_point_of_interest_scene:
-        PointOfInterestScene.for_arrival(journey, point_of_interest_index)
-    )
+  defp arrive_at(journey, point_of_interest_index) do
+    scene = PointOfInterestScene.for_arrival(journey, point_of_interest_index)
+
+    journey
+    |> Journey.arrival_changeset(point_of_interest_index, scene)
+    |> Repo.update()
   end
 end

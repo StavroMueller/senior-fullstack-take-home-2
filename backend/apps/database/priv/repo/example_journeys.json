@@ -1,0 +1,370 @@
+{
+  "journeys": [
+    {
+      "level": "A1",
+      "seed": 731467989,
+      "language": "fr",
+      "minutes_ago": 34560,
+      "finished_minutes_ago": 25740,
+      "entries": [
+        {
+          "body": "Je veux voir la cathédrale d'Amiens. C'est très grand et très belle. Je veux monter dans la tour et regarder la ville. Après, je vais manger un sandwich au café sur la place.",
+          "analysis_status": "analyzed",
+          "point_of_interest_index": 0,
+          "teacher_reaction": "Oh là là! One slip in agreement: the cathedral is feminine, so the adjective must be too. Fix it and the entry is clean.",
+          "corrections": [
+            {
+              "category": "adjective_agreement",
+              "original": "grand",
+              "span_start": 48,
+              "span_end": 53,
+              "fix": "grande",
+              "explanation": "The adjective must agree in gender with the feminine noun la cathédrale, so it takes an -e."
+            }
+          ],
+          "encounter_after_point_of_interest_index": null,
+          "minutes_ago": 34440
+        },
+        {
+          "body": "Je veux voir la cathédrale Sainte-Croix. Elle est très grand et belle. Je veux monter sur les tours pour voir la ville. Hier, le train était en retard, mais maintenant je suis content d'être ici.",
+          "analysis_status": "analyzed",
+          "point_of_interest_index": 1,
+          "teacher_reaction": "Pas mal! Only one slip, and it's agreement: cathédrale is feminine, so the adjective needs an -e. Let's fix it.",
+          "corrections": [
+            {
+              "category": "adjective_agreement",
+              "original": "grand",
+              "span_start": 55,
+              "span_end": 60,
+              "fix": "grande",
+              "explanation": "The adjective must agree with the feminine noun \"cathédrale\", so it takes an -e."
+            }
+          ],
+          "encounter_after_point_of_interest_index": null,
+          "minutes_ago": 33000
+        },
+        {
+          "body": "Nous sommes arrivés à Poitiers. L'église Notre-Dame-la-Grande est très belle. Elle est vieux. Le colline est un peu difficile. Je aime la vieille ville.",
+          "analysis_status": "analyzed",
+          "point_of_interest_index": 2,
+          "teacher_reaction": "Oh là là! Three errors, and two of them are gender. The church is lovely, but the grammar needs work. Let's fix it.",
+          "corrections": [
+            {
+              "category": "adjective_agreement",
+              "original": "vieux",
+              "span_start": 87,
+              "span_end": 92,
+              "fix": "vieille",
+              "explanation": "The adjective must agree in gender with the feminine noun église, so it takes the feminine form."
+            },
+            {
+              "category": "gender",
+              "original": "Le",
+              "span_start": 94,
+              "span_end": 96,
+              "fix": "La",
+              "explanation": "The noun colline is feminine, so it takes the feminine article la."
+            },
+            {
+              "category": "spelling",
+              "original": "Je aime",
+              "span_start": 127,
+              "span_end": 134,
+              "fix": "J'aime",
+              "explanation": "Je becomes j' before a vowel sound, so the two words are joined with an apostrophe."
+            }
+          ],
+          "encounter_after_point_of_interest_index": null,
+          "minutes_ago": 31560
+        },
+        {
+          "body": "Bonjour, renard ! Je m'appelle Marie. Je suis 25 ans. Je habite à Paris. J'aime le chocolat.",
+          "analysis_status": "analyzed",
+          "point_of_interest_index": null,
+          "teacher_reaction": "Zut! Two slips, both involving \"je\": age takes avoir, and \"je\" drops its e before a vowel. Paris and chocolate were earned, so well done.",
+          "corrections": [
+            {
+              "category": "word_choice",
+              "original": "Je suis",
+              "span_start": 38,
+              "span_end": 45,
+              "fix": "J'ai",
+              "explanation": "Ages are expressed with avoir in French, so say \"J'ai 25 ans\" rather than \"Je suis 25 ans\"."
+            },
+            {
+              "category": "spelling",
+              "original": "Je habite",
+              "span_start": 54,
+              "span_end": 63,
+              "fix": "J'habite",
+              "explanation": "\"Je\" becomes \"j'\" before a vowel or silent h."
+            }
+          ],
+          "encounter_after_point_of_interest_index": 2,
+          "minutes_ago": 30120
+        },
+        {
+          "body": "Je voudrais voir des fresques de bandes dessinées sur les murs. J'aime beaucoup le personnage de Astérix. Je veux voir le grand mur près de la gare, avec des couleur très vives. Ce serait super si on peut prendre une photo avec les héros.",
+          "analysis_status": "analyzed",
+          "point_of_interest_index": 3,
+          "teacher_reaction": "Zut! Three slips, and the wall ideas are good. Your tenses and articles need a little more work. Let's fix them.",
+          "corrections": [
+            {
+              "category": "article",
+              "original": "de Astérix",
+              "span_start": 94,
+              "span_end": 104,
+              "fix": "d'Astérix",
+              "explanation": "The preposition de becomes d' before a vowel sound, so it elides with Astérix."
+            },
+            {
+              "category": "noun_number",
+              "original": "des couleur",
+              "span_start": 154,
+              "span_end": 165,
+              "fix": "des couleurs",
+              "explanation": "After the plural article des, the noun couleur must also be plural."
+            },
+            {
+              "category": "verb_tense",
+              "original": "si on peut",
+              "span_start": 194,
+              "span_end": 204,
+              "fix": "si on pouvait",
+              "explanation": "After a conditional like Ce serait, the si clause uses the imperfect: si on pouvait."
+            }
+          ],
+          "encounter_after_point_of_interest_index": null,
+          "minutes_ago": 28680
+        },
+        {
+          "body": "Bonjour, chevalier! Nous allons à le château du roi. Le roi fait une grand fête. Nous allons pour manger gâteau et danser. Je suis très content de voyager avec tu.",
+          "analysis_status": "analyzed",
+          "point_of_interest_index": null,
+          "teacher_reaction": "Oh là là! Four slips in four sentences, and the knight still shows up. Let's fix them.",
+          "corrections": [
+            {
+              "category": "preposition",
+              "original": "à le",
+              "span_start": 32,
+              "span_end": 36,
+              "fix": "au",
+              "explanation": "The preposition à contracts with le to form au before a masculine noun."
+            },
+            {
+              "category": "adjective_agreement",
+              "original": "grand",
+              "span_start": 69,
+              "span_end": 74,
+              "fix": "grande",
+              "explanation": "Grand must agree with the feminine noun fête, so it takes an -e."
+            },
+            {
+              "category": "article",
+              "original": "manger gâteau",
+              "span_start": 98,
+              "span_end": 111,
+              "fix": "manger du gâteau",
+              "explanation": "A partitive article is needed before gâteau here, so it becomes du gâteau."
+            },
+            {
+              "category": "word_choice",
+              "original": "tu",
+              "span_start": 160,
+              "span_end": 162,
+              "fix": "toi",
+              "explanation": "After the preposition avec, the stressed pronoun toi is required, not tu."
+            }
+          ],
+          "encounter_after_point_of_interest_index": 3,
+          "minutes_ago": 27240
+        },
+        {
+          "body": "Je voudrais visiter le cathédrale de Bayonne. C'est très grand et très belle. Je veux aller dans une chocolaterie aussi. Le chocolat est délicieux! J'aime beaucoup chocolat noir.",
+          "analysis_status": "analyzed",
+          "point_of_interest_index": 4,
+          "teacher_reaction": "Zut! Three slips, and two of them are gender. The cathedral is feminine, so let's fix the articles and adjectives.",
+          "corrections": [
+            {
+              "category": "gender",
+              "original": "le cathédrale",
+              "span_start": 20,
+              "span_end": 33,
+              "fix": "la cathédrale",
+              "explanation": "Cathédrale is feminine, so it takes the article la."
+            },
+            {
+              "category": "adjective_agreement",
+              "original": "grand",
+              "span_start": 57,
+              "span_end": 62,
+              "fix": "grande",
+              "explanation": "The adjective must agree in gender with the feminine noun cathédrale, so it needs an e."
+            },
+            {
+              "category": "article",
+              "original": "beaucoup chocolat",
+              "span_start": 155,
+              "span_end": 172,
+              "fix": "beaucoup le chocolat",
+              "explanation": "After aimer, a general liking for a food needs the definite article le."
+            }
+          ],
+          "encounter_after_point_of_interest_index": null,
+          "minutes_ago": 25800
+        }
+      ],
+      "intro": "Allez ! I am taking you from Amiens to Bayonne, so expect a long trip and no shortcuts. On the way, I look forward to Angoulême, home of a famous comics festival, where you may finally read something without a dictionary.",
+      "current_point_of_interest_index": 4,
+      "current_point_of_interest_scene": "Bonjour! We have just arrived in Bayonne, which is famous for its chocolate. I hope you don't plan to share yours. Now, write a few sentences in French about the cathedral or a chocolate shop you would like to visit here.",
+      "encounters": [
+        {
+          "kind": "fox_in_a_hat",
+          "after_point_of_interest_index": 2
+        },
+        {
+          "kind": "lost_knight",
+          "after_point_of_interest_index": 3
+        }
+      ],
+      "current_encounter_after_point_of_interest_index": null
+    },
+    {
+      "level": "A1",
+      "seed": 1704370235,
+      "language": "fr",
+      "minutes_ago": 17280,
+      "finished_minutes_ago": null,
+      "entries": [
+        {
+          "body": "Je veux voir les Calanques. C'est très belle. Je voudrait aller en bateau avec mes amis. Demain, je vais à la plage et je mange une glace.",
+          "analysis_status": "analyzed",
+          "point_of_interest_index": 0,
+          "teacher_reaction": "Zut! Two slips, both about agreement. The Calanques deserve better grammar than that. Let's fix them.",
+          "corrections": [
+            {
+              "category": "adjective_agreement",
+              "original": "très belle",
+              "span_start": 34,
+              "span_end": 44,
+              "fix": "très beau",
+              "explanation": "After \"C'est\", the adjective stays masculine singular: \"C'est très beau\"."
+            },
+            {
+              "category": "verb_agreement",
+              "original": "Je voudrait",
+              "span_start": 46,
+              "span_end": 57,
+              "fix": "Je voudrais",
+              "explanation": "The conditional of \"vouloir\" with \"je\" ends in -ais, not -ait."
+            }
+          ],
+          "encounter_after_point_of_interest_index": null,
+          "minutes_ago": 17160
+        },
+        {
+          "body": "Regarde! Il y a un château qui vole au-dessus du champ. Le château est gris et très grand. Il a des drapeaux rouge sur chaque tour. Je pense que le roi et la reine habite dans le château. Ils sont très gentil.",
+          "analysis_status": "analyzed",
+          "point_of_interest_index": null,
+          "teacher_reaction": "Zut! Three slips, and two of them are adjectives that forgot to agree. The castle is impressive, but your grammar needs a little more care. Let's fix them.",
+          "corrections": [
+            {
+              "category": "adjective_agreement",
+              "original": "rouge",
+              "span_start": 109,
+              "span_end": 114,
+              "fix": "rouges",
+              "explanation": "The adjective must be plural to agree with the plural noun \"drapeaux\"."
+            },
+            {
+              "category": "verb_agreement",
+              "original": "habite",
+              "span_start": 164,
+              "span_end": 170,
+              "fix": "habitent",
+              "explanation": "The verb must be plural to agree with the compound subject \"le roi et la reine\"."
+            },
+            {
+              "category": "adjective_agreement",
+              "original": "gentil",
+              "span_start": 202,
+              "span_end": 208,
+              "fix": "gentils",
+              "explanation": "The adjective must be masculine plural to agree with \"Ils\"."
+            }
+          ],
+          "encounter_after_point_of_interest_index": 0,
+          "minutes_ago": 15720
+        },
+        {
+          "body": "Je voudrais visiter le musée de la mine. Je voudrais voir les belles chaises design. Après, je vais manger une crêpe dans le centre. Les rues sont très haute, mais je aime la ville.",
+          "analysis_status": "analyzed",
+          "point_of_interest_index": 1,
+          "teacher_reaction": "Pas mal! Two slips: an adjective that forgot its plural, and a missing apostrophe. Let's fix them.",
+          "corrections": [
+            {
+              "category": "adjective_agreement",
+              "original": "haute",
+              "span_start": 152,
+              "span_end": 157,
+              "fix": "hautes",
+              "explanation": "The adjective must agree in number with the plural noun \"rues\", so it takes an -s."
+            },
+            {
+              "category": "spelling",
+              "original": "je aime",
+              "span_start": 164,
+              "span_end": 171,
+              "fix": "j'aime",
+              "explanation": "Before a vowel sound, \"je\" becomes \"j'\" with an apostrophe."
+            }
+          ],
+          "encounter_after_point_of_interest_index": null,
+          "minutes_ago": 14280
+        }
+      ],
+      "intro": "Allons-y! I'm taking you from Marseille to Arras, so try not to fall asleep before Saint-Étienne. Look forward to the vineyards around Mâcon, which are lovely even if you are only allowed to look.",
+      "current_point_of_interest_index": 1,
+      "current_point_of_interest_scene": "Voilà! Saint-Étienne is famous for design and coal mining. I hope you packed better shoes than I did, because this city is all hills. Now, write three or four sentences in French about something you would like to see or do here.",
+      "encounters": [
+        {
+          "kind": "floating_castle",
+          "after_point_of_interest_index": 0
+        }
+      ],
+      "current_encounter_after_point_of_interest_index": null
+    },
+    {
+      "level": "A1",
+      "seed": 1184694052,
+      "language": "fr",
+      "minutes_ago": 1440,
+      "finished_minutes_ago": null,
+      "entries": [
+        {
+          "body": "Je veux voir les maisons à colombages. Je veux manger des crêpes dans un petit restaurant. Après, je vais visiter le jardin du Thabor avec mon amie. C'est très belle!",
+          "analysis_status": "analyzed",
+          "point_of_interest_index": 0,
+          "teacher_reaction": "Pas mal! Only one slip, in agreement with an adjective. Your plans are clear and the crêpes sound tempting. Let's fix it.",
+          "corrections": [
+            {
+              "category": "adjective_agreement",
+              "original": "belle",
+              "span_start": 160,
+              "span_end": 165,
+              "fix": "beau",
+              "explanation": "After the impersonal \"C'est\", the adjective takes the masculine form \"beau\"."
+            }
+          ],
+          "encounter_after_point_of_interest_index": null,
+          "minutes_ago": 1320
+        }
+      ],
+      "intro": "Allez ! I'm your teacher, and we start in Rennes and end in Arras. On the way, look forward to Rouen, where Monet painted its cathedral again and again. I'm sure you'll find my commentary on it thrilling.",
+      "current_point_of_interest_index": 0,
+      "current_point_of_interest_scene": "Voilà! We have arrived in Rennes. I am told it is known for its half-timbered houses, which I will admire calmly. Now, write a few sentences in French about one thing you want to see or do here.",
+      "encounters": [],
+      "current_encounter_after_point_of_interest_index": null
+    }
+  ]
+}

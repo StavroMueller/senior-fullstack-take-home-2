@@ -25,6 +25,8 @@ export const fonts = {
 export const sizes = {
   thinkingBuddy: 64,
   correctionUnderline: 2,
+  journeyStatusRadius: "8px",
+  journeyStatusBorder: 2,
   entryFontSize: "1.25rem",
   entryLineHeight: 1.8,
   correctedSpanPadding: "0 2px",

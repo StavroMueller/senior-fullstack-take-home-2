@@ -1,4 +1,4 @@
-import type { CurrentJourney } from "~/journal/operations";
+import type { Journey } from "~/journal/operations";
 
 const towns = [
   { name: "Nancy", longitude: 6.18, latitude: 48.69 },
@@ -8,12 +8,13 @@ const towns = [
   { name: "La Rochelle", longitude: -1.15, latitude: 46.16 },
 ];
 
-export function testJourney(changes: Partial<Record<keyof CurrentJourney, unknown>> = {}) {
+export function testJourney(changes: Partial<Record<keyof Journey, unknown>> = {}) {
   return {
     __typename: "Journey",
     id: "1",
     pointsOfInterest: towns.map((town) => ({ __typename: "PointOfInterest", ...town })),
     encounters: [],
+    entries: [],
     openEncounter: null,
     currentPointOfInterestIndex: 0,
     canTravelOn: false,

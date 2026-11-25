@@ -24,8 +24,7 @@ defmodule Backend.Graphql.MixProject do
   defp deps do
     [
       {:journal, in_umbrella: true},
-      {:absinthe, "~> 1.7"},
-      {:dataloader, "~> 2.0"}
+      {:absinthe, "~> 1.7"}
     ]
   end
 end

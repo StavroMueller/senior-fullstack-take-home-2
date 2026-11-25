@@ -109,12 +109,13 @@ defmodule Backend.ApiWeb.EntryFlowTest do
     assert read_entry(submitted["id"])["teacherReaction"] == ReactingAiProvider.teacher_reaction()
   end
 
-  test "lists entries newest first" do
+  test "lists a journey's entries newest first" do
     journey_id = start_journey()
     submit_entry(journey_id, "Je va au parc.")
     submit_entry(journey_id, "Bonjour.")
 
-    %{"data" => %{"entries" => entries}} = graphql("query { entries { body } }")
+    %{"data" => %{"journey" => %{"entries" => entries}}} =
+      graphql("query($id: ID!) { journey(id: $id) { entries { body } } }", %{id: journey_id})
 
     assert Enum.map(entries, & &1["body"]) == ["Bonjour.", "Je va au parc."]
   end
@@ -125,7 +126,9 @@ defmodule Backend.ApiWeb.EntryFlowTest do
     %{"errors" => [%{"message" => message}]} = submit_entry(journey_id, "   ")
 
     assert message == "can't be blank"
-    assert %{"data" => %{"entries" => []}} = graphql("query { entries { id } }")
+
+    assert %{"data" => %{"journey" => %{"entries" => []}}} =
+             graphql("query($id: ID!) { journey(id: $id) { entries { id } } }", %{id: journey_id})
   end
 
   test "a failing provider keeps the entry and marks its analysis failed after the last attempt" do

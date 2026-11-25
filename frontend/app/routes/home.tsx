@@ -1,9 +1,9 @@
-import { JourneyScreen } from "~/journey/JourneyScreen";
+import { JourneyList } from "~/journey/JourneyList";
 
 export function meta() {
   return [{ title: "Wayword" }];
 }
 
 export default function Home() {
-  return <JourneyScreen />;
+  return <JourneyList />;
 }

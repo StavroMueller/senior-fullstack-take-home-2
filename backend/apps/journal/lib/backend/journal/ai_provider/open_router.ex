@@ -1,5 +1,5 @@
 defmodule Backend.Journal.AiProvider.OpenRouter do
-  @moduledoc "An AI provider that asks a pinned model on OpenRouter for an entry's corrections and the teacher's reaction as schema-checked JSON, and for the teacher's intro to a journey and scene in a town."
+  @moduledoc "An AI provider that asks a pinned model on OpenRouter for an entry's corrections and the teacher's reaction as schema-checked JSON, for the teacher's intro to a journey and scene in a town, and for a learner's entry for the example journeys."
 
   @behaviour Backend.Journal.AiProvider
 
@@ -71,6 +71,19 @@ defmodule Backend.Journal.AiProvider.OpenRouter do
     })
   end
 
+  @impl true
+  def write_example_entry(writing_prompt, language, level) do
+    settings = Application.fetch_env!(:journal, __MODULE__)
+
+    post(settings, %{
+      model: Keyword.fetch!(settings, :model),
+      max_tokens: @max_output_tokens,
+      messages: [
+        %{role: "user", content: example_entry_instructions(writing_prompt, language, level)}
+      ]
+    })
+  end
+
   defp post(settings, request_body) do
     @endpoint
     |> Req.post(
@@ -94,6 +107,16 @@ defmodule Backend.Journal.AiProvider.OpenRouter do
     Write what you say as the journey begins, in English, as "I", in two or three short sentences. Name the first and the last town, and one thing to look forward to on the way.
     Open with an interjection in that language that a learner at that level can read. Mention only facts you are sure of.
     Tease dryly and never gush. Stay under 350 characters. Reply with the words you say and nothing else.
+    """
+  end
+
+  defp example_entry_instructions(writing_prompt, language, level) do
+    """
+    You are a learner of the language with ISO 639-1 code "#{language}", at CEFR level #{level}, keeping a travel journal. Your teacher asked:
+    #{writing_prompt}
+    Write your journal entry in that language, in three to five short sentences, using only words and grammar a learner at that level knows.
+    Make two to four mistakes a learner at that level typically makes, such as a wrong verb tense, a wrong gender, a missing article or a wrong preposition. Do not mark or explain them.
+    Reply with the entry and nothing else.
     """
   end
 

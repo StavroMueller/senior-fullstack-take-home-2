@@ -5,6 +5,6 @@ defmodule Backend.Journal.Commands.FailAnalysis do
   alias Backend.Database.Schema.Entry
 
   def execute(%Entry{} = entry) do
-    entry |> Ecto.Changeset.change(analysis_status: :analysis_failed) |> Repo.update()
+    entry |> Entry.analysis_failed_changeset() |> Repo.update()
   end
 end

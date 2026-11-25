@@ -139,6 +139,10 @@ function routeLine(pointsOfInterest: PointOfInterest[]) {
   };
 }
 
+function eraseRouteLine(map: MapLibreMap) {
+  map.getSource<GeoJSONSource>(routeSourceId)?.setData(routeLine([]));
+}
+
 function drawRouteLine(map: MapLibreMap, pointsOfInterest: PointOfInterest[]) {
   const source = map.getSource<GeoJSONSource>(routeSourceId);
   if (source) {
@@ -202,7 +206,11 @@ export function JourneyMap({
   }, []);
 
   useEffect(() => {
-    if (!map || !route) return;
+    if (!map) return;
+    if (!route) {
+      eraseRouteLine(map);
+      return;
+    }
     const { pointsOfInterest, encounters } = route;
 
     const pointOfInterestMarkers = pointsOfInterest.map((pointOfInterest) =>

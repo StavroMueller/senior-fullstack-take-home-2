@@ -16,6 +16,9 @@ defmodule Backend.Journal.Route do
     draw(towns, :rand.seed_s(:exsss, seed))
   end
 
+  @doc "Returns the country the route for a language crosses."
+  def country(language), do: language |> read_route() |> Map.fetch!("country")
+
   @doc "Counts the points of interest on every route."
   def point_of_interest_count, do: @points_of_interest_between + 2
 
@@ -94,11 +97,16 @@ defmodule Backend.Journal.Route do
     {Enum.at(towns, position - 1), random_state}
   end
 
-  defp read_towns(language) do
+  defp read_route(language) do
     :journal
     |> Application.app_dir("priv/routes/#{language}.json")
     |> File.read!()
     |> Jason.decode!()
+  end
+
+  defp read_towns(language) do
+    language
+    |> read_route()
     |> Map.fetch!("towns")
     |> Enum.map(fn town ->
       %{name: town["name"], longitude: town["longitude"], latitude: town["latitude"]}

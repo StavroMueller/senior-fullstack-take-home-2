@@ -1,8 +1,6 @@
 defmodule Backend.Journal.Commands.SubmitEntry do
   @moduledoc "Saves an entry at the journey's current route position and enqueues its analysis in one transaction, leaving the journey where it is."
 
-  import Ecto.Changeset
-
   alias Backend.Database.Repo
   alias Backend.Database.Schema.Encounter
   alias Backend.Database.Schema.Entry
@@ -10,8 +8,6 @@ defmodule Backend.Journal.Commands.SubmitEntry do
   alias Backend.Journal.Jobs.AnalyzeEntry
   alias Backend.Journal.Queries.GetJourneyProgress
   alias Ecto.Multi
-
-  @longest_body 2_000
 
   def execute(%{journey_id: journey_id, body: body}) do
     case Repo.get(Journey, journey_id) do
@@ -36,28 +32,23 @@ defmodule Backend.Journal.Commands.SubmitEntry do
   end
 
   defp save(entry_changeset) do
-    Multi.new()
-    |> Multi.insert(:entry, entry_changeset)
-    |> Oban.insert(:analysis_job, fn %{entry: entry} ->
-      AnalyzeEntry.new(%{entry_id: entry.id})
-    end)
-    |> Repo.transaction()
-    |> case do
+    multi =
+      Multi.new()
+      |> Multi.insert(:entry, entry_changeset)
+      |> Oban.insert(:analysis_job, fn %{entry: entry} ->
+        AnalyzeEntry.new(%{entry_id: entry.id})
+      end)
+
+    case Repo.transaction(multi) do
       {:ok, %{entry: entry}} -> {:ok, entry}
       {:error, :entry, changeset, _changes} -> {:error, changeset}
     end
   end
 
   defp entry_changeset(journey, body, route_position) do
-    %Entry{analysis_status: :analyzing, journey_id: journey.id}
-    |> cast(Map.put(route_position, :body, trim_and_compose(body)), [
-      :body,
-      :point_of_interest_index,
-      :encounter_id
-    ])
-    |> validate_required([:body])
-    |> validate_length(:body, max: @longest_body)
+    Entry.submission_changeset(
+      %Entry{analysis_status: :analyzing, journey_id: journey.id},
+      Map.put(route_position, :body, body)
+    )
   end
-
-  defp trim_and_compose(body), do: body |> String.trim() |> :unicode.characters_to_nfc_binary()
 end

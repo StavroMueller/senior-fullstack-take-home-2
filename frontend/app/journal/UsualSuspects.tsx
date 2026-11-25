@@ -2,6 +2,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { categoryLabels } from "~/journal/categoryLabels";
+import { entriesLabel } from "~/journal/countLabels";
 import type { CategoryTrendDirection, CategoryTrends } from "~/journal/operations";
 import { TeacherReaction } from "~/journal/TeacherReaction";
 import { palette } from "~/palette";
@@ -22,10 +23,6 @@ const trendColors: Record<CategoryTrendDirection, string> = {
 
 function timesLabel(count: number) {
   return count === 1 ? "1 time" : `${count} times`;
-}
-
-function entriesLabel(count: number) {
-  return count === 1 ? "1 entry" : `${count} entries`;
 }
 
 function comparisonNote(categoryTrends: CategoryTrends) {

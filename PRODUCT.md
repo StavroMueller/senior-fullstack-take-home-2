@@ -303,3 +303,55 @@ would put every entry in one bucket, and a fixed window of the last five entries
 trend before ten entries. Comparing per entry keeps two halves of different sizes fair.
 
 Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/lib/backend/journal/category_trends.ex`.
+
+### The opening page lists every journey
+
+`/` lists every journey, the one started most recently first, under a "Start a journey in
+<country>" button for each language with data files. Each card names the route by its first and
+last town, then gives the country, the start date, where the person is and the entry count.
+
+Starting a journey opens `/journeys/<id>`. That page holds the writing prompt and "Your entries"
+for that journey only. Usual suspects still counts every entry across every journey.
+
+Requested by Julien, 2026-11-24. Source: `frontend/app/journey/JourneyList.tsx`,
+`backend/apps/journal/lib/backend/journal/queries/list_journeys.ex`.
+
+### Example journeys are recorded once and loaded from a file
+
+The backend container runs `seeds.exs` on every boot, after the migrations. The script empties
+the journal tables and loads three example journeys from
+`backend/apps/database/priv/repo/example_journeys.json`: one finished, one partway along its
+route and one just started. Loading them makes no AI call. Each timestamp in the file is counted
+back from the moment of loading, so the entries stay recent and Usual suspects shows trends.
+
+Loading at every boot deletes whatever the person wrote since the last start. Julien chose that
+over loading only into an empty journal, so every start shows the same three journeys. Ruled by
+Julien, 2026-11-24. Source: `docker-compose.yml`.
+
+`mix api.record_example_journeys` writes that file. The task plays each journey through the
+real commands on a scratch database, `wayword_example_journeys`.
+
+The OpenRouter model writes
+the entries, as a learner at the journey's level with planted mistakes, and corrects them. The
+task stops unless the OpenRouter provider is configured, and stops when an analysis fails.
+Rerun the task only to change the examples.
+
+Cassettes for HTTP calls, such as ExVCR, were declined. The file stores database rows, so loading
+it sends no request to replay. Also, every journey starts from a random route seed, so each
+recording sends different prompts.
+
+Requested by Julien, 2026-11-24. Source: `backend/apps/database/lib/backend/database/commands/load_example_journeys.ex`,
+`backend/apps/api/lib/mix/tasks/api.record_example_journeys.ex`.
+
+### A finished journey ends on its recap
+
+Each journey card on `/` is marked "Finished" or "In progress". A finished card opens the
+journey recap at `/journeys/<id>/recap`, and "Keep going" at the last town opens the recap too.
+
+The recap counts the mistake categories of that journey's analyzed entries with the same
+older-half and recent-half trends as Usual suspects. Below the counts, every correction of the
+journey is listed under its category, original then fix. A recap of a journey still in progress
+opens from its address and reads "In progress".
+
+Requested by Julien, 2026-11-24. Source: `frontend/app/journey/JourneyRecapScreen.tsx`,
+`backend/apps/journal/lib/backend/journal/queries/get_category_trends.ex`.
