@@ -102,9 +102,9 @@ Ruled by Julien, 2026-11-23.
   - `journal`: entries, corrections, mistakes, the journey generator and the AI provider
     `@behaviour`, with write operations in `commands/` modules.
   - `graphql`: the Absinthe schema. Association fields read what the journal queries preloaded:
-    `Backend.Journal.LoadedAssociations` names the preloads for a journey and an entry, and each
-    mutation's resolver returns its row read back through `GetJourney` or `GetEntry`. Dataloader
-    was removed as overkill for one person's journal. Ruled by Julien, 2026-11-24.
+    `GetJourney`, `ListJourneys` and `GetEntry` each call `Repo.preload` with their own list, and
+    each mutation's resolver returns its row read back through `GetJourney` or `GetEntry`.
+    Dataloader was removed as overkill for one person's journal. Ruled by Julien, 2026-11-24.
   - `api`: Phoenix, absinthe_plug and the `entry:<id>` channel.
 - **Async analysis:** `submitEntry` saves the entry and enqueues an Oban job. The job stores the
   corrections and broadcasts on Phoenix PubSub, and the channel pushes `analysis_finished` or

@@ -3,11 +3,10 @@ defmodule Backend.Journal.Queries.GetJourney do
 
   alias Backend.Database.Repo
   alias Backend.Database.Schema.Journey
-  alias Backend.Journal.LoadedAssociations
 
   def run(journey_id) do
     Journey
     |> Repo.get(journey_id)
-    |> Repo.preload(LoadedAssociations.journey())
+    |> Repo.preload([:encounters, entries: [:corrections, :encounter]])
   end
 end

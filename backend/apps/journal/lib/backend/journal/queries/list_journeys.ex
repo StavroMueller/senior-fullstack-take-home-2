@@ -5,12 +5,11 @@ defmodule Backend.Journal.Queries.ListJourneys do
 
   alias Backend.Database.Repo
   alias Backend.Database.Schema.Journey
-  alias Backend.Journal.LoadedAssociations
 
   def run do
     Journey
     |> order_by(desc: :inserted_at, desc: :id)
-    |> preload(^LoadedAssociations.journey())
     |> Repo.all()
+    |> Repo.preload([:encounters, entries: [:corrections, :encounter]])
   end
 end
