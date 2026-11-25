@@ -574,3 +574,28 @@ teacher reactions recorded once from the real model.
   "In progress". Under the route come the country, the start date, the entry count, and the town
   you are in or the town where the journey finished.
 ```
+
+## 2026-11-25
+
+### A summary for a busy reader makes one claim
+
+The agent built a one-page summary of the code challenge with a chart of commits by hour, a card
+per stretch of work listing each pull request, and a system diagram naming every umbrella app.
+Julien said the page had too much text and too much detail, especially the build statistics,
+because the reader has little time.
+
+Rejected, as the page's opening line:
+
+```text
+The bulk of the work happened on Monday afternoon and evening, from 12:10 to 21:18:
+73 of 92 commits and 17 of the 23 merged pull requests.
+```
+
+Write instead:
+
+```text
+Most of the work was done on Monday afternoon and evening.
+```
+
+The page keeps one line per day and a diagram of four boxes: browser, Elixir backend, OpenRouter
+and Postgres.
