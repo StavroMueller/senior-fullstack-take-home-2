@@ -164,7 +164,7 @@ older half and a recent half, and each category compares corrections per entry a
 
 - **Haiku through OpenRouter.** Five models were tested on ten French entries before the pick,
   and Ollama in Docker was measured too. Haiku got every category right, with a median of 1.8
-  seconds. The results are in `todo/2026-11-23-real-ai-provider.md`.
+  seconds. The results are in `docs/ai-provider-benchmark.md`.
 - **The stub knows four phrases,** such as "je va" and "à le". Without a key, other errors go
   uncorrected.
 - **Halves over dates for trends.** A reviewer writes a few entries in one sitting, so a weekly
