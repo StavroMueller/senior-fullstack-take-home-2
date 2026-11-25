@@ -55,6 +55,42 @@ defmodule Backend.Database.Schema.Entry do
   alias Backend.Database.Schema.Journey
 ```
 
+### A fixed set of values is a Postgres enum type
+
+Julien ruled that a column holding a fixed set of values, such as an entry's analysis status or a
+correction's mistake category, is a Postgres enum type read through `Ecto.Enum`. The database then
+rejects any value outside the list.
+
+Commit `1bc33c5`, with the first migrations in commit `847210f`.
+
+The ruling and the migrations landed in the same second, so git holds no version of the columns as
+plain strings. The entry shows the form the rule produced.
+
+Write, in `CreateEntries`:
+
+```elixir
+execute(
+  "CREATE TYPE analysis_status AS ENUM ('analyzing', 'analyzed', 'analysis_failed')",
+  "DROP TYPE analysis_status"
+)
+
+create table(:entries) do
+  add :analysis_status, :analysis_status, null: false
+```
+
+And read it in `Backend.Database.Schema.Entry`:
+
+```elixir
+field :analysis_status, Ecto.Enum, values: [:analyzing, :analyzed, :analysis_failed]
+```
+
+When the AI needed a new mistake category, the rule meant a migration on the type. Commit
+`6c247f5`:
+
+```elixir
+execute("ALTER TYPE correction_category ADD VALUE 'noun_number' AFTER 'adjective_agreement'")
+```
+
 ### A function name says what the function does
 
 The agent named the failure path of the analysis job `record_failure`, though on every attempt
