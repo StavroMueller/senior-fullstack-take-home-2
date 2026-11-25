@@ -215,7 +215,7 @@ corrections, so the app runs and every test passes with no AI service.
 Haiku won a benchmark of five models on ten French A1 entries: every category right, no broken
 fix, a median of 1.8 seconds and $0.15 per 1000 entries. Ollama in Docker was declined because a
 Mac runs the model on its CPU, taking 24 to 128 seconds an entry, and its categories were wrong.
-The measurements are in `todo/2026-11-23-real-ai-provider.md`.
+The measurements are in `docs/ai-provider-benchmark.md`.
 
 Ruled by Julien, 2026-11-23. Source: `backend/apps/journal/`, `backend/config/runtime.exs`.
 
