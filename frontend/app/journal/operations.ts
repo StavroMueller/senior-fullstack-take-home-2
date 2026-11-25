@@ -90,11 +90,10 @@ const ROUTE_ON_MAP = gql`
   }
 `;
 
-export type JourneySummary = {
+export type JourneySummary = RouteOnMap & {
   id: string;
   country: string;
   insertedAt: string;
-  pointsOfInterest: Pick<PointOfInterest, "name">[];
   currentPointOfInterestIndex: number | null;
   openEncounter: Pick<Encounter, "id"> | null;
   entries: Pick<Entry, "id">[];
@@ -106,9 +105,7 @@ export const JOURNEYS = gql`
       id
       country
       insertedAt
-      pointsOfInterest {
-        name
-      }
+      ...RouteOnMap
       currentPointOfInterestIndex
       openEncounter {
         id
@@ -118,6 +115,7 @@ export const JOURNEYS = gql`
       }
     }
   }
+  ${ROUTE_ON_MAP}
 `;
 
 export const JOURNEY = gql`
