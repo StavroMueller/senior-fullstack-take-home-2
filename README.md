@@ -21,22 +21,22 @@ Postgres listens on port 55433. The map loads its tiles from OpenFreeMap, so it 
 
 ## Example journeys
 
-Every time the backend container starts, it loads three example journeys, with entries,
-corrections and teacher reactions recorded from the real model. The load empties every journey and
-entry first, so anything written in the app is gone after a restart. To load them again without a
+The backend container loads three example journeys at every start, with entries, corrections and
+teacher reactions recorded once from the real model. Loading empties every journey and entry
+first, so a restart deletes anything written in the app. To load the examples again without a
 restart:
 
 ```bash
 docker compose exec backend mix run apps/database/priv/repo/seeds.exs
 ```
 
-Loading reads
-`backend/apps/database/priv/repo/example_journeys.json` and makes no AI call. On the host,
-`cd backend && mix ecto.setup` creates the database, migrates it and loads the same journeys.
+The examples come from `backend/apps/database/priv/repo/example_journeys.json`, and loading them
+makes no AI call. On the host, `cd backend && mix ecto.setup` creates the database, runs
+the migrations and loads the same journeys.
 
-`mix api.record_example_journeys`, run from `backend` with `OPENROUTER_API_KEY` set,
-writes that file again. It plays three journeys through the real commands on a scratch
-database, with the model writing each learner entry and correcting it.
+To record that file again, run `mix api.record_example_journeys` from `backend` with
+`OPENROUTER_API_KEY` set. The task plays three journeys through the real commands on a scratch
+database. The model writes each learner entry, then corrects the entry.
 
 ## Corrections from a real model
 
@@ -94,12 +94,13 @@ screen shows which kinds of error keep coming back and which have dropped off.
 
 ## How the interface supports writing and review
 
-- **Journeys.** The opening page lists every journey, newest first. Each card names the route by
-  its first and last town, then where you are and how many entries you wrote. "Start a journey in
-  France" starts a new one and opens it. Each card is marked "Finished" or "In progress".
-- **Journey recap.** A finished journey opens on its recap: the mistake categories of that
-  journey with their counts and trends, then every correction grouped by category. "Keep going"
-  at the last town opens it.
+- **Journeys.** The opening page lists every journey, newest first, under a "Start a journey in
+  France" button. Each card shows the route from its first town to its last, marked "Finished" or
+  "In progress". Under the route come the country, the start date, the entry count, and the town
+  you are in or the town where the journey finished.
+- **Journey recap.** The card of a finished journey opens its recap page, and so does "Keep going"
+  at the last town. The recap counts that journey's mistake categories with their trends, then
+  lists every correction under its category.
 - **Writing.** The left half is a map of France with the journey's route. On the right, the
   teacher, drawn as a travel buddy, sets the scene at the current stop and asks for a few French
   sentences about it, above an entry field. In a town the scene names something the town is known
@@ -114,8 +115,9 @@ screen shows which kinds of error keep coming back and which have dropped off.
   teacher's reaction sums up the entry, and one card per correction shows the original crossed
   out, the fix, the category and the explanation.
 - **Failure.** When analysis fails, the entry is kept and a "Try again" button runs it again.
-- **Review.** On a journey's page, "Your entries" lists that journey's entries, newest first, with their correction count. Each
-  one opens on its own page, with its route position marked on the map.
+- **Review.** On a journey's page, "Your entries" lists that journey's entries, newest first, with
+  their correction count. Each entry opens on its own page, with its route position marked on the
+  map.
 - **Usual suspects.** Each mistake category with its count, most frequent first. A label says
   whether the category shows up fewer times lately, more times lately, about the same, or not at
   all lately.
