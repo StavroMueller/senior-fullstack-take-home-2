@@ -338,6 +338,9 @@ Julien's standing rulings, recorded 2026-11-23.
 
 ## Planning
 
+- **Every ruling against the agent's work goes into `docs/agent-rulings.md` the same day,** with
+  the rejected code and the code to write instead. Read that file before writing code. The rule
+  itself also goes into this file. Ruled by Julien, 2026-11-24.
 - **No CI. Every check runs locally before work is called done.** Hosted runs cost money and
   slow the loop. Run the commands under "Commands" and show their output. Declined: a GitHub
   Actions workflow, which passed once on 2026-11-23 and was deleted. Ruled by Julien,
@@ -422,6 +425,7 @@ frontend/       React Router 7 single-page app, tokens in app/palette.ts, theme 
 e2e/            the Playwright spec, run against the compose stack
 tools/          copy-check, the prose checker, with Wayword's banned words
 todo/           open work, one dated file each
+docs/           the provider benchmark and agent-rulings.md, the log of Julien's rulings with examples
 docs/           records a reader needs that are not open work, such as the AI provider benchmark
 ```
 
